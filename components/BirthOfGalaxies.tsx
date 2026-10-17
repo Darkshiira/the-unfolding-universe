@@ -110,6 +110,15 @@ export default function BirthOfGalaxies() {
       <div className="absolute inset-0">
         <GalaxiesScene progress={progress} />
       </div>
+      {/* Soft transition from the first stars section */}
+
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 z-20 h-[30vh]"
+        style={{
+          background:
+            "linear-gradient(to bottom, #000000 0%, rgba(0,0,0,0.8) 25%, rgba(0,0,0,0.35) 65%, transparent 100%)",
+        }}
+      />
 
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,transparent_20%,rgba(0,0,0,0.7)_100%)]" />
 

@@ -201,7 +201,7 @@ export default function FirstStars() {
           <p className="mt-5 text-sm leading-7 text-white/60 sm:text-base">
             Några av de största stjärnorna exploderade när deras liv tog slut.
             Explosionerna spred nya grundämnen ut i rymden. Ämnen som långt
-            senare skulle bli en del av planeter <br/>– och oss.
+            senare skulle bli en del av planeter <br />– och oss.
           </p>
         </div>
       </div>
@@ -213,6 +213,13 @@ export default function FirstStars() {
         style={{
           background:
             "radial-gradient(circle at 57% 46%, #ffffff 0%, #fff2cb 12%, rgba(255,160,75,0.5) 35%, transparent 75%)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[30vh]"
+        style={{
+          background:
+            "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.35) 35%, rgba(0,0,0,0.8) 75%, #000000 100%)",
         }}
       />
     </section>
