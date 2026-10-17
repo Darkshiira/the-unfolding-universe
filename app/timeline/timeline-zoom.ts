@@ -29,7 +29,9 @@ export function getVisibleMilestoneIds(
   const visible: Milestone[] = [];
   for (const event of candidates) {
     const overlaps = visible.some(
-      (other) => other.category === event.category && Math.abs(other.x - event.x) < minimumDistance,
+      (other) =>
+        other.category === event.category &&
+        Math.abs(other.x - event.x) < minimumDistance,
     );
     if (!overlaps) visible.push(event);
   }

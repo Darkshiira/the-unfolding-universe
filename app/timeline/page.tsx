@@ -9,6 +9,7 @@ import {
   type WheelEvent,
 } from "react";
 import { getVisibleMilestoneIds } from "./timeline-zoom";
+import { geologicalBoundaries, getMilestoneEra } from "./timeline-eras";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -23,6 +24,9 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
+  Search,
+  Map,
+  Layers3,
   Leaf,
   Maximize2,
   Minus,
@@ -33,10 +37,10 @@ import {
 // A spatial timeline: milestones move apart, but icons and text never scale.
 const EARTH_X = milestones.find((m) => m.id === "earth")?.x ?? 400;
 const EARTH_Y = milestones.find((m) => m.id === "earth")?.y ?? 195;
-const END_X = WORLD_WIDTH - 100;
+const END_X = 8600;
 const START_ZOOM = 1.05;
 const MIN_ZOOM = 0.35;
-const MAX_ZOOM = 2.5;
+const MAX_ZOOM = 4;
 
 // Change the *distance* between events, not their size.
 function spread(zoom: number) {
@@ -128,6 +132,81 @@ export default function TimelinePage() {
     return () => cancelAnimationFrame(frame);
   }, []);
   const [selected, setSelected] = useState<Milestone | null>(null);
+  const [activeBranch, setActiveBranch] = useState<Category | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [showEras, setShowEras] = useState(true);
+  const [showMap, setShowMap] = useState(true);
+  const [viewportSize, setViewportSize] = useState({ width: 900, height: 600 });
+  const viewportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const node = viewportRef.current;
+    if (!node) return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry)
+        setViewportSize({
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        });
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const results = useMemo(() => {
+    const needle = query.trim().toLocaleLowerCase("sv");
+    if (!needle) return [];
+    return milestones
+      .filter((m) =>
+        [m.title, m.description, m.date, m.fact].some((text) =>
+          text.toLocaleLowerCase("sv").includes(needle),
+        ),
+      )
+      .slice(0, 8);
+  }, [query]);
+
+  function travelTo(milestone: Milestone) {
+    const current = targetViewRef.current;
+    const zoom = Math.max(current.zoom, 1.3);
+    targetViewRef.current = {
+      x: -positionX(milestone.x, zoom),
+      y: -milestone.y,
+      zoom,
+    };
+    setSearchOpen(false);
+    setQuery("");
+    setSelected(milestone);
+  }
+
+  function travelToBranch(category: Category) {
+    setActiveBranch((previous) => (previous === category ? null : category));
+    const first = milestones
+      .filter((m) => m.category === category)
+      .reduce(
+        (earliest, item) =>
+          !earliest || item.x < earliest.x ? item : earliest,
+        null as Milestone | null,
+      );
+    if (!first) return;
+    const current = targetViewRef.current;
+    targetViewRef.current = {
+      ...current,
+      x: -positionX(first.x, current.zoom),
+      y: -branchY[category],
+    };
+  }
+
+  function travelFromMap(normalizedX: number, normalizedY: number) {
+    const current = targetViewRef.current;
+    const x = 100 + clamp(normalizedX, 0, 1) * (END_X - 100);
+    const y = clamp(normalizedY, 0, 1) * WORLD_HEIGHT;
+    targetViewRef.current = {
+      ...current,
+      x: -positionX(x, current.zoom),
+      y: -y,
+    };
+  }
   const [dragging, setDragging] = useState(false);
   const worldWidth = positionX(END_X + 160, view.zoom);
   const visibleMilestoneIds = useMemo(
@@ -237,11 +316,10 @@ export default function TimelinePage() {
       {/* Museum-style header */}
       <header className="relative z-30 flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-[#DDD8CD] bg-[#FBF9F3]/95 px-5 py-4 backdrop-blur-md sm:px-10">
         <div className="flex items-center gap-4">
-          {/* Explorer's Compass */}
-          <div className="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full sm:size-14">
+          <div className="relative size-12 shrink-0 overflow-hidden rounded-full border border-[#D8D0BF] bg-[#F1E9D9] sm:size-14">
             <Image
-              src="/images/timeline/compass-icon.png"
-              alt="En gyllene kompass omgiven av gröna blad"
+              src="/images/explorers-compass.png"
+              alt="Gyllene kompass med gröna blad"
               fill
               priority
               sizes="(max-width: 640px) 48px, 56px"
@@ -249,7 +327,6 @@ export default function TimelinePage() {
             />
           </div>
 
-          {/* Header text */}
           <div>
             <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#9B8972]">
               Hur allt började
@@ -281,13 +358,67 @@ export default function TimelinePage() {
           </p>
         </div>
 
-        <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-[#A29480] md:block">
-          Dra för att utforska · Scrolla för att zooma
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setSearchOpen((v) => !v)}
+            aria-label="Sök milstolpar"
+            className="flex items-center gap-2 rounded-full border border-[#DDD4C6] px-3 py-2 text-xs font-semibold text-[#66766B] hover:bg-white"
+          >
+            <Search size={15} /> <span className="hidden sm:inline">Sök</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowEras((v) => !v)}
+            aria-pressed={showEras}
+            className={`flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold ${showEras ? "border-[#839B70] bg-[#E5EDDD] text-[#48634D]" : "border-[#DDD4C6] text-[#66766B] hover:bg-white"}`}
+          >
+            <Layers3 size={15} />{" "}
+            <span className="hidden sm:inline">Geologiska tider</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowMap((v) => !v)}
+            aria-pressed={showMap}
+            className="flex items-center gap-2 rounded-full border border-[#DDD4C6] px-3 py-2 text-xs font-semibold text-[#66766B] hover:bg-white"
+          >
+            <Map size={15} />{" "}
+            <span className="hidden sm:inline">Översiktskarta</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Branch navigation on smaller screens */}
+      <div className="relative z-20 flex shrink-0 gap-2 overflow-x-auto border-b border-[#E5DFD3] bg-[#FBF9F3] px-4 py-2 lg:hidden">
+        {branches.map((category) => (
+          <button
+            key={category}
+            type="button"
+            onClick={() => travelToBranch(category)}
+            aria-pressed={activeBranch === category}
+            className={`shrink-0 rounded-full border px-3 py-2 text-[11px] font-semibold ${
+              activeBranch === category
+                ? "border-[#839B70] bg-[#E5EDDD] text-[#34473C]"
+                : "border-[#DED7CA] text-[#696B60]"
+            }`}
+          >
+            {palette[category].label}
+          </button>
+        ))}
+        {activeBranch && (
+          <button
+            type="button"
+            onClick={() => setActiveBranch(null)}
+            className="shrink-0 rounded-full px-3 py-2 text-[11px] font-semibold text-[#657D69]"
+          >
+            Visa alla
+          </button>
+        )}
       </div>
 
       {/* Timeline viewport */}
       <div
+        ref={viewportRef}
         className={`relative min-h-0 flex-1 overflow-hidden touch-none select-none ${
           dragging ? "cursor-grabbing" : "cursor-grab"
         }`}
@@ -319,6 +450,30 @@ export default function TimelinePage() {
             transform: `translate(${view.x}px, ${view.y}px)`,
           }}
         >
+          {/* Geological periods fill the ENTIRE world height and expand with zoom. */}
+          {showEras && (
+            <div
+              className="pointer-events-none absolute inset-0 overflow-hidden"
+              aria-hidden="true"
+            >
+              {geologicalBoundaries().map((era) => {
+                const left = positionX(era.startX, view.zoom);
+                const right = positionX(era.endX, view.zoom);
+                return (
+                  <div
+                    key={era.name}
+                    className="absolute top-0 h-full border-l border-white/50"
+                    style={{
+                      left,
+                      width: Math.max(0, right - left),
+                      background: `linear-gradient(90deg, ${era.color}B8, ${era.color}8A 85%, ${era.color}B8)`,
+                    }}
+                  />
+                );
+              })}
+            </div>
+          )}
+
           {/* Curved branches dynamically follow the milestones. */}
           <svg
             width={worldWidth}
@@ -330,17 +485,11 @@ export default function TimelinePage() {
             {branches.map((category) => {
               const d = branchPath(category, view.zoom);
               const color = palette[category].color;
-              const first = Math.min(
-                ...milestones
-                  .filter((m) => m.category === category)
-                  .map((m) => m.x),
-              );
-              const titleX =
-                category === "earth"
-                  ? positionX(80, view.zoom)
-                  : positionX(first - 350, view.zoom);
               return (
-                <g key={category}>
+                <g
+                  key={category}
+                  opacity={activeBranch && activeBranch !== category ? 0.16 : 1}
+                >
                   <path
                     d={d}
                     fill="none"
@@ -363,16 +512,6 @@ export default function TimelinePage() {
                     strokeLinecap="round"
                     opacity="0.7"
                   />
-                  <text
-                    x={titleX}
-                    y={branchY[category] - 105}
-                    fill="#625D51"
-                    fontSize="21"
-                    fontWeight="600"
-                    letterSpacing="3"
-                  >
-                    {branchTitles[category]}
-                  </text>
                   <circle
                     cx={positionX(END_X, view.zoom)}
                     cy={branchY[category]}
@@ -394,10 +533,37 @@ export default function TimelinePage() {
             })}
           </svg>
 
+          {/* Branch headings sit above their branch origins, outside milestone cards. */}
+          {branches.map((category) => {
+            const first = Math.min(
+              ...milestones
+                .filter((m) => m.category === category)
+                .map((m) => m.x),
+            );
+            const headingX = category === "earth" ? 65 : first - 420;
+            return (
+              <div
+                key={`heading-${category}`}
+                className="pointer-events-none absolute whitespace-nowrap text-[13px] font-bold uppercase tracking-[0.22em] sm:text-[16px]"
+                style={{
+                  left: positionX(headingX, view.zoom),
+                  top: branchY[category] - 145,
+                  color: palette[category].color,
+                  opacity:
+                    activeBranch && activeBranch !== category ? 0.18 : 0.95,
+                }}
+              >
+                {branchTitles[category]}
+              </div>
+            );
+          })}
+
           {/* Each medallion has a fixed screen size. Its position moves. */}
           {milestones.map((event) => {
             const colors = palette[event.category];
             const visible = visibleMilestoneIds.has(event.id);
+            const dimmed =
+              activeBranch !== null && activeBranch !== event.category;
             return (
               <button
                 key={event.id}
@@ -410,8 +576,8 @@ export default function TimelinePage() {
                 style={{
                   left: positionX(event.x, view.zoom),
                   top: event.y,
-                  opacity: visible ? 1 : 0,
-                  pointerEvents: visible ? "auto" : "none",
+                  opacity: visible ? (dimmed ? 0.12 : 1) : 0,
+                  pointerEvents: visible && !dimmed ? "auto" : "none",
                 }}
               >
                 <div
@@ -440,29 +606,196 @@ export default function TimelinePage() {
           })}
         </div>
 
-        {/* Floating museum legend */}
-        <div className="absolute bottom-5 left-4 z-10 hidden rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-5 shadow-[0_12px_35px_rgba(75,60,43,0.08)] backdrop-blur-sm lg:block">
-          <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[#9D8A71]">
+        {/* Geological period labels stay visible while panning vertically. */}
+        {showEras && (
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-11 overflow-hidden"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(248,245,238,.9), transparent)",
+            }}
+          >
+            {geologicalBoundaries().map((era) => {
+              const left =
+                viewportSize.width / 2 +
+                view.x +
+                positionX(era.startX, view.zoom);
+              const right =
+                viewportSize.width / 2 +
+                view.x +
+                positionX(era.endX, view.zoom);
+              if (right < 0 || left > viewportSize.width) return null;
+              const clippedLeft = Math.max(0, left);
+              const clippedRight = Math.min(viewportSize.width, right);
+              return (
+                <span
+                  key={era.name}
+                  className="absolute top-3 overflow-hidden whitespace-nowrap text-center text-[10px] font-bold uppercase tracking-[0.15em] text-[#766E61]"
+                  style={{
+                    left: clippedLeft,
+                    width: Math.max(0, clippedRight - clippedLeft),
+                  }}
+                >
+                  {era.name}
+                </span>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Clickable museum legend */}
+        <div className="absolute bottom-5 left-4 z-10 hidden rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-4 shadow-[0_12px_35px_rgba(75,60,43,0.08)] backdrop-blur-sm lg:block">
+          <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#9D8A71]">
             Utforska grenarna
           </p>
-
-          <div className="space-y-3">
-            {(Object.keys(palette) as Category[]).map((category) => (
-              <div key={category} className="flex items-center gap-3">
+          <div className="space-y-1">
+            {branches.map((category) => (
+              <button
+                key={category}
+                type="button"
+                aria-pressed={activeBranch === category}
+                onClick={() => travelToBranch(category)}
+                className={`flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-xs font-medium transition-colors hover:bg-[#F0E9DC] ${activeBranch === category ? "bg-[#EEE8DA] text-[#34473C]" : "text-[#696B60]"}`}
+              >
                 <span
-                  className="h-[5px] w-8 rounded-full"
-                  style={{
-                    backgroundColor: palette[category].color,
-                  }}
+                  className="h-[5px] w-8 shrink-0 rounded-full"
+                  style={{ backgroundColor: palette[category].color }}
                 />
-
-                <span className="text-xs font-medium text-[#696B60]">
-                  {palette[category].label}
-                </span>
-              </div>
+                {palette[category].label}
+              </button>
             ))}
           </div>
+          {activeBranch && (
+            <button
+              type="button"
+              onClick={() => setActiveBranch(null)}
+              className="mt-3 text-xs font-semibold text-[#718363]"
+            >
+              Visa alla grenar
+            </button>
+          )}
         </div>
+
+        {/* Search results: interactive overlay above viewport */}
+        {searchOpen && (
+          <div
+            className="absolute left-1/2 top-4 z-30 w-[min(94vw,480px)] -translate-x-1/2 rounded-2xl border border-[#DDD4C6] bg-[#FFFCF6] p-4 shadow-xl"
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-2">
+              <Search size={19} className="text-[#839B70]" />
+              <input
+                autoFocus
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Sök dinosaurier, hav, syre..."
+                aria-label="Sök milstolpar"
+                className="min-w-0 flex-1 bg-transparent p-2 text-sm outline-none placeholder:text-[#A49A8C]"
+              />
+              <button
+                type="button"
+                aria-label="Stäng sökningen"
+                onClick={() => setSearchOpen(false)}
+              >
+                <X size={18} />
+              </button>
+            </div>
+            {query.trim() && (
+              <div className="mt-2 max-h-64 overflow-y-auto border-t border-[#E8E1D6] pt-2">
+                {results.length === 0 && (
+                  <p className="p-3 text-sm text-[#857E72]">
+                    Inga träffar hittades.
+                  </p>
+                )}
+                {results.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => travelTo(item)}
+                    className="flex w-full items-center gap-3 rounded-xl p-3 text-left hover:bg-[#F3EEE5]"
+                  >
+                    <span className="text-2xl">{item.symbol}</span>
+                    <span>
+                      <span className="block text-sm font-semibold">
+                        {item.title}
+                      </span>
+                      <span className="block text-xs text-[#8D8171]">
+                        {item.date}
+                      </span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Interactive minimap. Each line represents a complete branch. */}
+        {showMap && (
+          <div
+            className="absolute right-4 top-4 z-10 w-[210px] rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-3 shadow-lg sm:w-[260px]"
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9D8A71]">
+              Översiktskarta
+            </p>
+            <svg
+              viewBox="0 0 240 110"
+              className="w-full cursor-crosshair"
+              role="img"
+              aria-label="Klicka för att förflytta dig i tidslinjen"
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                travelFromMap(
+                  (e.clientX - rect.left) / rect.width,
+                  (e.clientY - rect.top) / rect.height,
+                );
+              }}
+            >
+              {branches.map((category) => (
+                <line
+                  key={category}
+                  x1="5"
+                  x2="235"
+                  y1={(branchY[category] / WORLD_HEIGHT) * 110}
+                  y2={(branchY[category] / WORLD_HEIGHT) * 110}
+                  stroke={palette[category].color}
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              ))}
+              <rect
+                x={clamp(
+                  (originalX(-view.x - viewportSize.width / 2, view.zoom) /
+                    END_X) *
+                    240,
+                  0,
+                  240,
+                )}
+                y={clamp(
+                  ((-view.y - viewportSize.height / 2) / WORLD_HEIGHT) * 110,
+                  0,
+                  110,
+                )}
+                width={clamp(
+                  (viewportSize.width / spread(view.zoom) / END_X) * 240,
+                  7,
+                  240,
+                )}
+                height={clamp(
+                  (viewportSize.height / WORLD_HEIGHT) * 110,
+                  6,
+                  110,
+                )}
+                rx="3"
+                fill="#839B70"
+                fillOpacity=".12"
+                stroke="#657D69"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </div>
+        )}
 
         {/* Zoom controls */}
         <div className="absolute bottom-5 right-4 z-10 flex items-center gap-2 rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-2 shadow-[0_12px_35px_rgba(75,60,43,0.08)] backdrop-blur-sm sm:bottom-7 sm:right-7">
@@ -556,6 +889,9 @@ export default function TimelinePage() {
                 {selected.date}
               </p>
 
+              <p className="mt-2 text-xs text-[#8D8171]">
+                {getMilestoneEra(selected)}
+              </p>
               <h2
                 id="event-title"
                 className="mt-3 text-3xl font-semibold tracking-tight text-[#35463B]"

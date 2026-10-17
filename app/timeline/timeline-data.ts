@@ -1,3 +1,4 @@
+import { ageToX, MILESTONE_AGES_MA } from "./timeline-chronology";
 export type Category = "earth" | "life" | "plants" | "animals" | "humans";
 
 export type Milestone = {
@@ -7,6 +8,7 @@ export type Milestone = {
   description: string;
   fact: string;
   x: number;
+  ageMa?: number;
   y: number;
   category: Category;
   symbol: string;
@@ -14,7 +16,7 @@ export type Milestone = {
   image?: string;
 };
 
-export const WORLD_WIDTH = 6100;
+export const WORLD_WIDTH = 9000;
 export const WORLD_HEIGHT = 1160;
 
 export const palette: Record<
@@ -32,9 +34,8 @@ export const palette: Record<
   },
 };
 
-// En illustrerad, ej skalenlig tidslinje. Dateringarna är ungefärliga.
-// Alla fem grenar avslutas på x = 5700 (Idag).
-export const milestones: Milestone[] = [
+// Ursprungliga x-värden används inte längre: positionen beräknas från ageMa.
+const sourceMilestones: Milestone[] = [
   {
     id: "solar-nebula",
     title: "Solsystemet tar form",
@@ -1338,3 +1339,11 @@ export const milestones: Milestone[] = [
     major: true,
   },
 ];
+
+export const milestones: Milestone[] = sourceMilestones.map((milestone) => {
+  const ageMa = MILESTONE_AGES_MA[milestone.id];
+  if (ageMa === undefined) {
+    throw new Error(`Saknar geologisk ålder för ${milestone.id}`);
+  }
+  return { ...milestone, ageMa, x: ageToX(ageMa) };
+});
