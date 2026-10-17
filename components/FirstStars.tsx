@@ -150,12 +150,13 @@ export default function FirstStars() {
       >
         <div>
           <p className="mb-5 text-xs uppercase tracking-[0.4em] text-white/40">
-            The Cosmic Dark Ages
+            Universums mörka tid
           </p>
+
           <h2 className="text-3xl font-light tracking-wide sm:text-5xl">
-            For millions of years,
+            Under miljontals år
             <br />
-            darkness prevailed.
+            fanns inga stjärnor som lyste upp mörkret.
           </h2>
         </div>
       </div>
@@ -167,14 +168,16 @@ export default function FirstStars() {
       >
         <div className="max-w-2xl">
           <p className="mb-4 text-xs uppercase tracking-[0.35em] text-blue-200/70">
-            Approximately 100–200 Million Years Later
+            Ungefär 100–200 miljoner år efter Big Bang
           </p>
+
           <h2 className="text-3xl font-light sm:text-5xl">
-            The first stars ignite.
+            Tändes de allra första stjärnorna.
           </h2>
+
           <p className="mt-5 text-sm leading-7 text-white/60 sm:text-base">
-            Gravity draws primordial hydrogen and helium together. Deep within
-            immense clouds of gas, nuclear fusion begins.
+            Gravitationen drog samman stora moln av gas. När det blev
+            tillräckligt varmt i molnens mitt började de första stjärnorna lysa.
           </p>
         </div>
       </div>
@@ -186,16 +189,19 @@ export default function FirstStars() {
       >
         <div className="max-w-2xl">
           <p className="mb-4 text-xs uppercase tracking-[0.35em] text-amber-200/70">
-            The First Stellar Deaths
+            De första stjärnorna dör
           </p>
+
           <h2 className="text-3xl font-light sm:text-5xl">
-            From destruction,
+            Ur förstörelsen
             <br />
-            new possibilities.
+            föds något nytt.
           </h2>
+
           <p className="mt-5 text-sm leading-7 text-white/60 sm:text-base">
-            Some massive stars end their lives in extraordinary explosions,
-            dispersing newly forged elements into the cosmos.
+            Några av de största stjärnorna exploderade när deras liv tog slut.
+            Explosionerna spred nya grundämnen ut i rymden. Ämnen som långt
+            senare skulle bli en del av planeter <br/>– och oss.
           </p>
         </div>
       </div>

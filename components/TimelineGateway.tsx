@@ -2,7 +2,6 @@
 
 import TimelineTransition from "./TimelineTransition";
 import { useEffect, useRef } from "react";
-import Link from "next/link";
 import { ArrowRight, Clock3, Sparkles } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -93,27 +92,33 @@ export default function TimelineGateway() {
             ref={markersRef}
             className="absolute inset-x-0 top-0 flex -translate-y-1/2 justify-between"
           >
-            {["13.8 BYA", "First stars", "Galaxies", "4.6 BYA", "Earth"].map(
-              (label, index) => (
+            {[
+              "13,8 md år",
+              "Första stjärnorna",
+              "Galaxerna",
+              "4,6 md år",
+              "Jorden",
+            ].map((label, index) => (
+              <div
+                key={label}
+                className="group relative flex flex-col items-center"
+              >
                 <div
-                  key={label}
-                  className="group relative flex flex-col items-center"
-                >
-                  <div
-                    className={`rounded-full border border-amber-200/60 bg-amber-100 shadow-[0_0_16px_rgba(255,191,91,0.55)] ${
-                      index === 4 ? "h-3 w-3" : "h-1.5 w-1.5"
-                    }`}
-                  />
+                  className={`rounded-full border border-amber-200/60 bg-amber-100 shadow-[0_0_16px_rgba(255,191,91,0.55)] ${
+                    index === 4 ? "h-3 w-3" : "h-1.5 w-1.5"
+                  }`}
+                />
 
-                  <span className="absolute top-5 hidden whitespace-nowrap text-[10px] tracking-widest text-white/40 sm:block">
-                    {label}
-                  </span>
-                </div>
-              ),
-            )}
+                <span className="absolute top-5 hidden whitespace-nowrap text-[10px] tracking-widest text-white/40 sm:block">
+                  {label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
+
+      {/* Main invitation */}
 
       {/* Main invitation */}
       <div
@@ -122,27 +127,27 @@ export default function TimelineGateway() {
       >
         <div className="mb-7 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.32em] text-amber-200/75">
           <Sparkles size={14} strokeWidth={1.5} />
-          The journey continues
+          Resan fortsätter
         </div>
 
         <h2 className="max-w-3xl text-4xl font-light leading-[1.12] tracking-tight sm:text-6xl lg:text-7xl">
-          This is only
+          Men det här är
           <br />
           <span className="bg-gradient-to-r from-[#f3d7a3] via-[#fff5dc] to-[#b98c56] bg-clip-text font-medium text-transparent">
-            the beginning.
+            bara början.
           </span>
         </h2>
 
         <p className="mt-8 max-w-xl text-sm leading-7 text-white/55 sm:text-base sm:leading-8">
-          From the first light in the universe to the formation of our planet,
-          billions of years have shaped the world we know. Discover the
-          extraordinary events that came next.
+          Vi har följt universums historia, från de första stjärnorna till
+          jordens födelse. Men vad hände sedan? Hur uppstod livet, och hur blev
+          vår planet den värld vi känner idag?
         </p>
 
         <div className="mt-11">
           <TimelineTransition>
             <Clock3 size={18} strokeWidth={1.7} />
-            Explore the Timeline
+            Utforska tidslinjen
             <ArrowRight
               size={18}
               className="transition-transform duration-300 group-hover:translate-x-1"
@@ -151,7 +156,7 @@ export default function TimelineGateway() {
         </div>
 
         <span className="mt-7 text-[11px] uppercase tracking-[0.2em] text-white/30">
-          13.8 billion years of cosmic history
+          13,8 miljarder år av universums historia
         </span>
       </div>
 

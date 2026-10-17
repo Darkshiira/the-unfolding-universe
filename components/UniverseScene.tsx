@@ -50,11 +50,15 @@ function CosmicParticles({ progress }: UniverseSceneProps) {
   useFrame((state, delta) => {
     const points = pointsRef.current;
     if (!points) return;
-
     const p = THREE.MathUtils.clamp(progress.current, 0, 1);
 
-    // Smooth expansion
-    const expansion = (1 - Math.pow(1 - p, 4)) * 30;
+    // No particles visible before the universe begins.
+    points.visible = p > 0.025;
+
+    // Smooth expansion, beginning after the first spark.
+    const particleProgress = THREE.MathUtils.clamp((p - 0.025) / 0.975, 0, 1);
+
+    const expansion = (1 - Math.pow(1 - particleProgress, 4)) * 30;
 
     const attribute = points.geometry.getAttribute(
       "position",
@@ -117,6 +121,16 @@ function CosmicParticles({ progress }: UniverseSceneProps) {
   );
 }
 
+function SceneVisibility({ progress }: UniverseSceneProps) {
+  useFrame(({ scene }) => {
+    const p = THREE.MathUtils.clamp(progress.current, 0, 1);
+
+    scene.visible = p > 0.005;
+  });
+
+  return null;
+}
+
 export default function UniverseScene({ progress }: UniverseSceneProps) {
   return (
     <Canvas
@@ -138,7 +152,7 @@ export default function UniverseScene({ progress }: UniverseSceneProps) {
       }}
     >
       <color attach="background" args={["#000000"]} />
-
+      <SceneVisibility progress={progress} />
       <CosmicLight progress={progress} />
       <ParticleTrails progress={progress} />
       <CosmicParticles progress={progress} />

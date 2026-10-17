@@ -32,29 +32,35 @@ export default function CosmicIntro() {
       });
 
       timeline
-        // Fade out the opening message
+        // 1. First, fade out the opening message.
         .to(
           textRef.current,
           {
             opacity: 0,
-            scale: 1.05,
-            duration: 1.2,
+            scale: 1.03,
+            duration: 1.5,
+            ease: "power2.inOut",
           },
           0,
         )
 
-        // Fade out the scroll indicator
+        // 2. Fade out the scroll indicator at the same time.
         .to(
           scrollRef.current,
           {
             opacity: 0,
             y: 20,
-            duration: 0.8,
+            duration: 1.2,
+            ease: "power2.inOut",
           },
           0,
         )
 
-        // Expand the universe
+        // 3. Keep the screen completely dark for a moment.
+        //    The universe progress remains at 0.
+
+        // 4. Only AFTER the text is gone,
+        //    begin the Big Bang animation.
         .to(
           progress,
           {
@@ -62,7 +68,7 @@ export default function CosmicIntro() {
             duration: 6,
             ease: "none",
           },
-          0.4,
+          2.2,
         );
     }, sectionRef);
 
@@ -90,7 +96,7 @@ export default function CosmicIntro() {
         className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center px-6"
       >
         <h1 className="max-w-4xl text-center font-light tracking-[0.12em] text-white/90 text-3xl sm:text-5xl md:text-6xl">
-          First, there was nothing.
+          Först fanns ingenting.
         </h1>
       </div>
 
@@ -100,7 +106,7 @@ export default function CosmicIntro() {
         className="absolute bottom-12 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-4"
       >
         <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.35em] text-white/55 sm:text-xs">
-          Scroll to ignite the cosmos
+          Scrolla för att se hur allt började
         </p>
 
         <ArrowDown
@@ -113,7 +119,7 @@ export default function CosmicIntro() {
       {/* Small branding */}
       <div className="pointer-events-none absolute left-6 top-8 z-30 sm:left-12 sm:top-10">
         <span className="text-xs font-medium uppercase tracking-[0.35em] text-white/60">
-          The Unfolding Universe
+          Hur allt började
         </span>
       </div>
     </section>

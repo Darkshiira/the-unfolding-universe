@@ -113,56 +113,70 @@ export default function BirthOfGalaxies() {
 
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,transparent_20%,rgba(0,0,0,0.7)_100%)]" />
 
+      {/* The first galaxies */}
       <div
         ref={introRef}
         className="pointer-events-none absolute inset-0 flex items-end justify-center px-6 pb-24 text-center sm:pb-32"
       >
         <div className="max-w-2xl">
           <p className="mb-4 text-xs uppercase tracking-[0.35em] text-blue-200/70">
-            The First Galaxies
+            De första galaxerna
           </p>
+
           <h2 className="text-3xl font-light sm:text-5xl">
-            Gravity begins to build
+            Stjärnorna börjar
             <br />
-            the cosmic web.
+            samlas i galaxer.
           </h2>
+
           <p className="mt-5 text-sm leading-7 text-white/60 sm:text-base">
-            Within vast structures shaped by dark matter, gas gathers and early
-            galaxies begin to grow.
+            Gravitationen drog samman gas och stjärnor i enorma samlingar. Med
+            hjälp av den osynliga mörka materian började de första galaxerna
+            växa fram.
           </p>
         </div>
       </div>
 
+      {/* Galactic evolution */}
       <div
         ref={typesRef}
         className="pointer-events-none absolute inset-0 flex items-end justify-center px-6 pb-24 text-center sm:pb-32"
       >
         <div className="max-w-2xl">
           <p className="mb-4 text-xs uppercase tracking-[0.35em] text-amber-200/70">
-            Galactic Evolution
+            Galaxerna förändras
           </p>
+
           <h2 className="text-3xl font-light sm:text-5xl">
-            A universe of galaxies.
+            Ett universum
+            <br />
+            fullt av galaxer.
           </h2>
+
           <p className="mt-5 text-sm leading-7 text-white/60 sm:text-base">
-            Over billions of years, galaxies grow through star formation, gas
-            accretion, and mergers, developing a remarkable variety of shapes.
+            Under miljarder år växte galaxerna. Nya stjärnor föddes och galaxer
+            krockade och smälte samman. Vissa blev spiralformade, andra runda
+            eller oregelbundna.
           </p>
         </div>
       </div>
 
+      {/* The Milky Way */}
       <div
         ref={milkyWayRef}
         className="pointer-events-none absolute inset-0 flex items-end justify-center px-6 pb-24 text-center sm:pb-32"
       >
         <div className="max-w-2xl">
           <p className="mb-4 text-xs uppercase tracking-[0.35em] text-blue-200/70">
-            Our Galactic Home
+            Vårt hem i universum
           </p>
-          <h2 className="text-3xl font-light sm:text-5xl">The Milky Way.</h2>
+
+          <h2 className="text-3xl font-light sm:text-5xl">Vintergatan.</h2>
+
           <p className="mt-5 text-sm leading-7 text-white/60 sm:text-base">
-            Within this immense barred spiral galaxy, a small star system will
-            eventually become our home.
+            Bland universums alla galaxer finns Vintergatan. En enorm
+            spiralgalax med miljarder stjärnor. Här kommer vår sol och våra
+            planeter en dag att bildas.
           </p>
         </div>
       </div>

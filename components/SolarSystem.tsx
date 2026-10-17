@@ -13,28 +13,28 @@ const SolarSystemScene = dynamic(() => import("./SolarSystemScene"), {
 
 const chapters = [
   {
-    eyebrow: "4.6 Billion Years Ago",
-    title: "Our Sun ignites.",
+    eyebrow: "För 4,6 miljarder år sedan",
+    title: "Vår sol tänds.",
     description:
-      "At the center of a collapsing cloud of gas and dust, a young star begins to shine.",
+      "Ett enormt moln av gas och stoft dras samman av gravitationen. I mitten föds en ny stjärna – vår sol.",
   },
   {
-    eyebrow: "The Solar Nebula",
-    title: "A thousand billion possibilities.",
+    eyebrow: "Ett solsystem börjar bildas",
+    title: "Ett hav av stoft",
     description:
-      "As we pull away, a vast rotating disk of material surrounds the newborn Sun.",
+      "Runt den unga solen bildas en stor skiva av gas och små partiklar. Här finns materialet som en dag ska bli planeter.",
   },
   {
-    eyebrow: "The Age of Accretion",
-    title: "From dust to worlds.",
+    eyebrow: "Planeterna växer fram",
+    title: "Ur stoft bildas nya världar.",
     description:
-      "Particles collide and stick together. Over millions of years, larger bodies emerge from the disk.",
+      "Små partiklar krockar och fastnar i varandra. Under miljontals år växer de till allt större klumpar som så småningom bildar planeter.",
   },
   {
-    eyebrow: "The Birth of Earth",
-    title: "And one of them becomes home.",
+    eyebrow: "Jorden föds",
+    title: "En av dem blir vårt hem.",
     description:
-      "About 4.54 billion years ago, our planet begins taking shape through countless collisions.",
+      "För ungefär 4,54 miljarder år sedan börjar jorden ta form. Den unga planeten är glödhet och formas av kraftiga kollisioner.",
   },
 ];
 
