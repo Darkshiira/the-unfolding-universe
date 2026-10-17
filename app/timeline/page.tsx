@@ -3,6 +3,14 @@
 import { useRef, useState, type PointerEvent, type WheelEvent } from "react";
 import Link from "next/link";
 import {
+  milestones,
+  palette,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+  type Category,
+  type Milestone,
+} from "./timeline-data";
+import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
@@ -14,198 +22,6 @@ import {
   X,
 } from "lucide-react";
 
-type Category = "earth" | "life" | "plants" | "animals" | "humans";
-
-type Milestone = {
-  id: string;
-  title: string;
-  date: string;
-  description: string;
-  fact: string;
-  x: number;
-  y: number;
-  category: Category;
-  symbol: string;
-  major?: boolean;
-};
-
-const WORLD_WIDTH = 2500;
-const WORLD_HEIGHT = 1160;
-
-const palette: Record<
-  Category,
-  { color: string; light: string; label: string }
-> = {
-  earth: {
-    color: "#BC906C",
-    light: "#F1E2D0",
-    label: "Earth's history",
-  },
-  life: {
-    color: "#739FA2",
-    light: "#E0EFF0",
-    label: "Early life",
-  },
-  plants: {
-    color: "#839B70",
-    light: "#E5EDDD",
-    label: "Plant evolution",
-  },
-  animals: {
-    color: "#B88D8D",
-    light: "#F2E4E3",
-    label: "Animal evolution",
-  },
-  humans: {
-    color: "#BA916A",
-    light: "#F3E8D9",
-    label: "Human evolution",
-  },
-};
-
-const milestones: Milestone[] = [
-  {
-    id: "earth",
-    title: "Earth is born",
-    date: "4.54 billion years ago",
-    description:
-      "Our planet forms from material surrounding the young Sun. Its early history is marked by intense heat, collisions, and rapid geological change.",
-    fact: "Earth is approximately 4.54 billion years old.",
-    x: 170,
-    y: 195,
-    category: "earth",
-    symbol: "🌋",
-    major: true,
-  },
-  {
-    id: "moon",
-    title: "The Moon forms",
-    date: "Around 4.5 billion years ago",
-    description:
-      "According to the leading hypothesis, a giant collision in Earth's early history produced debris that eventually formed the Moon.",
-    fact: "The Moon helps stabilize Earth's axial tilt.",
-    x: 520,
-    y: 195,
-    category: "earth",
-    symbol: "🌕",
-  },
-  {
-    id: "oceans",
-    title: "A world of water",
-    date: "Possibly by 4.4 billion years ago",
-    description:
-      "Ancient zircon minerals suggest that liquid water may have existed on Earth's surface surprisingly early.",
-    fact: "Some of the oldest evidence comes from tiny zircon crystals.",
-    x: 900,
-    y: 195,
-    category: "earth",
-    symbol: "🌊",
-    major: true,
-  },
-  {
-    id: "microbes",
-    title: "Ancient microorganisms",
-    date: "At least 3.5 billion years ago",
-    description:
-      "Some of the earliest widely accepted evidence of life points to simple microbial organisms living in ancient environments.",
-    fact: "Microbial life dominated Earth's history for billions of years.",
-    x: 1080,
-    y: 435,
-    category: "life",
-    symbol: "🦠",
-    major: true,
-  },
-  {
-    id: "oxygen",
-    title: "Oxygen transforms Earth",
-    date: "Around 2.4 billion years ago",
-    description:
-      "During the Great Oxidation Event, oxygen begins accumulating significantly in Earth's atmosphere, transforming environments and evolution.",
-    fact: "Oxygen was not always abundant in Earth's atmosphere.",
-    x: 1530,
-    y: 435,
-    category: "life",
-    symbol: "🫧",
-    major: true,
-  },
-  {
-    id: "eukaryotes",
-    title: "Complex cells",
-    date: "At least 1.6 billion years ago",
-    description:
-      "Eukaryotic cells, with complex internal structures, became a crucial part of the history of life.",
-    fact: "Plants, animals, and fungi are all eukaryotes.",
-    x: 1790,
-    y: 435,
-    category: "life",
-    symbol: "🔬",
-  },
-  {
-    id: "land-plants",
-    title: "Plants conquer land",
-    date: "Around 470 million years ago",
-    description:
-      "Early land plants begin spreading into terrestrial environments, eventually transforming landscapes and ecosystems.",
-    fact: "Early land plants were very different from modern trees.",
-    x: 1910,
-    y: 695,
-    category: "plants",
-    symbol: "🌱",
-    major: true,
-  },
-  {
-    id: "forests",
-    title: "The first forests",
-    date: "Around 385 million years ago",
-    description:
-      "Early forests alter the landscape, influence soils, and help reshape the global carbon cycle.",
-    fact: "Some early trees looked unlike anything growing today.",
-    x: 2260,
-    y: 695,
-    category: "plants",
-    symbol: "🌳",
-  },
-  {
-    id: "animals",
-    title: "Early animals",
-    date: "By around 600 million years ago",
-    description:
-      "Animals diversify in ancient oceans. Their deeper evolutionary origins are still being studied.",
-    fact: "The earliest animals lived in the sea.",
-    x: 1910,
-    y: 890,
-    category: "animals",
-    symbol: "🪼",
-    major: true,
-  },
-  {
-    id: "dinosaurs",
-    title: "The age of dinosaurs",
-    date: "Beginning around 230 million years ago",
-    description:
-      "Dinosaurs appear during the Triassic period and diversify into an extraordinary variety of forms.",
-    fact: "Birds are the surviving dinosaur lineage.",
-    x: 2240,
-    y: 890,
-    category: "animals",
-    symbol: "🦕",
-    major: true,
-  },
-  {
-    id: "humans",
-    title: "Our species emerges",
-    date: "Around 300,000 years ago",
-    description:
-      "Homo sapiens evolves in Africa, very recently compared with the immense history of life on Earth.",
-    fact: "Humans are mammals, primates, and part of the animal kingdom.",
-    x: 2430,
-    y: 1080,
-    category: "humans",
-    symbol: "👣",
-    major: true,
-  },
-];
-
 const paths: {
   id: Category;
   d: string;
@@ -215,45 +31,47 @@ const paths: {
 }[] = [
   {
     id: "earth",
-    d: "M 65 195 H 2500",
-    title: "THE CHANGING EARTH",
+    d: "M 65 195 H 6000",
+    title: "JORDEN FÖRÄNDRAS",
     x: 80,
     y: 120,
   },
   {
     id: "life",
-    d: "M 900 195 C 1020 195 930 435 1080 435 H 2500",
-    title: "THE BEGINNING OF LIFE",
-    x: 1050,
+    d: "M 850 195 C 1020 195 1050 435 1300 435 H 6000",
+    title: "LIVET UPPSTÅR",
+    x: 1240,
     y: 365,
   },
   {
     id: "plants",
-    d: "M 1790 435 C 1900 435 1790 695 1910 695 H 2500",
-    title: "THE GREEN WORLD",
-    x: 1950,
+    d: "M 3450 435 C 3600 435 3510 695 3700 695 H 6000",
+    title: "VÄXTERNAS HISTORIA",
+    x: 3740,
     y: 630,
   },
   {
     id: "animals",
-    d: "M 1790 435 C 1920 435 1780 890 1910 890 H 2500",
-    title: "THE ANIMAL KINGDOM",
-    x: 1950,
+    d: "M 3200 435 C 3370 435 3300 890 3450 890 H 6000",
+    title: "DJURENS HISTORIA",
+    x: 3500,
     y: 830,
   },
   {
     id: "humans",
-    d: "M 2240 890 C 2360 890 2320 1080 2430 1080 H 2500",
-    title: "OUR STORY",
-    x: 2330,
+    d: "M 4650 890 C 4780 890 4660 1080 4750 1080 H 6000",
+    title: "VÅR HISTORIA",
+    x: 4800,
     y: 1010,
   },
 ];
 
 const initialView = {
-  x: 0,
-  y: 0,
-  zoom: 0.65,
+  // Starta med "Jorden föds" mitt i bilden.
+  // (Världens mitt: 1250, 580; jordens position: 170, 195.)
+  x: (WORLD_WIDTH / 2 - 170) * 1.05,
+  y: (WORLD_HEIGHT / 2 - 195) * 1.05,
+  zoom: 1.05,
 };
 
 function clamp(value: number, min: number, max: number) {
@@ -380,11 +198,11 @@ export default function TimelinePage() {
 
           <div>
             <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#9B8972]">
-              The Unfolding Universe
+              Hur allt började
             </p>
 
             <h1 className="mt-1 text-lg font-semibold tracking-tight text-[#34473C] sm:text-2xl">
-              The Story of Earth
+              Jordens historia
             </h1>
           </div>
         </div>
@@ -394,8 +212,8 @@ export default function TimelinePage() {
           className="inline-flex items-center gap-2 rounded-full border border-[#DCD4C6] px-4 py-2.5 text-xs font-semibold text-[#6C7066] transition-colors hover:bg-[#EFE8DB]"
         >
           <ArrowLeft size={15} />
-          <span className="hidden sm:inline">Back to the universe</span>
-          <span className="sm:hidden">Back</span>
+          <span className="hidden sm:inline">Tillbaka till universum</span>
+          <span className="sm:hidden">Tillbaka</span>
         </Link>
       </header>
 
@@ -405,12 +223,12 @@ export default function TimelinePage() {
           <BookOpen size={17} className="text-[#9D896D]" strokeWidth={1.5} />
 
           <p className="text-xs leading-relaxed text-[#77786C]">
-            An illustrated atlas of our planet&apos;s extraordinary history.
+            En illustrerad resa genom jordens fantastiska historia.
           </p>
         </div>
 
         <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-[#A29480] md:block">
-          Drag to explore · Scroll to zoom
+          Dra för att utforska · Scrolla för att zooma
         </span>
       </div>
 
@@ -503,6 +321,35 @@ export default function TimelinePage() {
               );
             })}
 
+            {/* Alla fem grenar fortsätter till nutid. */}
+            {paths.map((path) => {
+              const y =
+                path.id === "earth"
+                  ? 195
+                  : path.id === "life"
+                    ? 435
+                    : path.id === "plants"
+                      ? 695
+                      : path.id === "animals"
+                        ? 890
+                        : 1080;
+              return (
+                <g key={`${path.id}-today`}>
+                  <circle
+                    cx="6000"
+                    cy={y}
+                    r="10"
+                    fill={palette[path.id].color}
+                    stroke="#FFFCF6"
+                    strokeWidth="4"
+                  />
+                  <text x="6018" y={y + 6} fontSize="16" fill="#77786C">
+                    IDAG
+                  </text>
+                </g>
+              );
+            })}
+
             {/* Subtle botanical decoration */}
             <g fill="none" stroke="#A5B394" strokeWidth="2" opacity="0.5">
               <path d="M 2050 570 Q 2070 535 2080 505" />
@@ -525,7 +372,7 @@ export default function TimelinePage() {
                 key={event.id}
                 type="button"
                 onClick={() => selectMilestone(event)}
-                aria-label={`Read about ${event.title}`}
+                aria-label={`Läs om ${event.title}`}
                 className="group absolute flex w-[190px] -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center transition-opacity duration-300"
                 style={{
                   left: event.x,
@@ -568,7 +415,7 @@ export default function TimelinePage() {
         {/* Floating museum legend */}
         <div className="absolute bottom-5 left-4 z-10 hidden rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-5 shadow-[0_12px_35px_rgba(75,60,43,0.08)] backdrop-blur-sm lg:block">
           <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[#9D8A71]">
-            Explore the branches
+            Utforska grenarna
           </p>
 
           <div className="space-y-3">
@@ -594,7 +441,7 @@ export default function TimelinePage() {
           <button
             type="button"
             onClick={() => zoomAt(1 / 1.25)}
-            aria-label="Zoom out"
+            aria-label="Zooma ut"
             className="rounded-xl p-3 text-[#6F7769] transition-colors hover:bg-[#EEE9DE]"
           >
             <Minus size={19} />
@@ -607,7 +454,7 @@ export default function TimelinePage() {
           <button
             type="button"
             onClick={() => zoomAt(1.25)}
-            aria-label="Zoom in"
+            aria-label="Zooma in"
             className="rounded-xl p-3 text-[#6F7769] transition-colors hover:bg-[#EEE9DE]"
           >
             <Plus size={19} />
@@ -618,7 +465,7 @@ export default function TimelinePage() {
           <button
             type="button"
             onClick={() => setView(initialView)}
-            aria-label="Reset timeline view"
+            aria-label="Återställ tidslinjens vy"
             className="rounded-xl p-3 text-[#6F7769] transition-colors hover:bg-[#EEE9DE]"
           >
             <Maximize2 size={18} />
@@ -631,12 +478,12 @@ export default function TimelinePage() {
         <div className="flex items-center gap-2 text-[#938777]">
           <Leaf size={14} strokeWidth={1.5} />
           <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">
-            An interactive natural history atlas
+            En interaktiv resa genom naturens historia
           </span>
         </div>
 
         <span className="hidden text-[10px] text-[#A49A8C] sm:block">
-          A journey through deep time
+          En resa genom miljarder år
         </span>
       </footer>
 
@@ -652,7 +499,7 @@ export default function TimelinePage() {
             <button
               type="button"
               onClick={() => setSelected(null)}
-              aria-label="Close information panel"
+              aria-label="Stäng informationsrutan"
               className="absolute right-5 top-5 z-10 rounded-full border border-[#E4DCCE] bg-[#FFFCF6] p-2 text-[#726D61] transition-colors hover:bg-[#F0E8DA]"
             >
               <X size={19} />
@@ -693,7 +540,7 @@ export default function TimelinePage() {
               <div className="mt-7 rounded-xl border border-[#E6DDCD] bg-[#F6F0E5] p-5">
                 <p className="mb-2 flex items-center gap-2 text-xs font-bold text-[#7B8D6A]">
                   <Leaf size={15} />
-                  Did you know?
+                  Visste du att?
                 </p>
 
                 <p className="text-sm leading-6 text-[#686B60]">
@@ -701,14 +548,13 @@ export default function TimelinePage() {
                 </p>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setSelected(null)}
+              <Link
+                href={`/timeline/${selected.id}`}
                 className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#657D69] transition-colors hover:text-[#344F3B]"
               >
-                Continue exploring
+                Fortsätt utforska
                 <ArrowRight size={16} />
-              </button>
+              </Link>
             </div>
           </section>
         </div>
