@@ -145,6 +145,7 @@ export default function TimelinePage() {
       ? swedishHistoryBoundaries()
       : geologicalBoundaries();
   const [showMap, setShowMap] = useState(true);
+  const [overviewOpen, setOverviewOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileMapOpen, setMobileMapOpen] = useState(false);
   const [showTouchHint, setShowTouchHint] = useState(true);
@@ -157,6 +158,22 @@ export default function TimelinePage() {
 
   const [viewportSize, setViewportSize] = useState({ width: 900, height: 600 });
 
+  // The small floating label follows the center of the viewport while
+  // the world pans and zooms. It only appears for Swedish history.
+  const currentHistoricalPeriod =
+    periodMode === "history"
+      ? periods.find((period) => {
+          const left =
+            viewportSize.width / 2 +
+            view.x +
+            positionX(period.startX, view.zoom);
+          const right =
+            viewportSize.width / 2 + view.x + positionX(period.endX, view.zoom);
+          return (
+            left <= viewportSize.width / 2 && right > viewportSize.width / 2
+          );
+        })
+      : undefined;
   const viewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -265,6 +282,26 @@ export default function TimelinePage() {
       y: -branchY.humans,
     };
     setMobileMenuOpen(false);
+  }
+
+  // Overview is a true fit-to-screen map. At this scale milestone labels
+  // cannot be readable, so show dots and let a tap zoom into that region.
+  function openOverview() {
+    setSelected(null);
+    setMobileMenuOpen(false);
+    setMobileMapOpen(false);
+    setOverviewOpen(true);
+  }
+
+  function jumpFromOverview(x: number, y: number) {
+    const current = targetViewRef.current;
+    const zoom = Math.max(1.05, current.zoom);
+    targetViewRef.current = {
+      zoom,
+      x: -positionX(x, zoom),
+      y: -y,
+    };
+    setOverviewOpen(false);
   }
 
   function resetView() {
@@ -440,7 +477,7 @@ export default function TimelinePage() {
 
           <div>
             <p className="hidden text-[9px] font-bold uppercase tracking-[0.3em] text-[#9B8972] sm:block">
-              Hur allt fortsatte
+              Hur allt började
             </p>
 
             <h1 className="truncate text-base font-semibold tracking-tight text-[#34473C] sm:mt-1 sm:text-2xl">
@@ -612,7 +649,7 @@ export default function TimelinePage() {
             aria-label={
               mobileMapOpen ? "Dölj översiktskartan" : "Visa översiktskartan"
             }
-            className="rounded-full border border-[#DED7CA] bg-[#FFFCF6]/95 p-2.5 text-[#435D4D] shadow-md"
+            className="rounded-full border border-[#DED7CA] bg-[#FFFCF6]/95 p-2.5 text-[#435D4D] shadow-md hidden sm:flex"
           >
             {mobileMapOpen ? <X size={18} /> : <MapIcon size={18} />}
           </button>
@@ -947,6 +984,19 @@ export default function TimelinePage() {
           </div>
         )}
 
+        {/* Floating Swedish historical-period label. No extra layout height. */}
+        {currentHistoricalPeriod && (
+          <div
+            className="pointer-events-none absolute left-1/2 top-[68px] z-[16] -translate-x-1/2 whitespace-nowrap rounded-full border border-[#D8CEBF] bg-[#FFFCF6]/95 px-4 py-2 text-center shadow-[0_5px_18px_rgba(65,55,40,0.12)] backdrop-blur-md sm:top-4"
+            role="status"
+            aria-label={`Historisk period: ${currentHistoricalPeriod.name}`}
+          >
+            <span className="text-[10px] font-bold uppercase tracking-[0.17em] text-[#526B5B]">
+              {currentHistoricalPeriod.name}
+            </span>
+          </div>
+        )}
+
         {/* Clickable museum legend */}
         <div className="absolute bottom-5 left-4 z-10 hidden rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-4 shadow-[0_12px_35px_rgba(75,60,43,0.08)] backdrop-blur-sm lg:block">
           <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#9D8A71]">
@@ -1040,7 +1090,7 @@ export default function TimelinePage() {
             className={`absolute right-3 top-16 z-20 w-[min(75vw,240px)] rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-3 shadow-lg sm:right-4 sm:top-4 sm:z-10 sm:w-[260px] ${mobileMapOpen ? "block" : "hidden sm:block"}`}
             onPointerDown={(e) => e.stopPropagation()}
           >
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9D8A71]">
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9D8A71] hidden sm:block">
               Översiktskarta
             </p>
             <svg
@@ -1113,6 +1163,153 @@ export default function TimelinePage() {
           </div>
         )}
 
+        {/* Entire timeline overview: readable branches, dots for milestones.
+            Tap a location to travel there at normal exploration zoom. */}
+        {overviewOpen && (
+          <div
+            className="absolute inset-0 z-30 flex flex-col bg-[#F8F5EE]/98 px-4 pb-5 pt-5 sm:px-10 sm:pt-8"
+            data-timeline-ui
+            onPointerDown={(event) => event.stopPropagation()}
+            onWheel={(event) => event.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-semibold text-[#34473C]">
+                  Hela tidslinjen
+                </h2>
+                <p className="mt-1 text-xs text-[#82796C]">
+                  Tryck på en plats för att utforska den närmare
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setOverviewOpen(false)}
+                aria-label="Stäng översiktskartan"
+                className="rounded-full border border-[#DED7CA] bg-[#FFFCF6] p-3 text-[#536F64]"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="flex min-h-0 flex-1 flex-col justify-center gap-5 sm:gap-7">
+              <svg
+                viewBox="0 0 1000 480"
+                preserveAspectRatio="none"
+                className="h-[min(42vh,380px)] min-h-[190px] w-full shrink-0 touch-manipulation overflow-visible rounded-2xl border border-[#E5DDD0] bg-[#FFFCF6] p-3 sm:h-[min(55vh,480px)]"
+                role="img"
+                aria-label="Hela tidslinjen med fem utvecklingsgrenar. Tryck för att förflytta dig."
+                onClick={(event) => {
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  // preserveAspectRatio="none": the complete world fills the
+                  // available mobile screen width and height.
+                  const svgX =
+                    ((event.clientX - rect.left) / rect.width) * 1000;
+                  const svgY = ((event.clientY - rect.top) / rect.height) * 480;
+                  if (svgX < 0 || svgX > 1000 || svgY < 0 || svgY > 480) return;
+                  jumpFromOverview(
+                    -850 + (svgX / 1000) * (END_X + 850),
+                    (svgY / 480) * WORLD_HEIGHT,
+                  );
+                }}
+              >
+                {branches.map((category) => {
+                  const y = (branchY[category] / WORLD_HEIGHT) * 480;
+                  const first = Math.min(
+                    ...milestones
+                      .filter((m) => m.category === category)
+                      .map((m) => m.x),
+                  );
+                  const parent: Category =
+                    category === "life"
+                      ? "earth"
+                      : category === "humans"
+                        ? "animals"
+                        : "life";
+                  const parentY = (branchY[parent] / WORLD_HEIGHT) * 480;
+                  const toSvgX = (x: number) =>
+                    ((x + 850) / (END_X + 850)) * 1000;
+                  const start = toSvgX(first - 380);
+                  const landing = toSvgX(first - 100);
+                  const d =
+                    category === "earth"
+                      ? `M 0 ${y} H 1000`
+                      : `M ${start} ${parentY} C ${start + 22} ${parentY}, ${landing - 22} ${y}, ${landing} ${y} H 1000`;
+                  return (
+                    <g key={category}>
+                      <path
+                        d={d}
+                        fill="none"
+                        stroke="#FFFCF6"
+                        strokeWidth="9"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d={d}
+                        fill="none"
+                        stroke={palette[category].color}
+                        strokeWidth="4"
+                        strokeLinecap="round"
+                      />
+                    </g>
+                  );
+                })}
+                {milestones.map((m) => (
+                  <circle
+                    key={m.id}
+                    cx={((m.x + 850) / (END_X + 850)) * 1000}
+                    cy={(m.y / WORLD_HEIGHT) * 480}
+                    r={m.major ? 6 : 3.5}
+                    fill={
+                      m.id.startsWith("sweden-")
+                        ? "#2463A0"
+                        : palette[m.category].color
+                    }
+                    stroke={m.major ? "#FFFCF6" : "none"}
+                    strokeWidth="1.5"
+                  >
+                    <title>
+                      {m.title} — {m.date}
+                    </title>
+                  </circle>
+                ))}
+              </svg>
+
+              {/* Readable legend stays outside the SVG, so mobile browsers
+                  never shrink the labels along with the full timeline. */}
+              <div className="rounded-2xl border border-[#E5DDD0] bg-[#FFFCF6] p-3 sm:p-5">
+                <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#9B8972]">
+                  Tidslinjens färger
+                </p>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+                  {branches.map((category) => (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => {
+                        setOverviewOpen(false);
+                        travelToBranch(category);
+                      }}
+                      className="flex min-h-11 items-center gap-2 rounded-xl px-2 py-2 text-left transition-colors hover:bg-[#F3EEE5] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#657D69]"
+                    >
+                      <span
+                        className="h-1 w-7 shrink-0 rounded-full"
+                        style={{ backgroundColor: palette[category].color }}
+                        aria-hidden="true"
+                      />
+                      <span className="text-[11px] font-semibold leading-4 text-[#536355] sm:text-xs">
+                        {palette[category].label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                {/* <p className="mt-3 text-[11px] leading-5 text-[#82796C]">
+                  Tryck på kartan för att resa till en plats, eller välj en färg
+                  för att följa en gren.
+                </p> */}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Zoom controls */}
         <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1 rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-1 shadow-[0_12px_35px_rgba(75,60,43,0.08)] backdrop-blur-sm sm:bottom-7 sm:right-7 sm:gap-2 sm:p-2">
           <button
@@ -1141,8 +1338,8 @@ export default function TimelinePage() {
 
           <button
             type="button"
-            onClick={resetView}
-            aria-label="Återställ tidslinjens vy"
+            onClick={openOverview}
+            aria-label="Visa hela tidslinjen"
             className="rounded-xl p-2.5 text-[#6F7769] transition-colors hover:bg-[#EEE9DE] sm:p-3"
           >
             <Maximize2 size={18} />
