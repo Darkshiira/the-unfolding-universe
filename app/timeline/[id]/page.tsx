@@ -1,3 +1,5 @@
+import MilestoneArticle from "../components/MilestoneArticle";
+import { getArticle } from "../content";
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -130,6 +132,29 @@ async function MilestoneContent({ params }: Props) {
   const { id } = await params;
   const milestone = milestones.find((item) => item.id === id);
   if (!milestone) notFound();
+
+  // Rich content is opt-in: every other milestone keeps its existing page.
+  const richArticle = getArticle(id);
+  if (richArticle) {
+    return (
+      <main className="min-h-svh bg-[#F8F5EE] text-[#34473C]">
+        <header className="border-b border-[#DDD8CD] bg-[#FBF9F3] px-5 py-5 sm:px-10">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
+            <Link
+              href="/timeline"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#657D69] hover:text-[#344F3B]"
+            >
+              <ArrowLeft size={17} /> Tillbaka till tidslinjen
+            </Link>
+            <span className="hidden text-[10px] font-bold uppercase tracking-[0.24em] text-[#9B8972] sm:block">
+              HUR ALLT FORTSATTE
+            </span>
+          </div>
+        </header>
+        <MilestoneArticle milestone={milestone} article={richArticle} />
+      </main>
+    );
+  }
 
   const colors = palette[milestone.category];
   const story = stories[id];
