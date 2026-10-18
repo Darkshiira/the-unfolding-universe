@@ -13,20 +13,12 @@ export const GEOLOGICAL_ERAS = [
 export function getMilestoneEra(milestone: Milestone): string {
   const age = milestone.ageMa;
   if (age === undefined) return "Datering saknas";
-  const era = GEOLOGICAL_ERAS.find(
-    (item) => age <= item.olderMa && age > item.youngerMa,
-  );
-  return era
-    ? era.name
-    : age === 0
-      ? "Nutid (Kenozoikum)"
-      : "Utanför jordens geologiska tidsindelning";
+  const era = GEOLOGICAL_ERAS.find((item) => age <= item.olderMa && age > item.youngerMa);
+  return era ? era.name : age === 0 ? "Nutid (Kenozoikum)" : "Utanför jordens geologiska tidsindelning";
 }
 
 export function geologicalBoundaries() {
   return GEOLOGICAL_ERAS.map((era) => ({
-    ...era,
-    startX: ageToX(era.olderMa),
-    endX: ageToX(era.youngerMa),
+    ...era, startX: ageToX(era.olderMa), endX: ageToX(era.youngerMa),
   }));
 }

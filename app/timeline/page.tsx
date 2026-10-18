@@ -10,6 +10,7 @@ import {
 } from "react";
 import { getVisibleMilestoneIds } from "./timeline-zoom";
 import { geologicalBoundaries, getMilestoneEra } from "./timeline-eras";
+import { swedishHistoryBoundaries } from "./timeline-history";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -37,10 +38,10 @@ import {
 // A spatial timeline: milestones move apart, but icons and text never scale.
 const EARTH_X = milestones.find((m) => m.id === "earth")?.x ?? 400;
 const EARTH_Y = milestones.find((m) => m.id === "earth")?.y ?? 195;
-const END_X = 8600;
+const END_X = 12000;
 const START_ZOOM = 1.05;
 const MIN_ZOOM = 0.35;
-const MAX_ZOOM = 4;
+const MAX_ZOOM = 5;
 
 // Change the *distance* between events, not their size.
 function spread(zoom: number) {
@@ -135,7 +136,13 @@ export default function TimelinePage() {
   const [activeBranch, setActiveBranch] = useState<Category | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [showEras, setShowEras] = useState(true);
+  const [periodMode, setPeriodMode] = useState<"geology" | "history" | "none">(
+    "geology",
+  );
+  const periods =
+    periodMode === "history"
+      ? swedishHistoryBoundaries()
+      : geologicalBoundaries();
   const [showMap, setShowMap] = useState(true);
   const [viewportSize, setViewportSize] = useState({ width: 900, height: 600 });
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -369,12 +376,32 @@ export default function TimelinePage() {
           </button>
           <button
             type="button"
-            onClick={() => setShowEras((v) => !v)}
-            aria-pressed={showEras}
-            className={`flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold ${showEras ? "border-[#839B70] bg-[#E5EDDD] text-[#48634D]" : "border-[#DDD4C6] text-[#66766B] hover:bg-white"}`}
+            onClick={() =>
+              setPeriodMode((v) => (v === "geology" ? "none" : "geology"))
+            }
+            aria-pressed={periodMode === "geology"}
+            className={`flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold ${periodMode === "geology" ? "border-[#839B70] bg-[#E5EDDD] text-[#48634D]" : "border-[#DDD4C6] text-[#66766B] hover:bg-white"}`}
           >
             <Layers3 size={15} />{" "}
             <span className="hidden sm:inline">Geologiska tider</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setPeriodMode((v) => (v === "history" ? "none" : "history"));
+              const nextZoom = Math.max(targetViewRef.current.zoom, 4);
+              targetViewRef.current = {
+                zoom: nextZoom,
+                x: -positionX(7850, nextZoom),
+                y: -branchY.humans,
+              };
+            }}
+            aria-pressed={periodMode === "history"}
+            className={`flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold ${periodMode === "history" ? "border-[#839B70] bg-[#E5EDDD] text-[#48634D]" : "border-[#DDD4C6] text-[#66766B] hover:bg-white"}`}
+          >
+            <BookOpen size={15} />
+            <span className="hidden sm:inline">Svenska historiska tider</span>
+            <span className="sm:hidden">Historia</span>
           </button>
           <button
             type="button"
@@ -450,13 +477,13 @@ export default function TimelinePage() {
             transform: `translate(${view.x}px, ${view.y}px)`,
           }}
         >
-          {/* Geological periods fill the ENTIRE world height and expand with zoom. */}
-          {showEras && (
+          {/* Geological or Swedish/Nordic historical periods fill the world height. */}
+          {periodMode !== "none" && (
             <div
               className="pointer-events-none absolute inset-0 overflow-hidden"
               aria-hidden="true"
             >
-              {geologicalBoundaries().map((era) => {
+              {periods.map((era) => {
                 const left = positionX(era.startX, view.zoom);
                 const right = positionX(era.endX, view.zoom);
                 return (
@@ -561,6 +588,10 @@ export default function TimelinePage() {
           {/* Each medallion has a fixed screen size. Its position moves. */}
           {milestones.map((event) => {
             const colors = palette[event.category];
+            const isSwedish = event.id.startsWith("sweden-");
+
+            const pinColor = isSwedish ? "#2463A0" : colors.color;
+            const pinBackground = isSwedish ? "#FFF1BD" : colors.light;
             const visible = visibleMilestoneIds.has(event.id);
             const dimmed =
               activeBranch !== null && activeBranch !== event.category;
@@ -583,18 +614,23 @@ export default function TimelinePage() {
                 <div
                   className="relative flex size-[92px] items-center justify-center rounded-full border-[5px] border-[#FBF9F3] shadow-[0_5px_20px_rgba(80,64,44,0.14)] transition-transform duration-300 group-hover:scale-110"
                   style={{
-                    backgroundColor: colors.light,
-                    outline: `2px solid ${colors.color}`,
+                    backgroundColor: pinBackground,
+                    outline: `3px solid ${pinColor}`,
                   }}
                 >
                   <span className="text-[43px]" aria-hidden="true">
                     {event.symbol}
                   </span>
+
+                  {/* Small marker beneath the milestone */}
                   <span
                     className="absolute -bottom-2 left-1/2 size-4 -translate-x-1/2 rounded-full border-[3px] border-[#FBF9F3]"
-                    style={{ backgroundColor: colors.color }}
+                    style={{
+                      backgroundColor: isSwedish ? "#E8BA36" : colors.color,
+                    }}
                   />
                 </div>
+
                 <span className="mt-5 rounded-md bg-[#F8F5EE]/90 px-2 py-1 text-[16px] font-bold leading-snug text-[#3E463D]">
                   {event.title}
                 </span>
@@ -606,8 +642,8 @@ export default function TimelinePage() {
           })}
         </div>
 
-        {/* Geological period labels stay visible while panning vertically. */}
-        {showEras && (
+        {/* Selected period labels stay visible while panning vertically. */}
+        {periodMode !== "none" && (
           <div
             className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-11 overflow-hidden"
             style={{
@@ -615,7 +651,7 @@ export default function TimelinePage() {
                 "linear-gradient(to bottom, rgba(248,245,238,.9), transparent)",
             }}
           >
-            {geologicalBoundaries().map((era) => {
+            {periods.map((era) => {
               const left =
                 viewportSize.width / 2 +
                 view.x +
@@ -627,6 +663,7 @@ export default function TimelinePage() {
               if (right < 0 || left > viewportSize.width) return null;
               const clippedLeft = Math.max(0, left);
               const clippedRight = Math.min(viewportSize.width, right);
+              if (clippedRight - clippedLeft < 65) return null;
               return (
                 <span
                   key={era.name}
@@ -752,18 +789,30 @@ export default function TimelinePage() {
                 );
               }}
             >
-              {branches.map((category) => (
-                <line
+              {/* A connected, museum-style miniature of the evolutionary tree. */}
+              {(
+                [
+                  ["earth", "M 5 18 H 235"],
+                  ["life", "M 30 18 C 52 18, 45 39, 70 39 H 235"],
+                  ["plants", "M 95 39 C 118 39, 110 61, 135 61 H 235"],
+                  ["animals", "M 110 39 C 140 39, 132 83, 160 83 H 235"],
+                  ["humans", "M 185 83 C 205 83, 198 103, 218 103 H 235"],
+                ] as const
+              ).map(([category, d]) => (
+                <path
                   key={category}
-                  x1="5"
-                  x2="235"
-                  y1={(branchY[category] / WORLD_HEIGHT) * 110}
-                  y2={(branchY[category] / WORLD_HEIGHT) * 110}
+                  d={d}
+                  fill="none"
                   stroke={palette[category].color}
-                  strokeWidth="3"
+                  strokeWidth="2.5"
                   strokeLinecap="round"
+                  strokeLinejoin="round"
+                  opacity={
+                    activeBranch && activeBranch !== category ? 0.2 : 0.9
+                  }
                 />
               ))}
+
               <rect
                 x={clamp(
                   (originalX(-view.x - viewportSize.width / 2, view.zoom) /
