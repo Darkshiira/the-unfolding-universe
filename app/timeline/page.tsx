@@ -13,6 +13,7 @@ import { geologicalBoundaries, getMilestoneEra } from "./timeline-eras";
 import { swedishHistoryBoundaries } from "./timeline-history";
 import Link from "next/link";
 import Image from "next/image";
+import { milestoneVisualX } from "./timeline-layout";
 import {
   milestones,
   palette,
@@ -909,7 +910,7 @@ export default function TimelinePage() {
                 aria-hidden={!visible}
                 className="group absolute flex w-[190px] -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center transition-opacity duration-200"
                 style={{
-                  left: positionX(event.x, view.zoom),
+                  left: positionX(milestoneVisualX(event), view.zoom),
                   top: event.y,
                   opacity: visible ? (dimmed ? 0.12 : 1) : 0,
                   pointerEvents: visible && !dimmed ? "auto" : "none",
