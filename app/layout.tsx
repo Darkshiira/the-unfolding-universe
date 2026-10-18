@@ -8,6 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://the-unfolding-universe.vercel.app/"),
+
   title: {
     default: "The Unfolding Universe – Från Big Bang till livet på jorden",
     template: "%s | The Unfolding Universe",
