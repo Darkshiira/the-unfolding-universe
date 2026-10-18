@@ -26,12 +26,13 @@ import {
   ArrowRight,
   BookOpen,
   Search,
-  Map,
+  Map as MapIcon,
   Layers3,
   Leaf,
   Maximize2,
   Minus,
   Plus,
+  Menu,
   X,
 } from "lucide-react";
 
@@ -80,7 +81,7 @@ function branchPath(category: Category, zoom: number) {
   const y = branchY[category];
   const end = positionX(END_X, zoom);
   if (category === "earth") {
-    return `M ${positionX(65, zoom)} ${y} H ${end}`;
+    return `M ${positionX(-850, zoom)} ${y} H ${end}`;
   }
 
   const first = Math.min(
@@ -144,7 +145,18 @@ export default function TimelinePage() {
       ? swedishHistoryBoundaries()
       : geologicalBoundaries();
   const [showMap, setShowMap] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMapOpen, setMobileMapOpen] = useState(false);
+  const [showTouchHint, setShowTouchHint] = useState(true);
+
+  // Only a first-visit visual hint; never move the timeline without consent.
+  useEffect(() => {
+    const timer = window.setTimeout(() => setShowTouchHint(false), 7500);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   const [viewportSize, setViewportSize] = useState({ width: 900, height: 600 });
+
   const viewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -182,6 +194,7 @@ export default function TimelinePage() {
       zoom,
     };
     setSearchOpen(false);
+    setMobileMenuOpen(false);
     setQuery("");
     setSelected(milestone);
   }
@@ -196,6 +209,7 @@ export default function TimelinePage() {
         null as Milestone | null,
       );
     if (!first) return;
+    setMobileMenuOpen(false);
     const current = targetViewRef.current;
     targetViewRef.current = {
       ...current,
@@ -230,6 +244,34 @@ export default function TimelinePage() {
   } | null>(null);
 
   const ignoreClickRef = useRef(false);
+  const pointersRef = useRef(new Map<number, { x: number; y: number }>());
+  const pinchRef = useRef<{
+    distance: number;
+    zoom: number;
+    focusWorldX: number;
+    focusWorldY: number;
+    centerX: number;
+    centerY: number;
+    viewX: number;
+    viewY: number;
+  } | null>(null);
+
+  function toggleHistory() {
+    setPeriodMode((v) => (v === "history" ? "none" : "history"));
+    const nextZoom = Math.max(targetViewRef.current.zoom, 4);
+    targetViewRef.current = {
+      zoom: nextZoom,
+      x: -positionX(7850, nextZoom),
+      y: -branchY.humans,
+    };
+    setMobileMenuOpen(false);
+  }
+
+  function resetView() {
+    targetViewRef.current = initialView;
+    setActiveBranch(null);
+    setMobileMenuOpen(false);
+  }
 
   function zoomAt(factor: number, px = 0) {
     const current = targetViewRef.current;
@@ -250,42 +292,89 @@ export default function TimelinePage() {
   }
 
   function onPointerDown(event: PointerEvent<HTMLDivElement>) {
-    if (event.button !== 0) return;
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    if (
+      (event.target as Element).closest("button, a, input, [data-timeline-ui]")
+    )
+      return;
 
-    // Let interactive controls receive their own clicks.
-    if ((event.target as Element).closest("button, a")) {
+    if (event.pointerType === "touch") setShowTouchHint(false);
+    pointersRef.current.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY,
+    });
+    event.currentTarget.setPointerCapture(event.pointerId);
+
+    if (pointersRef.current.size === 2) {
+      const [a, b] = Array.from(pointersRef.current.values());
+      const rect = event.currentTarget.getBoundingClientRect();
+      const cx = (a.x + b.x) / 2 - rect.left - rect.width / 2;
+      const cy = (a.y + b.y) / 2 - rect.top - rect.height / 2;
+      const current = targetViewRef.current;
+      pinchRef.current = {
+        distance: Math.hypot(a.x - b.x, a.y - b.y),
+        zoom: current.zoom,
+        focusWorldX: originalX(cx - current.x, current.zoom),
+        focusWorldY: cy - current.y,
+        centerX: cx,
+        centerY: cy,
+        viewX: current.x,
+        viewY: current.y,
+      };
+      dragRef.current = null;
+      ignoreClickRef.current = true;
+      setDragging(true);
       return;
     }
 
-    dragRef.current = {
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      viewX: targetViewRef.current.x,
-      viewY: targetViewRef.current.y,
-      moved: false,
-    };
-
-    event.currentTarget.setPointerCapture(event.pointerId);
+    if (pointersRef.current.size === 1) {
+      dragRef.current = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        viewX: targetViewRef.current.x,
+        viewY: targetViewRef.current.y,
+        moved: false,
+      };
+    }
   }
 
   function onPointerMove(event: PointerEvent<HTMLDivElement>) {
-    const drag = dragRef.current;
+    if (!pointersRef.current.has(event.pointerId)) return;
+    pointersRef.current.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY,
+    });
 
-    if (!drag || drag.pointerId !== event.pointerId) {
+    if (pointersRef.current.size === 2 && pinchRef.current) {
+      const [a, b] = Array.from(pointersRef.current.values());
+      const rect = event.currentTarget.getBoundingClientRect();
+      const cx = (a.x + b.x) / 2 - rect.left - rect.width / 2;
+      const cy = (a.y + b.y) / 2 - rect.top - rect.height / 2;
+      const pinch = pinchRef.current;
+      const distance = Math.hypot(a.x - b.x, a.y - b.y);
+      const nextZoom = clamp(
+        pinch.zoom * (distance / Math.max(1, pinch.distance)),
+        MIN_ZOOM,
+        MAX_ZOOM,
+      );
+      targetViewRef.current = {
+        zoom: nextZoom,
+        x: cx - positionX(pinch.focusWorldX, nextZoom),
+        y: cy - pinch.focusWorldY,
+      };
       return;
     }
 
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId || pinchRef.current) return;
     const dx = event.clientX - drag.startX;
     const dy = event.clientY - drag.startY;
-
     if (Math.abs(dx) + Math.abs(dy) > 5) {
       drag.moved = true;
       setDragging(true);
     }
-
     if (!drag.moved) return;
-
     targetViewRef.current = {
       ...targetViewRef.current,
       x: drag.viewX + dx,
@@ -295,15 +384,19 @@ export default function TimelinePage() {
 
   function onPointerUp(event: PointerEvent<HTMLDivElement>) {
     const drag = dragRef.current;
-
-    if (!drag || drag.pointerId !== event.pointerId) {
-      return;
+    if (drag?.pointerId === event.pointerId) {
+      ignoreClickRef.current = drag.moved;
     }
-
-    ignoreClickRef.current = drag.moved;
-    dragRef.current = null;
-    setDragging(false);
-
+    pointersRef.current.delete(event.pointerId);
+    if (pinchRef.current) {
+      ignoreClickRef.current = true;
+      pinchRef.current = null;
+      // Don't start a new drag with the remaining finger.
+      dragRef.current = null;
+    } else if (drag?.pointerId === event.pointerId) {
+      dragRef.current = null;
+    }
+    if (pointersRef.current.size === 0) setDragging(false);
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
@@ -320,26 +413,37 @@ export default function TimelinePage() {
 
   return (
     <main className="timeline-page-enter relative flex h-svh flex-col overflow-hidden bg-[#F8F5EE] text-[#343E35]">
+      <style>{`
+        @keyframes timeline-swipe-hint {
+          0%, 100% { transform: translateX(-9px); opacity: .45; }
+          50% { transform: translateX(9px); opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          [aria-hidden="true"] > span[style*="timeline-swipe-hint"] {
+            animation: none !important;
+          }
+        }
+      `}</style>
       {/* Museum-style header */}
-      <header className="relative z-30 flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-[#DDD8CD] bg-[#FBF9F3]/95 px-5 py-4 backdrop-blur-md sm:px-10">
-        <div className="flex items-center gap-4">
-          <div className="relative size-12 shrink-0 overflow-hidden rounded-full border border-[#D8D0BF] bg-[#F1E9D9] sm:size-14">
+      <header className="relative z-30 flex shrink-0 items-center justify-between gap-2 border-b border-[#DDD8CD] bg-[#FBF9F3]/95 px-3 py-2 backdrop-blur-md sm:gap-4 sm:px-10 sm:py-4">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-4">
+          <div className="relative size-10 shrink-0 overflow-hidden rounded-full bg-[#F1E9D9] sm:size-14">
             <Image
               src="/images/explorers-compass.png"
               alt="Gyllene kompass med gröna blad"
               fill
               priority
-              sizes="(max-width: 640px) 48px, 56px"
+              sizes="(max-width: 640px) 40px, 56px"
               className="object-cover"
             />
           </div>
 
           <div>
-            <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#9B8972]">
-              Hur allt började
+            <p className="hidden text-[9px] font-bold uppercase tracking-[0.3em] text-[#9B8972] sm:block">
+              Hur allt fortsatte
             </p>
 
-            <h1 className="mt-1 text-lg font-semibold tracking-tight text-[#34473C] sm:text-2xl">
+            <h1 className="truncate text-base font-semibold tracking-tight text-[#34473C] sm:mt-1 sm:text-2xl">
               Jordens historia
             </h1>
           </div>
@@ -347,16 +451,15 @@ export default function TimelinePage() {
 
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-full border border-[#DCD4C6] px-4 py-2.5 text-xs font-semibold text-[#6C7066] transition-colors hover:bg-[#EFE8DB]"
+          className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#DCD4C6] p-2.5 text-xs font-semibold text-[#6C7066] transition-colors hover:bg-[#EFE8DB] sm:px-4"
         >
           <ArrowLeft size={15} />
           <span className="hidden sm:inline">Tillbaka till universum</span>
-          <span className="sm:hidden">Tillbaka</span>
         </Link>
       </header>
 
       {/* Intro strip */}
-      <div className="relative z-20 flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#E5DFD3] bg-[#F5F0E6] px-5 py-3 sm:px-10">
+      <div className="relative z-20 hidden shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#E5DFD3] bg-[#F5F0E6] px-5 py-3 sm:flex sm:px-10">
         <div className="flex items-center gap-3">
           <BookOpen size={17} className="text-[#9D896D]" strokeWidth={1.5} />
 
@@ -409,14 +512,14 @@ export default function TimelinePage() {
             aria-pressed={showMap}
             className="flex items-center gap-2 rounded-full border border-[#DDD4C6] px-3 py-2 text-xs font-semibold text-[#66766B] hover:bg-white"
           >
-            <Map size={15} />{" "}
+            <MapIcon size={15} />{" "}
             <span className="hidden sm:inline">Översiktskarta</span>
           </button>
         </div>
       </div>
 
       {/* Branch navigation on smaller screens */}
-      <div className="relative z-20 flex shrink-0 gap-2 overflow-x-auto border-b border-[#E5DFD3] bg-[#FBF9F3] px-4 py-2 lg:hidden">
+      <div className="relative z-20 hidden shrink-0 gap-2 overflow-x-auto border-b border-[#E5DFD3] bg-[#FBF9F3] px-4 py-2 sm:flex lg:hidden">
         {branches.map((category) => (
           <button
             key={category}
@@ -455,6 +558,140 @@ export default function TimelinePage() {
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       >
+        {/* Short, accessible gesture hint for first-time mobile visitors. */}
+        {showTouchHint && !mobileMenuOpen && !mobileMapOpen && !selected && (
+          <div
+            className="pointer-events-none absolute left-1/2 top-[22%] z-20 -translate-x-1/2 sm:hidden"
+            aria-live="polite"
+          >
+            <div className="flex min-w-[210px] flex-col items-center gap-2 rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/90 px-5 py-3 text-center shadow-md backdrop-blur-sm">
+              <span
+                className="text-2xl font-medium tracking-[0.35em] text-[#77907D]"
+                style={{
+                  animation: "timeline-swipe-hint 1.6s ease-in-out infinite",
+                }}
+                aria-hidden="true"
+              >
+                ← ↔ →
+              </span>
+              <span className="text-xs font-semibold text-[#435D4D]">
+                Följ linjen för att resa genom tiden
+              </span>
+              <span className="text-[11px] text-[#8B8275]">
+                Nyp med två fingrar för att zooma
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile controls float above the canvas instead of consuming its height. */}
+        <div
+          data-timeline-ui
+          className="absolute left-3 right-3 top-3 z-20 flex items-start justify-between gap-2 sm:hidden"
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen((v) => !v);
+              setMobileMapOpen(false);
+            }}
+            aria-expanded={mobileMenuOpen}
+            aria-label="Öppna utforskarmenyn"
+            className="flex items-center gap-2 rounded-full border border-[#DED7CA] bg-[#FFFCF6]/95 px-4 py-2.5 text-xs font-semibold text-[#435D4D] shadow-md"
+          >
+            <Menu size={17} /> Utforska
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMapOpen((v) => !v);
+              setMobileMenuOpen(false);
+            }}
+            aria-expanded={mobileMapOpen}
+            aria-label={
+              mobileMapOpen ? "Dölj översiktskartan" : "Visa översiktskartan"
+            }
+            className="rounded-full border border-[#DED7CA] bg-[#FFFCF6]/95 p-2.5 text-[#435D4D] shadow-md"
+          >
+            {mobileMapOpen ? <X size={18} /> : <MapIcon size={18} />}
+          </button>
+        </div>
+
+        {mobileMenuOpen && (
+          <div
+            data-timeline-ui
+            className="absolute left-3 right-3 top-16 z-30 max-h-[min(65svh,480px)] overflow-y-auto rounded-2xl border border-[#DED7CA] bg-[#FFFCF6] p-4 shadow-xl sm:hidden"
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#9D8A71]">
+              Utforska tidslinjen
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchOpen(true);
+                setMobileMenuOpen(false);
+              }}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm hover:bg-[#F2EEE6]"
+            >
+              <Search size={17} /> Sök milstolpar
+            </button>
+            <div className="my-2 border-t border-[#E8E1D6]" />
+            {branches.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => travelToBranch(category)}
+                className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm hover:bg-[#F2EEE6]"
+              >
+                <span
+                  className="h-1 w-7 rounded-full"
+                  style={{ backgroundColor: palette[category].color }}
+                />
+                {palette[category].label}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => {
+                setActiveBranch(null);
+                setMobileMenuOpen(false);
+              }}
+              className="w-full rounded-xl px-3 py-2 text-left text-xs font-semibold text-[#657D69]"
+            >
+              Visa alla grenar
+            </button>
+            <div className="my-2 border-t border-[#E8E1D6]" />
+            <button
+              type="button"
+              onClick={() => {
+                setPeriodMode((v) => (v === "geology" ? "none" : "geology"));
+                setMobileMenuOpen(false);
+              }}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm hover:bg-[#F2EEE6]"
+            >
+              <Layers3 size={17} /> Geologiska tider{" "}
+              {periodMode === "geology" ? "✓" : ""}
+            </button>
+            <button
+              type="button"
+              onClick={toggleHistory}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm hover:bg-[#F2EEE6]"
+            >
+              <BookOpen size={17} /> Svenska historiska tider{" "}
+              {periodMode === "history" ? "✓" : ""}
+            </button>
+            <button
+              type="button"
+              onClick={resetView}
+              className="mt-2 flex w-full items-center gap-3 rounded-xl bg-[#E5EDDD] px-3 py-3 text-left text-sm font-semibold text-[#435D4D]"
+            >
+              <Maximize2 size={17} /> Till början
+            </button>
+          </div>
+        )}
+
         {/* Subtle paper background */}
         <div
           className="pointer-events-none absolute inset-0"
@@ -468,6 +705,60 @@ export default function TimelinePage() {
 
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(212,197,171,0.18))]" />
 
+        {/* Before Earth existed: a subtle cosmic introduction, not a geological era. */}
+        {periodMode === "geology" && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 left-0"
+            style={{
+              width: Math.max(
+                0,
+                viewportSize.width / 2 + view.x + positionX(100, view.zoom),
+              ),
+              background: "linear-gradient(90deg, #DFE1EB, #E8E1DE)",
+            }}
+          />
+        )}
+
+        {/* Geological/history bands: anchored to the VIEWPORT, not WORLD_HEIGHT.
+            They still use the same animated horizontal world coordinates,
+            so the colors follow every pan and smooth spatial zoom. */}
+        {periodMode !== "none" && (
+          <div
+            className="pointer-events-none absolute inset-0 overflow-hidden"
+            aria-hidden="true"
+          >
+            {periods.map((era, index) => {
+              const left =
+                viewportSize.width / 2 +
+                view.x +
+                positionX(era.startX, view.zoom);
+              const right =
+                viewportSize.width / 2 +
+                view.x +
+                positionX(era.endX, view.zoom);
+              // Extend the first and last eras to the edges of the viewport
+              // so the user never sees a blank band at either end.
+              const from = index === 0 ? left : left;
+              const to =
+                index === periods.length - 1
+                  ? Math.max(viewportSize.width + 100, right)
+                  : right;
+              return (
+                <div
+                  key={era.name}
+                  className="absolute inset-y-0 border-l border-white/50"
+                  style={{
+                    left: from,
+                    width: Math.max(0, to - from),
+                    background: `linear-gradient(90deg, ${era.color}B8, ${era.color}8A 85%, ${era.color}B8)`,
+                  }}
+                />
+              );
+            })}
+          </div>
+        )}
+
         {/* Spatial world: only positions change, never the size of content. */}
         <div
           className="absolute left-1/2 top-1/2"
@@ -477,30 +768,6 @@ export default function TimelinePage() {
             transform: `translate(${view.x}px, ${view.y}px)`,
           }}
         >
-          {/* Geological or Swedish/Nordic historical periods fill the world height. */}
-          {periodMode !== "none" && (
-            <div
-              className="pointer-events-none absolute inset-0 overflow-hidden"
-              aria-hidden="true"
-            >
-              {periods.map((era) => {
-                const left = positionX(era.startX, view.zoom);
-                const right = positionX(era.endX, view.zoom);
-                return (
-                  <div
-                    key={era.name}
-                    className="absolute top-0 h-full border-l border-white/50"
-                    style={{
-                      left,
-                      width: Math.max(0, right - left),
-                      background: `linear-gradient(90deg, ${era.color}B8, ${era.color}8A 85%, ${era.color}B8)`,
-                    }}
-                  />
-                );
-              })}
-            </div>
-          )}
-
           {/* Curved branches dynamically follow the milestones. */}
           <svg
             width={worldWidth}
@@ -770,7 +1037,7 @@ export default function TimelinePage() {
         {/* Interactive minimap. Each line represents a complete branch. */}
         {showMap && (
           <div
-            className="absolute right-4 top-4 z-10 w-[210px] rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-3 shadow-lg sm:w-[260px]"
+            className={`absolute right-3 top-16 z-20 w-[min(75vw,240px)] rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-3 shadow-lg sm:right-4 sm:top-4 sm:z-10 sm:w-[260px] ${mobileMapOpen ? "block" : "hidden sm:block"}`}
             onPointerDown={(e) => e.stopPropagation()}
           >
             <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9D8A71]">
@@ -847,17 +1114,17 @@ export default function TimelinePage() {
         )}
 
         {/* Zoom controls */}
-        <div className="absolute bottom-5 right-4 z-10 flex items-center gap-2 rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-2 shadow-[0_12px_35px_rgba(75,60,43,0.08)] backdrop-blur-sm sm:bottom-7 sm:right-7">
+        <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1 rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-1 shadow-[0_12px_35px_rgba(75,60,43,0.08)] backdrop-blur-sm sm:bottom-7 sm:right-7 sm:gap-2 sm:p-2">
           <button
             type="button"
             onClick={() => zoomAt(1 / 1.25)}
             aria-label="Zooma ut"
-            className="rounded-xl p-3 text-[#6F7769] transition-colors hover:bg-[#EEE9DE]"
+            className="rounded-xl p-2.5 text-[#6F7769] transition-colors hover:bg-[#EEE9DE] sm:p-3"
           >
             <Minus size={19} />
           </button>
 
-          <span className="min-w-12 text-center text-xs font-bold tabular-nums text-[#696C60]">
+          <span className="min-w-10 text-center text-[11px] font-bold tabular-nums text-[#696C60] sm:min-w-12 sm:text-xs">
             {Math.round(view.zoom * 100)}%
           </span>
 
@@ -865,20 +1132,18 @@ export default function TimelinePage() {
             type="button"
             onClick={() => zoomAt(1.25)}
             aria-label="Zooma in"
-            className="rounded-xl p-3 text-[#6F7769] transition-colors hover:bg-[#EEE9DE]"
+            className="rounded-xl p-2.5 text-[#6F7769] transition-colors hover:bg-[#EEE9DE] sm:p-3"
           >
             <Plus size={19} />
           </button>
 
-          <div className="mx-1 h-6 w-px bg-[#E2DBCE]" />
+          <div className="mx-0.5 h-6 w-px bg-[#E2DBCE] sm:mx-1" />
 
           <button
             type="button"
-            onClick={() => {
-              targetViewRef.current = initialView;
-            }}
+            onClick={resetView}
             aria-label="Återställ tidslinjens vy"
-            className="rounded-xl p-3 text-[#6F7769] transition-colors hover:bg-[#EEE9DE]"
+            className="rounded-xl p-2.5 text-[#6F7769] transition-colors hover:bg-[#EEE9DE] sm:p-3"
           >
             <Maximize2 size={18} />
           </button>
@@ -886,7 +1151,7 @@ export default function TimelinePage() {
       </div>
 
       {/* Footer */}
-      <footer className="relative z-20 flex shrink-0 items-center justify-between gap-3 border-t border-[#E2DBCE] bg-[#FBF9F3] px-5 py-3 sm:px-10">
+      <footer className="relative z-20 hidden shrink-0 items-center justify-between gap-3 border-t border-[#E2DBCE] bg-[#FBF9F3] px-5 py-3 sm:flex sm:px-10">
         <div className="flex items-center gap-2 text-[#938777]">
           <Leaf size={14} strokeWidth={1.5} />
           <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">
@@ -918,17 +1183,17 @@ export default function TimelinePage() {
             </button>
 
             <div
-              className="flex h-48 items-center justify-center"
+              className="flex h-32 items-center justify-center sm:h-48"
               style={{
                 backgroundColor: palette[selected.category].light,
               }}
             >
-              <span className="text-[100px]" aria-hidden="true">
+              <span className="text-[72px] sm:text-[100px]" aria-hidden="true">
                 {selected.symbol}
               </span>
             </div>
 
-            <div className="p-7 sm:p-9">
+            <div className="max-h-[calc(85svh-8rem)] overflow-y-auto p-5 sm:max-h-none sm:p-9">
               <p
                 className="text-[11px] font-bold uppercase tracking-[0.18em]"
                 style={{
@@ -943,7 +1208,7 @@ export default function TimelinePage() {
               </p>
               <h2
                 id="event-title"
-                className="mt-3 text-3xl font-semibold tracking-tight text-[#35463B]"
+                className="mt-3 text-2xl font-semibold tracking-tight text-[#35463B] sm:text-3xl"
               >
                 {selected.title}
               </h2>
@@ -952,7 +1217,7 @@ export default function TimelinePage() {
                 {selected.description}
               </p>
 
-              <div className="mt-7 rounded-xl border border-[#E6DDCD] bg-[#F6F0E5] p-5">
+              <div className="mt-5 rounded-xl border border-[#E6DDCD] bg-[#F6F0E5] p-4 sm:mt-7 sm:p-5">
                 <p className="mb-2 flex items-center gap-2 text-xs font-bold text-[#7B8D6A]">
                   <Leaf size={15} />
                   Visste du att?

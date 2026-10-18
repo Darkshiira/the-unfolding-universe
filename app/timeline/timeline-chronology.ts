@@ -2,6 +2,7 @@
 // Vaga eller omdiskuterade händelser har ett ungefärligt visningsankare.
 // Detta är INTE exakta dateringar för varje händelse.
 export const MILESTONE_AGES_MA: Record<string, number> = {
+  "big-bang": 13800,
   "solar-nebula": 4600,
   earth: 4540,
   moon: 4500,
@@ -225,6 +226,9 @@ const ANCHORS: readonly (readonly [number, number])[] = [
 ];
 
 export function ageToX(ageMa: number): number {
+  if (ageMa > 4600) {
+    return -750;
+  }
   const age = Math.max(0, Math.min(4600, ageMa));
   for (let i = 0; i < ANCHORS.length - 1; i++) {
     const [older, left] = ANCHORS[i];

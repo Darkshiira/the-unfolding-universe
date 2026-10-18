@@ -36,6 +36,21 @@ export const palette: Record<
 
 // Ursprungliga x-värden används inte längre: positionen beräknas från ageMa.
 const sourceMilestones: Milestone[] = [
+  
+  {
+    id: "big-bang",
+    title: "Den stora smällen",
+    date: "För cirka 13,8 miljarder år sedan",
+    description:
+      "Universum börjar expandera från ett extremt hett och tätt tillstånd. Med tiden bildas de första partiklarna, atomerna, stjärnorna och galaxerna.",
+    fact:
+      "Den stora smällen var inte en explosion på en plats i rymden. Det är själva rymden som har expanderat.",
+    x: -750,
+    y: 195,
+    category: "earth",
+    symbol: "💥",
+    major: true,
+  },
   {
     id: "solar-nebula",
     title: "Solsystemet tar form",

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -89,7 +90,43 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default async function MilestonePage({ params }: Props) {
+export default function MilestonePage({ params }: Props) {
+  return (
+    <Suspense fallback={<MilestoneLoading />}>
+      <MilestoneContent params={params} />
+    </Suspense>
+  );
+}
+
+function MilestoneLoading() {
+  return (
+    <main className="min-h-svh bg-[#F8F5EE] text-[#34473C]">
+      <header className="border-b border-[#DDD8CD] bg-[#FBF9F3] px-5 py-5 sm:px-10">
+        <div className="mx-auto max-w-6xl">
+          <Link
+            href="/timeline"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#657D69]"
+          >
+            <ArrowLeft size={17} /> Tillbaka till tidslinjen
+          </Link>
+        </div>
+      </header>
+      <div
+        className="mx-auto max-w-6xl animate-pulse px-5 pt-12 sm:px-10 sm:pt-20"
+        role="status"
+        aria-label="Laddar upptäckt"
+      >
+        <div className="h-4 w-36 rounded bg-[#E4DDD0]" />
+        <div className="mt-6 h-12 max-w-lg rounded-xl bg-[#E4DDD0]" />
+        <div className="mt-5 h-5 max-w-2xl rounded bg-[#EBE5D9]" />
+        <div className="mt-12 h-72 rounded-[28px] bg-[#EBE5D9]" />
+        <span className="sr-only">Laddar upptäckt…</span>
+      </div>
+    </main>
+  );
+}
+
+async function MilestoneContent({ params }: Props) {
   const { id } = await params;
   const milestone = milestones.find((item) => item.id === id);
   if (!milestone) notFound();
@@ -115,7 +152,7 @@ export default async function MilestonePage({ params }: Props) {
             <ArrowLeft size={17} /> Tillbaka till tidslinjen
           </Link>
           <span className="hidden text-[10px] font-bold uppercase tracking-[0.24em] text-[#9B8972] sm:block">
-            THE UNFOLDING UNIVERSE
+            HUR ALLT FORTSATTE
           </span>
         </div>
       </header>
