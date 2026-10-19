@@ -13,6 +13,7 @@ import type { Milestone } from "../timeline-data";
 import { milestones, palette } from "../timeline-data";
 import type { MilestoneArticleData } from "../content/types";
 import MuseumShowcase from "./MuseumShowcase";
+import ArticleAtmosphere from "./ArticleAtmosphere";
 
 export default function MilestoneArticle({
   milestone,
@@ -39,6 +40,12 @@ export default function MilestoneArticle({
             sizes="(max-width: 768px) 100vw, 1200px"
             className="object-cover object-center"
           />
+          {article.atmosphere && (
+            <ArticleAtmosphere
+              mode={article.atmosphere.mode}
+              intensity={article.atmosphere.intensity}
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-[#0C151B]/90 via-[#0C151B]/35 to-[#0C151B]/10 sm:bg-gradient-to-r sm:from-[#0C151B]/95 sm:via-[#0C151B]/50 sm:to-transparent" />
           <div className="relative z-10 flex min-h-[390px] max-w-2xl flex-col justify-end px-6 pb-12 pt-20 sm:min-h-[470px] sm:px-12 sm:pb-16">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#F1C18F]">

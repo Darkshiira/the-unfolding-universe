@@ -30,4 +30,8 @@ export type MilestoneArticleData = {
     description: string;
     alt: string;
   };
+  atmosphere?: {
+    mode: "embers" | "frost";
+    intensity?: "subtle" | "normal" | "dramatic";
+  };
 };

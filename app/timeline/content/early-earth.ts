@@ -326,6 +326,10 @@ export const earlyEarthArticles: Record<string, MilestoneArticleData> = {
       credit,
       kind: "illustration",
     },
+    atmosphere: {
+      mode: "embers",
+      intensity: "dramatic",
+    },
     sections: [
       {
         id: "rester",

@@ -230,6 +230,10 @@ export const earthAwakensArticles: Record<string, MilestoneArticleData> = {
       credit,
       kind: "illustration",
     },
+    atmosphere: {
+      mode: "frost",
+      intensity: "dramatic",
+    },
     sections: [
       {
         id: "varlden-under-ordovicium",

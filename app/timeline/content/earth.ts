@@ -4,14 +4,18 @@ export const earthArticles: Record<string, MilestoneArticleData> = {
   earth: {
     id: "earth",
     kicker: "HADEIKUM · PLANETENS FÖDELSE",
-    lead:
-      "Jorden föddes inte på en enda dag. Den växte fram ur stoft, sten och kollisioner runt den unga solen. Under sina första miljoner år förvandlades den från en samling mindre himlakroppar till en planet med en inre struktur, en yta och så småningom förutsättningar för hav.",
+    lead: "Jorden föddes inte på en enda dag. Den växte fram ur stoft, sten och kollisioner runt den unga solen. Under sina första miljoner år förvandlades den från en samling mindre himlakroppar till en planet med en inre struktur, en yta och så småningom förutsättningar för hav.",
     hero: {
       src: "/images/timeline/earth/young-earth.png",
       alt: "Konstnärlig illustration av den heta, unga jorden i rymden med glödande områden och små himlakroppar.",
-      caption: "Så kan den mycket unga jorden ha sett ut. Illustration, inte ett fotografi.",
+      caption:
+        "Så kan den mycket unga jorden ha sett ut. Illustration, inte ett fotografi.",
       credit: "AI-genererad rekonstruktion för The Unfolding Universe",
       kind: "illustration",
+    },
+    atmosphere: {
+      mode: "embers",
+      intensity: "dramatic",
     },
     sections: [
       {
@@ -21,11 +25,12 @@ export const earthArticles: Record<string, MilestoneArticleData> = {
           "För ungefär 4,6 miljarder år sedan fanns en roterande skiva av gas och stoft runt den nybildade solen. I skivans varmare inre delar kunde mineral och metallkorn samlas till fasta partiklar.",
           "Partiklar kolliderade och klumpade ihop sig. Med tiden bildades större kroppar, så kallade planetesimaler. Gravitationen hjälpte dem att dra till sig ännu mer material. Jorden växte fram genom många sådana sammanstötningar, inte genom ett enda ögonblick av skapelse.",
         ],
-        
+
         image: {
           src: "/images/timeline/earth/protoplanetary-disk.png",
           alt: "Konstnärlig rekonstruktion av en glödande ung stjärna med en skiva av gas, stoft och stenmaterial.",
-          caption: "En ung stjärna omgiven av material som kan bilda planeter. Konstnärlig rekonstruktion.",
+          caption:
+            "En ung stjärna omgiven av material som kan bilda planeter. Konstnärlig rekonstruktion.",
           credit: "AI-genererad illustration för The Unfolding Universe",
           kind: "illustration",
         },
@@ -40,7 +45,8 @@ export const earthArticles: Record<string, MilestoneArticleData> = {
         image: {
           src: "/images/timeline/earth/accretion.png",
           alt: "Pedagogiskt diagram över stoftpartiklar, planetesimaler och en växande planet.",
-          caption: "Ackretion, förenklat: små partiklar blir till allt större kroppar.",
+          caption:
+            "Ackretion, förenklat: små partiklar blir till allt större kroppar.",
           credit: "Originaldiagram för The Unfolding Universe",
           kind: "diagram",
         },
@@ -56,7 +62,8 @@ export const earthArticles: Record<string, MilestoneArticleData> = {
         image: {
           src: "/images/timeline/earth/magma-world.png",
           alt: "Konstnärlig rekonstruktion av en mycket het ung jord med lava, vulkaniska berg och glödande horisont.",
-          caption: "En tänkbar bild av delar av den tidiga jordens yta. Exakt utseende är osäkert.",
+          caption:
+            "En tänkbar bild av delar av den tidiga jordens yta. Exakt utseende är osäkert.",
           credit: "AI-genererad illustration för The Unfolding Universe",
           kind: "illustration",
         },
@@ -121,9 +128,18 @@ export const earthArticles: Record<string, MilestoneArticleData> = {
     ],
     relatedIds: ["solar-nebula", "moon", "early-oceans"],
     sources: [
-      { label: "USGS – Age of the Earth", url: "https://pubs.usgs.gov/gip/geotime/age.html" },
-      { label: "NASA Science – Earth facts", url: "https://science.nasa.gov/earth/facts/" },
-      { label: "NASA Science – Moon formation", url: "https://science.nasa.gov/moon/formation/" },
+      {
+        label: "USGS – Age of the Earth",
+        url: "https://pubs.usgs.gov/gip/geotime/age.html",
+      },
+      {
+        label: "NASA Science – Earth facts",
+        url: "https://science.nasa.gov/earth/facts/",
+      },
+      {
+        label: "NASA Science – Moon formation",
+        url: "https://science.nasa.gov/moon/formation/",
+      },
     ],
   },
 };

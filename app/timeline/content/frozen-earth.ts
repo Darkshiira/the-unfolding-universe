@@ -15,6 +15,10 @@ export const frozenEarthArticles: Record<string, MilestoneArticleData> = {
       credit: "AI-genererad illustration för The Unfolding Universe",
       kind: "illustration",
     },
+    atmosphere: {
+      mode: "frost",
+      intensity: "subtle",
+    },
 
     showcase: {
       src: "/images/timeline/showcases/huronian-tillite.png",
@@ -224,7 +228,10 @@ export const frozenEarthArticles: Record<string, MilestoneArticleData> = {
         "AI-genererad konstnärlig rekonstruktion för The Unfolding Universe",
       kind: "illustration",
     },
-
+    atmosphere: {
+      mode: "frost",
+      intensity: "dramatic",
+    },
     sections: [
       {
         id: "tva-nedisningar",

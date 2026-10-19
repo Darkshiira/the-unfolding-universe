@@ -121,6 +121,10 @@ export const worldInMotionArticles: Record<string, MilestoneArticleData> = {
         "AI-genererad konstnärlig rekonstruktion för The Unfolding Universe",
       kind: "illustration",
     },
+    atmosphere: {
+      mode: "embers",
+      intensity: "dramatic",
+    },
     showcase: {
       src: "/images/timeline/showcases/siberian-basalt.png",
       title: "Basalt – spår av enorm vulkanism",

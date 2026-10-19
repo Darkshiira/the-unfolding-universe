@@ -246,7 +246,10 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
       credit: "Konstnärlig rekonstruktion för The Unfolding Universe",
       kind: "illustration",
     },
-
+    atmosphere: {
+      mode: "embers",
+      intensity: "normal",
+    },
     showcase: {
       src: "/images/timeline/showcases/moon-rock.png",
       title: "Månsten – anortosit",

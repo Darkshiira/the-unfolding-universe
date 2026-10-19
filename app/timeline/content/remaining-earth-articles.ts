@@ -15,6 +15,10 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
       credit,
       kind: "illustration",
     },
+    atmosphere: {
+      mode: "embers",
+      intensity: "dramatic",
+    },
     showcase: {
       src: "/images/timeline/showcases/impact-breccia.png",
       title: "Impaktbreccia – spår av ett asteroidnedslag",
@@ -218,6 +222,10 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
       credit,
       kind: "illustration",
     },
+    atmosphere: {
+      mode: "frost",
+      intensity: "normal",
+    },
     sections: [
       {
         id: "kvartar",
@@ -314,6 +322,10 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
         "Den senaste istidens största globala isutbredning inträffade ungefär för 26 000–19 000 år sedan.",
       credit,
       kind: "illustration",
+    },
+    atmosphere: {
+      mode: "frost",
+      intensity: "dramatic",
     },
     showcase: {
       src: "/images/timeline/showcases/glacial-striated-stone.png",
