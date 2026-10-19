@@ -31,7 +31,7 @@ export type MilestoneArticleData = {
     alt: string;
   };
   atmosphere?: {
-    mode: "embers" | "frost";
+    mode: "embers" | "frost" | "underwater" | "steam";
     intensity?: "subtle" | "normal" | "dramatic";
   };
 };

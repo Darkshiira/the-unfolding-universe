@@ -8,6 +8,9 @@ import { worldInMotionArticles } from "./a-world-in-motion";
 import { remainingEarthArticles } from "./remaining-earth-articles";
 import { lifeAwakensArticles } from "./life-awakens";
 import { lifeOxygenArticles } from "./life-oxygen";
+import { lifeComplexityArticles } from "./life-complexity";
+import { lifeVisibleArticles } from "./life-visible";
+import { lifeExtinctionsArticles } from "./life-extinctions"
 import type { MilestoneArticleData } from "./types";
 
 
@@ -22,6 +25,11 @@ export const articles: Record<string, MilestoneArticleData> = {
   ...remainingEarthArticles,
   ...lifeAwakensArticles,
   ...lifeOxygenArticles,
+  ...lifeComplexityArticles,
+  ...lifeVisibleArticles,
+  ...lifeExtinctionsArticles,
+
+
 };
 
 export function getArticle(id: string): MilestoneArticleData | undefined {
