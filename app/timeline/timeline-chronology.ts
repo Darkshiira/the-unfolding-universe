@@ -30,7 +30,7 @@ export const MILESTONE_AGES_MA: Record<string, number> = {
   "earth-today": 0,
   "origin-life": 3800,
   microbes: 3500,
-  stromatolites: 3500,
+  stromatolites: 3450,
   photosynthesis: 2700,
   oxygen: 2400,
   eukaryotes: 1600,
