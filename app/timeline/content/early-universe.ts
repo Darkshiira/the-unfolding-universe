@@ -10,7 +10,8 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
     hero: {
       src: "/images/timeline/early/big-bang-hero-v2.png",
       alt: "Konstnärlig visualisering av det tidiga, heta universum och dess expansion, utan en central explosionspunkt.",
-      caption: "Konstnärlig visualisering av universums tidiga expansion, inte ett fotografi av den stora smällen.",
+      caption:
+        "Konstnärlig visualisering av universums tidiga expansion, inte ett fotografi av den stora smällen.",
       credit: "Illustration för The Unfolding Universe",
       kind: "illustration",
     },
@@ -25,7 +26,8 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
         image: {
           src: "/images/timeline/early/expanding-space.png",
           alt: "Pedagogisk illustration av hur avstånd mellan galaxer ökar när rymden expanderar.",
-          caption: "Rymdens expansion ökar avstånden mellan galaxer som inte hålls samman av gravitationen.",
+          caption:
+            "Rymdens expansion ökar avstånden mellan galaxer som inte hålls samman av gravitationen.",
           credit: "Pedagogisk illustration för The Unfolding Universe",
           kind: "diagram",
         },
@@ -48,7 +50,8 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
         image: {
           src: "/images/timeline/early/primordial-elements.png",
           alt: "Vetenskaplig illustration av väte- och heliumkärnor i det tidiga universum.",
-          caption: "Väte och helium dominerade den materia som bildades i universums första minuter.",
+          caption:
+            "Väte och helium dominerade den materia som bildades i universums första minuter.",
           credit: "Illustration för The Unfolding Universe",
           kind: "illustration",
         },
@@ -63,8 +66,10 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
         image: {
           src: "/images/timeline/early/cosmic-background.png",
           alt: "Visualisering av små temperaturvariationer i den kosmiska mikrovågsbakgrunden.",
-          caption: "Mikrovågsbakgrunden är ett av de viktigaste spåren efter universums tidiga historia.",
-          credit: "Vetenskapligt inspirerad visualisering för The Unfolding Universe",
+          caption:
+            "Mikrovågsbakgrunden är ett av de viktigaste spåren efter universums tidiga historia.",
+          credit:
+            "Vetenskapligt inspirerad visualisering för The Unfolding Universe",
           kind: "diagram",
         },
       },
@@ -104,9 +109,18 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
     ],
     relatedIds: ["solar-nebula", "earth"],
     sources: [
-      { label: "NASA Science – Big Bang", url: "https://science.nasa.gov/universe/overview/" },
-      { label: "ESA – Planck mission", url: "https://www.esa.int/Science_Exploration/Space_Science/Planck" },
-      { label: "NASA – Cosmic microwave background", url: "https://science.nasa.gov/mission/wmap/" },
+      {
+        label: "NASA Science – Big Bang",
+        url: "https://science.nasa.gov/universe/overview/",
+      },
+      {
+        label: "ESA – Planck mission",
+        url: "https://www.esa.int/Science_Exploration/Space_Science/Planck",
+      },
+      {
+        label: "NASA – Cosmic microwave background",
+        url: "https://science.nasa.gov/mission/wmap/",
+      },
     ],
   },
   "solar-nebula": {
@@ -116,7 +130,8 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
     hero: {
       src: "/images/timeline/early/solar-nebula-hero-v3.png",
       alt: "Konstnärlig rekonstruktion av den unga solen omgiven av en skiva med gas, stoft och växande planetkroppar.",
-      caption: "Så kan det unga solsystemet ha sett ut när planeterna började bildas.",
+      caption:
+        "Så kan det unga solsystemet ha sett ut när planeterna började bildas.",
       credit: "Konstnärlig rekonstruktion för The Unfolding Universe",
       kind: "illustration",
     },
@@ -139,7 +154,8 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
         image: {
           src: "/images/timeline/early/protoplanetary-disk.png",
           alt: "Illustration av en ung stjärna med en roterande skiva av gas och stoft.",
-          caption: "Planeter växer fram ur materialet i en protoplanetär skiva.",
+          caption:
+            "Planeter växer fram ur materialet i en protoplanetär skiva.",
           credit: "Illustration för The Unfolding Universe",
           kind: "illustration",
         },
@@ -154,7 +170,8 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
         image: {
           src: "/images/timeline/earth/accretion.png",
           alt: "Diagram som visar hur stoft, planetesimaler och större planetkroppar bildas genom ackretion.",
-          caption: "Ackretion: mindre partiklar och kroppar samlas till större objekt.",
+          caption:
+            "Ackretion: mindre partiklar och kroppar samlas till större objekt.",
           credit: "Illustration för The Unfolding Universe",
           kind: "diagram",
         },
@@ -203,9 +220,18 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
     ],
     relatedIds: ["earth", "moon", "oldest-zircons"],
     sources: [
-      { label: "NASA Science – Solar System Facts", url: "https://science.nasa.gov/solar-system/solar-system-facts/" },
-      { label: "NASA Science – Our Solar System", url: "https://science.nasa.gov/solar-system/" },
-      { label: "ESO – ALMA observatory", url: "https://www.eso.org/public/teles-instr/alma/" },
+      {
+        label: "NASA Science – Solar System Facts",
+        url: "https://science.nasa.gov/solar-system/solar-system-facts/",
+      },
+      {
+        label: "NASA Science – Our Solar System",
+        url: "https://science.nasa.gov/solar-system/",
+      },
+      {
+        label: "ESO – ALMA observatory",
+        url: "https://www.eso.org/public/teles-instr/alma/",
+      },
     ],
   },
   moon: {
@@ -215,10 +241,20 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
     hero: {
       src: "/images/timeline/early/moon-formation-hero-v3.png",
       alt: "Konstnärlig rekonstruktion av en jättelik kollision mellan den unga jorden och en annan planetkropp.",
-      caption: "En möjlig bild av den kollision som kan ha lett till månens bildning.",
+      caption:
+        "En möjlig bild av den kollision som kan ha lett till månens bildning.",
       credit: "Konstnärlig rekonstruktion för The Unfolding Universe",
       kind: "illustration",
     },
+
+    showcase: {
+      src: "/images/timeline/showcases/moon-rock.png",
+      title: "Månsten – anortosit",
+      description:
+        "Månens ljusa högland består till stor del av anortosit. Bergarten ger forskare ledtrådar om hur månens tidiga skorpa bildades när smält berg svalnade. Konstnärlig rekonstruktion, inte ett verkligt månprov.",
+      alt: "Konstnärlig illustration av en ljusgrå, kristallin månsten med mörka mineralinslag, placerad på en polerad träplattform.",
+    },
+
     sections: [
       {
         id: "kollisionen",
@@ -230,7 +266,8 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
         image: {
           src: "/images/timeline/early/giant-impact.png",
           alt: "Vetenskapligt inspirerad illustration av två unga planetkroppar som kolliderar och kastar ut material.",
-          caption: "Jättenedslagshypotesen kan förklara flera egenskaper hos jorden och månen.",
+          caption:
+            "Jättenedslagshypotesen kan förklara flera egenskaper hos jorden och månen.",
           credit: "Illustration för The Unfolding Universe",
           kind: "illustration",
         },
@@ -302,9 +339,18 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
     ],
     relatedIds: ["earth", "solar-nebula", "oceans"],
     sources: [
-      { label: "NASA Science – Moon Formation", url: "https://science.nasa.gov/moon/formation/" },
-      { label: "NASA Science – Moon Facts", url: "https://science.nasa.gov/moon/facts/" },
-      { label: "NASA – Apollo Lunar Sample Laboratory", url: "https://curator.jsc.nasa.gov/lunar/" },
+      {
+        label: "NASA Science – Moon Formation",
+        url: "https://science.nasa.gov/moon/formation/",
+      },
+      {
+        label: "NASA Science – Moon Facts",
+        url: "https://science.nasa.gov/moon/facts/",
+      },
+      {
+        label: "NASA – Apollo Lunar Sample Laboratory",
+        url: "https://curator.jsc.nasa.gov/lunar/",
+      },
     ],
   },
 };

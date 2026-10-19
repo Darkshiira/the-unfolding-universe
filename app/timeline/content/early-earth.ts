@@ -15,6 +15,14 @@ export const earlyEarthArticles: Record<string, MilestoneArticleData> = {
       credit,
       kind: "illustration",
     },
+    showcase: {
+      src: "/images/timeline/showcases/zircon.png",
+      title: "Zirkon – en uråldrig tidskapsel",
+      description:
+        "I Jack Hills i Australien har forskare hittat zirkonkristaller som är omkring 4,4 miljarder år gamla. De verkliga kristallerna är ofta mindre än ett sandkorn. Här visas en konstnärligt förstorad modell.",
+      alt: "Konstnärlig museimodell av gyllene zirkonkristaller på en polerad träplattform.",
+    },
+
     sections: [
       {
         id: "tidskapslar",

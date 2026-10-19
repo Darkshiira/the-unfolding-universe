@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ZoomableFigure from "./ZoomableFigure";
 import {
   ArrowRight,
   BookOpen,
@@ -10,53 +11,8 @@ import {
 } from "lucide-react";
 import type { Milestone } from "../timeline-data";
 import { milestones, palette } from "../timeline-data";
-import type { ArticleImage, MilestoneArticleData } from "../content/types";
-
-function Figure({
-  image,
-  priority = false,
-}: {
-  image: ArticleImage;
-  priority?: boolean;
-}) {
-  const isDiagram = image.kind === "diagram";
-
-  return (
-    <figure className="overflow-hidden rounded-[24px] border border-[#E1D7C8] bg-[#F2E8DB]">
-      {isDiagram ? (
-        // Diagrams: show the COMPLETE image without cropping.
-        <div className="w-full bg-[#F5F0E8]">
-          <Image
-            src={image.src}
-            alt={image.alt}
-            width={2048}
-            height={768}
-            priority={priority}
-            sizes="(max-width: 768px) 100vw, 900px"
-            className="block h-auto w-full object-contain"
-          />
-        </div>
-      ) : (
-        // Cinematic images: preserve the existing widescreen design.
-        <div className="relative aspect-[16/9] w-full">
-          <Image
-            src={image.src}
-            alt={image.alt}
-            fill
-            priority={priority}
-            sizes="(max-width: 768px) 100vw, 900px"
-            className="object-cover"
-          />
-        </div>
-      )}
-
-      <figcaption className="bg-[#FFFCF6] px-5 py-4 text-xs leading-6 text-[#77766A]">
-        {image.caption}
-        <span className="block text-[#9A8C7B]">{image.credit}</span>
-      </figcaption>
-    </figure>
-  );
-}
+import type { MilestoneArticleData } from "../content/types";
+import MuseumShowcase from "./MuseumShowcase";
 
 export default function MilestoneArticle({
   milestone,
@@ -106,6 +62,18 @@ export default function MilestoneArticle({
         className="mt-12 grid scroll-mt-8 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_290px]"
       >
         <div className="min-w-0 space-y-14">
+          {/* Museum showcase on mobile and tablet */}
+          {article.showcase && (
+            <div className="lg:hidden">
+              <MuseumShowcase
+                src={article.showcase.src}
+                title={article.showcase.title}
+                description={article.showcase.description}
+                alt={article.showcase.alt}
+              />
+            </div>
+          )}
+
           <nav
             aria-label="På den här sidan"
             className="rounded-2xl border border-[#E1D7C8] bg-[#FFFCF6] p-6"
@@ -146,7 +114,7 @@ export default function MilestoneArticle({
               </div>
               {section.image && (
                 <div className="mt-7">
-                  <Figure image={section.image} />
+                  <ZoomableFigure image={section.image} />
                 </div>
               )}
             </section>
@@ -175,7 +143,19 @@ export default function MilestoneArticle({
           </section>
         </div>
 
-        <aside className="space-y-5 lg:sticky lg:top-6">
+        <aside className="space-y-5">
+          {/* Museum showcase in the desktop sidebar */}
+          {article.showcase && (
+            <div className="hidden lg:block">
+              <MuseumShowcase
+                src={article.showcase.src}
+                title={article.showcase.title}
+                description={article.showcase.description}
+                alt={article.showcase.alt}
+              />
+            </div>
+          )}
+
           <div className="rounded-2xl border border-[#E6DDCD] bg-[#F6F0E5] p-6">
             <h2 className="flex items-center gap-2 font-semibold text-[#718363]">
               <Leaf size={18} /> Visste du att?

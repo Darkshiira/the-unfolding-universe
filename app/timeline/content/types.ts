@@ -24,4 +24,10 @@ export type MilestoneArticleData = {
   uncertainties: string[];
   relatedIds: string[];
   sources: { label: string; url: string }[];
+  showcase?: {
+    src: string;
+    title: string;
+    description: string;
+    alt: string;
+  };
 };
