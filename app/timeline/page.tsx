@@ -467,7 +467,7 @@ export default function TimelinePage() {
         <div className="flex min-w-0 items-center gap-2 sm:gap-4">
           <div className="relative size-10 shrink-0 overflow-hidden rounded-full bg-[#F1E9D9] sm:size-14">
             <Image
-              src="/images/explorers-compass.png"
+              src="/images/explorers-compass.webp"
               alt="Gyllene kompass med gröna blad"
               fill
               priority

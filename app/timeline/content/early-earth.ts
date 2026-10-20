@@ -8,7 +8,7 @@ export const earlyEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "HADEIKUM · JORDENS ÄLDSTA SPÅR",
     lead: "Hur kan vi veta något om en värld som fanns för 4,4 miljarder år sedan? Svaret finns i några av jordens allra minsta och mest motståndskraftiga kristaller. De fungerar som tidskapslar från vår planets första tid.",
     hero: {
-      src: "/images/timeline/early-earth/zircons-hero.png",
+      src: "/images/timeline/early-earth/zircons-hero.webp",
       alt: "Närbild av gyllene zirkonkristaller i uråldrig berggrund.",
       caption:
         "Zirkonkristaller kan bevara spår från jordens tidigaste historia. Konstnärlig illustration.",
@@ -16,7 +16,7 @@ export const earlyEarthArticles: Record<string, MilestoneArticleData> = {
       kind: "illustration",
     },
     showcase: {
-      src: "/images/timeline/showcases/zircon.png",
+      src: "/images/timeline/showcases/zircon.webp",
       title: "Zirkon – en uråldrig tidskapsel",
       description:
         "I Jack Hills i Australien har forskare hittat zirkonkristaller som är omkring 4,4 miljarder år gamla. De verkliga kristallerna är ofta mindre än ett sandkorn. Här visas en konstnärligt förstorad modell.",
@@ -43,7 +43,7 @@ export const earlyEarthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/early-earth/zircon-dating.png",
+          src: "/images/timeline/early-earth/zircon-dating.webp",
           alt: "Infografik som visar hur uran-238 sönderfaller till bly-206 och hur forskare använder processen för att åldersbestämma zirkonkristaller.",
           caption:
             "Uran–bly-datering fungerar som en geologisk klocka. Genom att mäta uran och bly i en zirkonkristall kan forskare beräkna när den bildades.",
@@ -114,7 +114,7 @@ export const earlyEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "HADEIKUM · DE FÖRSTA HAVEN",
     lead: "I dag täcker vatten större delen av vår planet. Men varifrån kom det? Och när svalnade den unga jorden tillräckligt för att de första haven skulle kunna bildas? Svaret är en av de mest fascinerande frågorna om jordens tidiga historia.",
     hero: {
-      src: "/images/timeline/early-earth/oceans-hero.png",
+      src: "/images/timeline/early-earth/oceans-hero.webp",
       alt: "Ett urtida hav med vulkaniska öar under en dramatisk himmel.",
       caption:
         "En möjlig bild av jordens tidiga hav. Deras exakta utseende är okänt.",
@@ -141,7 +141,7 @@ export const earlyEarthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/early-earth/oceans-first-rain.png",
+          src: "/images/timeline/early-earth/oceans-first-rain.webp",
           alt: "Konstnärlig rekonstruktion av den unga jorden med vulkaniska öar, vattenånga, mörka regnmoln och regn över ett tidigt hav.",
           caption:
             "När den unga jorden svalnade kunde vattenånga kondensera och falla som regn. Hur de allra första haven såg ut vet forskarna ännu inte.",
@@ -221,7 +221,7 @@ export const earlyEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "HADEIKUM · JORDENS FÖRSTA BERGGRUND",
     lead: "Från en mycket het och delvis smält värld började jorden utveckla en fast yta. Men den första jordskorpan var inte som den vi känner i dag. Den bildades, förändrades och förstördes gång på gång.",
     hero: {
-      src: "/images/timeline/early-earth/crust-hero.png",
+      src: "/images/timeline/early-earth/crust-hero.webp",
       alt: "Den unga jordens mörka, stelnande yta med sprickor av glödande lava.",
       caption:
         "En konstnärlig rekonstruktion av en ung planet där fast berg börjar bildas.",
@@ -239,7 +239,7 @@ export const earlyEarthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/early-earth/crust-formation.png",
+          src: "/images/timeline/early-earth/crust-formation.webp",
           alt: "Vetenskaplig illustration av hur den unga jordens smälta yta gradvis svalnar och bildar en tunn, tidig jordskorpa ovanför hetare berggrund.",
           caption:
             "När jordens yta svalnade kunde smält berg stelna till en tidig jordskorpa. Nedslag och vulkanisk aktivitet kunde sedan förändra eller smälta delar av den igen.",
@@ -319,7 +319,7 @@ export const earlyEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "HADEIKUM OCH ARKEIKUM · NEDSLAGENS HISTORIA",
     lead: "Under solsystemets första tid fanns mängder av mindre himlakroppar kvar mellan planeterna. Många kolliderade med jorden och månen. Nedslagen kunde smälta berggrund, skapa enorma kratrar och förändra hela planetens miljö.",
     hero: {
-      src: "/images/timeline/early-earth/bombardment-hero.png",
+      src: "/images/timeline/early-earth/bombardment-hero.webp",
       alt: "Asteroider och ljusstarka nedslag mot den unga jordens yta.",
       caption:
         "Stora nedslag formade det tidiga solsystemet. Konstnärlig illustration.",
@@ -341,7 +341,7 @@ export const earlyEarthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/early-earth/asteroid-impact-diagram.png",
+          src: "/images/timeline/early-earth/asteroid-impact-diagram.webp",
           alt: "Genomskärning av ett stort asteroidnedslag som visar hur en krater bildas, berggrund smälter och stötvågor sprider sig genom marken.",
           caption:
             "Ett stort asteroidnedslag frigör enorma mängder energi. Berggrund kan krossas och smälta, material kastas ut och en krater bildas. Illustrationens proportioner är förenklade.",

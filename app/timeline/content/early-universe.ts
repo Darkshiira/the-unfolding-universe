@@ -8,7 +8,7 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
     kicker: "UNIVERSUMS HISTORIA · DEN TIDIGA EXPANSIONEN",
     lead: "För omkring 13,8 miljarder år sedan var det observerbara universum mycket hett och tätt. Sedan dess har rymden expanderat och svalnat. Genom att studera ljuset från avlägsna galaxer och universums äldsta ljus kan forskare återskapa stora delar av den här berättelsen.",
     hero: {
-      src: "/images/timeline/early/big-bang-hero-v2.png",
+      src: "/images/timeline/early/big-bang-hero-v2.webp",
       alt: "Konstnärlig visualisering av det tidiga, heta universum och dess expansion, utan en central explosionspunkt.",
       caption:
         "Konstnärlig visualisering av universums tidiga expansion, inte ett fotografi av den stora smällen.",
@@ -24,7 +24,7 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
           "När vi ser långt ut i rymden ser vi också tillbaka i tiden, eftersom ljuset behöver tid för att nå oss. Det ger astronomer möjlighet att undersöka hur universum har förändrats under miljarder år.",
         ],
         image: {
-          src: "/images/timeline/early/expanding-space.png",
+          src: "/images/timeline/early/expanding-space.webp",
           alt: "Pedagogisk illustration av hur avstånd mellan galaxer ökar när rymden expanderar.",
           caption:
             "Rymdens expansion ökar avstånden mellan galaxer som inte hålls samman av gravitationen.",
@@ -48,7 +48,7 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
           "Tyngre grundämnen, som kol och syre, bildades huvudsakligen långt senare i stjärnor och genom andra kosmiska processer. Därför berättar grundämnenas förekomst både om universums första minuter och om generationer av stjärnor.",
         ],
         image: {
-          src: "/images/timeline/early/primordial-elements.png",
+          src: "/images/timeline/early/primordial-elements.webp",
           alt: "Vetenskaplig illustration av väte- och heliumkärnor i det tidiga universum.",
           caption:
             "Väte och helium dominerade den materia som bildades i universums första minuter.",
@@ -64,7 +64,7 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
           "Detta ljus kan fortfarande observeras som den kosmiska mikrovågsbakgrunden. Små temperaturskillnader i strålningen visar hur materia var fördelad i det unga universum och hjälper forskare att förstå hur galaxer senare kunde bildas.",
         ],
         image: {
-          src: "/images/timeline/early/cosmic-background.png",
+          src: "/images/timeline/early/cosmic-background.webp",
           alt: "Visualisering av små temperaturvariationer i den kosmiska mikrovågsbakgrunden.",
           caption:
             "Mikrovågsbakgrunden är ett av de viktigaste spåren efter universums tidiga historia.",
@@ -128,7 +128,7 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
     kicker: "SOLSYSTEMETS HISTORIA · EN UNG STJÄRNA",
     lead: "För ungefär 4,6 miljarder år sedan började vårt solsystem ta form ur ett moln av gas och stoft. I mitten växte solen fram. Runt den snurrade en skiva av material som så småningom blev planeter, månar, asteroider och kometer.",
     hero: {
-      src: "/images/timeline/early/solar-nebula-hero-v3.png",
+      src: "/images/timeline/early/solar-nebula-hero-v3.webp",
       alt: "Konstnärlig rekonstruktion av den unga solen omgiven av en skiva med gas, stoft och växande planetkroppar.",
       caption:
         "Så kan det unga solsystemet ha sett ut när planeterna började bildas.",
@@ -152,7 +152,7 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
           "Astronomer kan idag fotografera skivor runt andra unga stjärnor. Vissa visar ringar och luckor som kan vara tecken på pågående planetbildning.",
         ],
         image: {
-          src: "/images/timeline/early/protoplanetary-disk.png",
+          src: "/images/timeline/early/protoplanetary-disk.webp",
           alt: "Illustration av en ung stjärna med en roterande skiva av gas och stoft.",
           caption:
             "Planeter växer fram ur materialet i en protoplanetär skiva.",
@@ -168,7 +168,7 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
           "Hur de första stenblocken snabbt blev kilometerstora kroppar är fortfarande ett viktigt forskningsproblem. Rörelser i gasen och ansamlingar av partiklar kan ha spelat stor roll.",
         ],
         image: {
-          src: "/images/timeline/earth/accretion.png",
+          src: "/images/timeline/earth/accretion.webp",
           alt: "Diagram som visar hur stoft, planetesimaler och större planetkroppar bildas genom ackretion.",
           caption:
             "Ackretion: mindre partiklar och kroppar samlas till större objekt.",
@@ -239,7 +239,7 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
     kicker: "HADEIKUM · MÅNENS URSPRUNG",
     lead: "Månen är jordens närmaste stora följeslagare. De ledande teorierna beskriver hur en enorm kollision tidigt i solsystemets historia kastade material i bana runt jorden. Därifrån kan månen ha vuxit fram — men många detaljer är fortfarande öppna frågor.",
     hero: {
-      src: "/images/timeline/early/moon-formation-hero-v3.png",
+      src: "/images/timeline/early/moon-formation-hero-v3.webp",
       alt: "Konstnärlig rekonstruktion av en jättelik kollision mellan den unga jorden och en annan planetkropp.",
       caption:
         "En möjlig bild av den kollision som kan ha lett till månens bildning.",
@@ -251,7 +251,7 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
       intensity: "normal",
     },
     showcase: {
-      src: "/images/timeline/showcases/moon-rock.png",
+      src: "/images/timeline/showcases/moon-rock.webp",
       title: "Månsten – anortosit",
       description:
         "Månens ljusa högland består till stor del av anortosit. Bergarten ger forskare ledtrådar om hur månens tidiga skorpa bildades när smält berg svalnade. Konstnärlig rekonstruktion, inte ett verkligt månprov.",
@@ -267,7 +267,7 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
           "Det är viktigt att skilja modellen från ett observerat historiskt faktum: ingen vet exakt hur stor den andra kroppen var, vilken bana den hade eller hur kollisionen utvecklades.",
         ],
         image: {
-          src: "/images/timeline/early/giant-impact.png",
+          src: "/images/timeline/early/giant-impact.webp",
           alt: "Vetenskapligt inspirerad illustration av två unga planetkroppar som kolliderar och kastar ut material.",
           caption:
             "Jättenedslagshypotesen kan förklara flera egenskaper hos jorden och månen.",
@@ -291,7 +291,7 @@ export const earlyUniverseArticles: Record<string, MilestoneArticleData> = {
           "Månens ljusa högland består till stor del av anortosit, en bergart som ger ledtrådar om en tidig period då smälta bergarter separerades efter densitet.",
         ],
         image: {
-          src: "/images/timeline/early/young-moon.png",
+          src: "/images/timeline/early/young-moon.webp",
           alt: "Konstnärlig rekonstruktion av den tidiga månens heta yta och begynnande skorpa.",
           caption: "Den unga månen kan ha haft ett omfattande magmahav.",
           credit: "Konstnärlig rekonstruktion för The Unfolding Universe",

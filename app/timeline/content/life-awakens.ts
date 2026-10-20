@@ -8,7 +8,7 @@ export const lifeAwakensArticles: Record<string, MilestoneArticleData> = {
     kicker: "ARKAIKUM · LIVETS STORA MYSTERIUM",
     lead: "Någon gång på den unga jorden började kemi utvecklas till något vi skulle kalla liv. Men när skedde det, var hände det och vilka steg krävdes? Forskare söker fortfarande svar i bergarter, laboratorier och livets egen kemi.",
     hero: {
-      src: "/images/timeline/life-awakens/origin-life-hero.png",
+      src: "/images/timeline/life-awakens/origin-life-hero.webp",
       alt: "Konstnärlig rekonstruktion av den unga jordens kust med vulkaniska öar, dimma och ett stilla urhav.",
       caption: "Den unga jorden hade vatten och energikällor, men vi vet inte var livet först uppstod.",
       credit,
@@ -42,7 +42,7 @@ export const lifeAwakensArticles: Record<string, MilestoneArticleData> = {
           "Det finns också idéer om att mineralytor eller naturliga små hålrum kan ha fungerat som enkla avgränsade reaktionsmiljöer. Flera olika miljöer kan ha bidragit, och vi vet ännu inte vilken som var avgörande.",
         ],
         image: {
-          src: "/images/timeline/life-awakens/origin-life-environments.png",
+          src: "/images/timeline/life-awakens/origin-life-environments.webp",
           alt: "Pedagogisk jämförelse mellan hydrotermala källor på havsbottnen, grunda vattenmiljöer och mineralrika porer som möjliga miljöer för livets uppkomst.",
           caption: "Forskare undersöker flera möjliga miljöer för livets uppkomst. Illustrationens alternativ är hypoteser, inte bevisade födelseplatser.",
           credit,
@@ -97,7 +97,7 @@ export const lifeAwakensArticles: Record<string, MilestoneArticleData> = {
     kicker: "ARKAIKUM · DE ÄLDSTA BIOLOGISKA LEDTRÅDARNA",
     lead: "De första organismerna lämnade inga ben eller skal. Ändå finns spår i mycket gamla bergarter som kan berätta att mikroskopiskt liv redan hade etablerats för minst omkring 3,5 miljarder år sedan.",
     hero: {
-      src: "/images/timeline/life-awakens/microbes-hero.png",
+      src: "/images/timeline/life-awakens/microbes-hero.webp",
       alt: "Konstnärlig rekonstruktion av grunda urhav med tunna mikrobiella mattor över sediment och stenar.",
       caption: "Mikroorganismer kan ha bildat samhällen på havsbottnar långt innan djur och växter utvecklades.",
       credit,
@@ -131,7 +131,7 @@ export const lifeAwakensArticles: Record<string, MilestoneArticleData> = {
           "Därför kombinerar forskare mikroskopi, kemiska analyser och geologisk kontext innan de drar slutsatser om ett mycket gammalt fynd.",
         ],
         image: {
-          src: "/images/timeline/life-awakens/earliest-life-evidence.png",
+          src: "/images/timeline/life-awakens/earliest-life-evidence.webp",
           alt: "Pedagogiskt diagram med tre typer av möjliga biosignaturer i gamla bergarter: mikroskopiska strukturer, skiktade sediment och kemiska isotopsignaler.",
           caption: "Forskare söker flera sorters biosignaturer. Ingen enskild form eller kemisk signal bevisar automatiskt att liv funnits.",
           credit,
@@ -186,14 +186,14 @@ export const lifeAwakensArticles: Record<string, MilestoneArticleData> = {
     kicker: "ARKAIKUM · LIVET SOM BYGGDE STEN",
     lead: "Långt innan korallrev och skogar fanns kunde mikrobiella samhällen påverka hur sediment samlades och mineral bildades. Resultatet blev ibland skiktade strukturer som fortfarande hjälper oss att läsa livets tidiga historia.",
     hero: {
-      src: "/images/timeline/life-awakens/stromatolites-hero.png",
+      src: "/images/timeline/life-awakens/stromatolites-hero.webp",
       alt: "Konstnärlig rekonstruktion av ett varmt, grunt urhav med rundade, skiktade stromatoliter under vattenytan.",
       caption: "Stromatolitliknande strukturer kan byggas upp i grunda vattenmiljöer genom samspelet mellan mikrober, sediment och mineral.",
       credit,
       kind: "illustration",
     },
     showcase: {
-      src: "/images/timeline/showcases/stromatolite.png",
+      src: "/images/timeline/showcases/stromatolite.webp",
       title: "Stromatolit – livets lager på lager",
       description: "Stromatoliter är skiktade strukturer som kan bildas när mikrobiella samhällen fångar sediment eller påverkar mineralutfällning. Vissa mycket gamla exemplar ger ledtrådar om tidigt liv. Konstnärlig illustration av ett bergartsprov, inte ett autentiskt fossil.",
       alt: "Konstnärlig museiillustration av ett gråbeige stromatolitprov med tydliga böljande lager på en rund, polerad träplattform.",
@@ -217,7 +217,7 @@ export const lifeAwakensArticles: Record<string, MilestoneArticleData> = {
           "Alla stromatoliter bildas inte på exakt samma sätt. Vattendjup, ljus, vågor, sediment och mikrobernas sammansättning påverkar utseendet.",
         ],
         image: {
-          src: "/images/timeline/life-awakens/stromatolite-formation.png",
+          src: "/images/timeline/life-awakens/stromatolite-formation.webp",
           alt: "Pedagogiskt tvärsnitt som visar en mikrobiell matta, sediment som fastnar och upprepade lager som bygger upp en stromatolit.",
           caption: "Mikrobiella mattor kan fånga sediment och påverka mineralbildning. Under lång tid kan upprepade processer skapa skiktade stromatoliter.",
           credit,

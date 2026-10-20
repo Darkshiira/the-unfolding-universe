@@ -8,7 +8,7 @@ export const lifeOxygenArticles: Record<string, MilestoneArticleData> = {
     kicker: "ARKAIKUM · NÄR LIVET FÅNGADE SOLLJUSET",
     lead: "Långt innan det fanns växter använde mikroorganismer ljus som energikälla. Så småningom utvecklades fotosyntes som frigör syre – en biologisk innovation som skulle förändra jordens hav, atmosfär och framtida liv.",
     hero: {
-      src: "/images/timeline/life-oxygen/photosynthesis-hero.png",
+      src: "/images/timeline/life-oxygen/photosynthesis-hero.webp",
       alt: "Konstnärlig rekonstruktion av ett grunt urhav där solljus tränger genom vattnet och lyser upp mikrobiella mattor på havsbottnen.",
       caption:
         "Ljusdrivna mikroorganismer fanns långt innan landväxterna. När syreproducerande fotosyntes utvecklades började livet förändra planetens kemi.",
@@ -43,7 +43,7 @@ export const lifeOxygenArticles: Record<string, MilestoneArticleData> = {
           "Det är viktigt att skilja på syreproduktionen och syrets senare ansamling i atmosfären. Under lång tid kunde nybildat syre förbrukas i reaktioner med ämnen i hav och bergarter.",
         ],
         image: {
-          src: "/images/timeline/life-oxygen/photosynthesis-process.png",
+          src: "/images/timeline/life-oxygen/photosynthesis-process.webp",
           alt: "Pedagogiskt diagram som jämför syrefri fotosyntes med syreproducerande fotosyntes hos cyanobakterier och visar hur solljus, vatten och koldioxid används medan syrgas frigörs.",
           caption:
             "All fotosyntes bildar inte syrgas. Vid syreproducerande fotosyntes används vatten och syrgas frigörs som en produkt.",
@@ -105,7 +105,7 @@ export const lifeOxygenArticles: Record<string, MilestoneArticleData> = {
     kicker: "PALEOPROTEROZOIKUM · DEN STORA SYRESÄTTNINGEN",
     lead: "För omkring 2,4 miljarder år sedan förändrades jordens atmosfär i grunden. Syrgas som producerades av mikroorganismer började få ett mer bestående genomslag – med enorma följder för hav, bergarter och liv.",
     hero: {
-      src: "/images/timeline/life-oxygen/oxygen-hero.png",
+      src: "/images/timeline/life-oxygen/oxygen-hero.webp",
       alt: "Konstnärlig rekonstruktion av den tidiga jordens hav och karga kust när atmosfärens syrehalt började öka, med solbelysta moln och järnrika röda sediment.",
       caption:
         "Den stora syresättningen förändrade jordens kemi. Atmosfären blev inte omedelbart lika syrerik som i dag.",
@@ -114,7 +114,7 @@ export const lifeOxygenArticles: Record<string, MilestoneArticleData> = {
     },
 
     showcase: {
-      src: "/images/timeline/showcases/banded-iron-formation.png",
+      src: "/images/timeline/showcases/banded-iron-formation.webp",
       title: "Bandad järnformation – när haven förändrades",
       description:
         "Bandade järnformationer består av växlande järnrika och kiseldioxidrika lager som bildades i forntida hav. Deras mineral och kemiska sammansättning hjälper forskare att förstå hur järn och syre samspelade under jordens tidiga historia. Många bildades långt före den stora syresättningen. Konstnärlig illustration av ett bergartsprov, inte ett autentiskt exemplar.",
@@ -154,7 +154,7 @@ export const lifeOxygenArticles: Record<string, MilestoneArticleData> = {
           "Men jorden rostade inte överallt samtidigt. Bandade järnformationer började bildas långt före den stora syresättningen, och forskare undersöker fortfarande hur olika biologiska och kemiska processer bidrog till deras uppkomst. De är därför viktiga ledtrådar till havens utveckling, inte ett enkelt mått på atmosfärens syrehalt.",
         ],
         image: {
-          src: "/images/timeline/life-oxygen/oceans-begin-to-rust.png",
+          src: "/images/timeline/life-oxygen/oceans-begin-to-rust.webp",
           alt: "Pedagogiskt tvärsnitt av ett urhav där syre från fotosyntetiserande mikroorganismer reagerar med löst järn, så att järnmineral bildas och avsätts i sediment på havsbottnen.",
           caption:
             "Syre från mikroorganismer kunde reagera med löst järn i urhaven. Under lång tid bidrog järnmineral till sediment som senare bildade bandade järnformationer. Processerna varierade mellan olika miljöer och tidsperioder.",
@@ -172,7 +172,7 @@ export const lifeOxygenArticles: Record<string, MilestoneArticleData> = {
           "Även rödfärgade sediment, järnmineral och andra geokemiska indikatorer hjälper forskare att rekonstruera syrets historia. Varje signal måste tolkas i sitt geologiska sammanhang.",
         ],
         image: {
-          src: "/images/timeline/life-oxygen/great-oxidation-evidence.png",
+          src: "/images/timeline/life-oxygen/great-oxidation-evidence.webp",
           alt: "Pedagogiskt diagram över jordens syresättning med en tidslinje, förändrade svavelisotopsignaler och exempel på järnrika sediment som geologiska ledtrådar.",
           caption:
             "Förändrade svavelisotoper och andra geokemiska spår visar att atmosfärens syrehalt började förändras för omkring 2,4 miljarder år sedan.",

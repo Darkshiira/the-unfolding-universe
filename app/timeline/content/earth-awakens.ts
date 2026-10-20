@@ -13,7 +13,7 @@ export const earthAwakensArticles: Record<string, MilestoneArticleData> = {
     kicker: "EDIACARA · EFTER ISEN",
     lead: "För omkring 635 miljoner år sedan började jorden återhämta sig efter en av sin historias mest extrema nedisningar. Isarna drog sig tillbaka, haven förändrades och nya miljöer växte fram. Men hur kunde en så nedkyld planet bli varm igen?",
     hero: {
-      src: "/images/timeline/earth-awakens/ediacaran-earth-hero.png",
+      src: "/images/timeline/earth-awakens/ediacaran-earth-hero.webp",
       alt: "Konstnärlig rekonstruktion av smältande glaciärer, mörka uråldriga berg och öppet hav efter en global nedisning.",
       caption:
         "När den marinoiska nedisningen upphörde förändrades jordens hav och klimat kraftigt. Landskapet är en konstnärlig tolkning.",
@@ -22,7 +22,7 @@ export const earthAwakensArticles: Record<string, MilestoneArticleData> = {
     },
 
     showcase: {
-      src: "/images/timeline/showcases/cap-carbonate.png",
+      src: "/images/timeline/showcases/cap-carbonate.webp",
       title: "Täckkarbonat – efter den stora isen",
       description:
         "Karbonatbergarter som avsatts ovanpå vissa glaciala sediment från kryogenium. De bevarar ledtrådar om hur havens kemi och miljöer förändrades efter omfattande nedisningar. Konstnärlig illustration av ett bergartsprov.",
@@ -58,7 +58,7 @@ export const earthAwakensArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/earth-awakens/cap-carbonates-diagram.png",
+          src: "/images/timeline/earth-awakens/cap-carbonates-diagram.webp",
           alt: "Pedagogisk illustration i fyra steg av hur en global istid följs av uppvärmning, förändrad havskemi och avsättning av cap-karbonater ovanpå glaciala sediment.",
           caption:
             "Cap-karbonater är karakteristiska karbonatlager som förekommer ovanpå vissa glaciala avlagringar från kryogenium. De hjälper forskare att undersöka hur klimatet och havens kemi förändrades efter omfattande nedisningar.",
@@ -123,7 +123,7 @@ export const earthAwakensArticles: Record<string, MilestoneArticleData> = {
     lead: "För omkring 550 miljoner år sedan höll en enorm landmassa på att ta form. Genom långvariga kollisioner förenades gamla kontinentalblock till Gondwana – en superkontinent vars delar i dag ligger utspridda över flera världsdelar.",
 
     hero: {
-      src: "/images/timeline/earth-awakens/gondwana-hero.png",
+      src: "/images/timeline/earth-awakens/gondwana-hero.webp",
       alt: "Konstnärlig vy från hög höjd över en uråldrig superkontinent med bergskedjor, vidsträckta kuster, hav och ett stort istäckt område.",
       caption:
         "Gondwana bildades genom en lång serie kollisioner mellan äldre kontinentalblock. Bilden är en konstnärlig tolkning och visar inte en exakt rekonstruktion av Gondwanas geografi vid 550 miljoner år sedan.",
@@ -161,7 +161,7 @@ export const earthAwakensArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/earth-awakens/gondwana-reconstruction.png",
+          src: "/images/timeline/earth-awakens/gondwana-reconstruction.webp",
           alt: "Pedagogisk infografik om superkontinenten Gondwana, med en schematisk karta, jämförelse med dagens kontinenter, geologiska bevis och en tidslinje över kontinenternas sammanslagning.",
           caption:
             "Gondwana bildades genom långvariga kollisioner mellan äldre kontinentalblock. Forskare använder bland annat bergarter, fossil och paleomagnetiska data för att rekonstruera dess historia. Bilden är schematisk och innehåller även exempel från senare perioder i Gondwanas historia.",
@@ -223,7 +223,7 @@ export const earthAwakensArticles: Record<string, MilestoneArticleData> = {
     kicker: "SEN ORDOVICIUM · IS OCH FÖRÄNDRING",
     lead: "För omkring 445 miljoner år sedan kyls jorden åter kraftigt. Stora inlandsisar växer över delar av Gondwana, havsnivån sjunker och livet i haven utsätts för snabba miljöförändringar. Det är början på en av jordens stora biologiska kriser.",
     hero: {
-      src: "/images/timeline/earth-awakens/ordovician-ice-hero.png",
+      src: "/images/timeline/earth-awakens/ordovician-ice-hero.webp",
       alt: "Konstnärlig rekonstruktion av stora glaciärer på en karg uråldrig kontinent under sen ordovicium.",
       caption:
         "Under sen ordovicium bredde is ut sig över delar av Gondwana. Bilden visar en möjlig miljö och är inte en exakt rekonstruktion av en specifik plats.",
@@ -262,7 +262,7 @@ export const earthAwakensArticles: Record<string, MilestoneArticleData> = {
           "Forskare undersöker sedimentlager och fossil för att förstå hur miljöförändringarna sammanföll med förlusterna av arter.",
         ],
         image: {
-          src: "/images/timeline/earth-awakens/ordovician-sea-level.png",
+          src: "/images/timeline/earth-awakens/ordovician-sea-level.webp",
           alt: "Pedagogiskt diagram som visar hur vatten binds i växande inlandsisar och hur havsnivån kan sjunka över grunda kontinentalsocklar.",
           caption:
             "När inlandsisar växer kan den globala havsnivån sjunka och grunda havsområden minska. Diagrammet förenklar ett komplext geologiskt förlopp.",

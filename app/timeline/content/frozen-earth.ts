@@ -8,7 +8,7 @@ export const frozenEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "PALEOPROTEROZOIKUM · JORDENS TIDIGA ISTIDER",
     lead: "Föreställ dig en jord där stora ismassor breder ut sig över landskapet – långt innan djur och växter fanns på land. För omkring 2,4–2,1 miljarder år sedan inträffade flera omfattande nedisningar. Spåren finns fortfarande kvar i uråldriga bergarter.",
     hero: {
-      src: "/images/timeline/frozen-earth/huronian-hero.png",
+      src: "/images/timeline/frozen-earth/huronian-hero.webp",
       alt: "Konstnärlig rekonstruktion av ett uråldrigt islandskap med väldiga glaciärer, mörka klippor och ett delvis istäckt hav.",
       caption:
         "Under den huroniska istidsperioden, för omkring 2,4–2,1 miljarder år sedan, drabbades jorden av omfattande nedisningar. Landskapets utseende är en konstnärlig tolkning.",
@@ -21,7 +21,7 @@ export const frozenEarthArticles: Record<string, MilestoneArticleData> = {
     },
 
     showcase: {
-      src: "/images/timeline/showcases/huronian-tillite.png",
+      src: "/images/timeline/showcases/huronian-tillite.webp",
       title: "Tillit – spår av uråldrig is",
       description:
         "Tillit är en bergart som kan bildas när osorterade sediment från glaciärer hårdnar till sten. Inneslutna stenfragment ger forskare ledtrådar om forntida nedisningar. Konstnärlig illustration, inte ett autentiskt huroniskt bergartsprov.",
@@ -47,7 +47,7 @@ export const frozenEarthArticles: Record<string, MilestoneArticleData> = {
           "Ingen enskild struktur är alltid ett säkert bevis. Därför väger geologer samman flera observationer innan de drar slutsatsen att en mycket gammal bergart bildades i en glacial miljö.",
         ],
         image: {
-          src: "/images/timeline/frozen-earth/huronian-evidence.png",
+          src: "/images/timeline/frozen-earth/huronian-evidence.webp",
           alt: "Pedagogisk illustration av glaciala spår i berggrunden, med morän, isräfflor, flyttblock och sediment avsatta av smältvatten.",
           caption:
             "Glaciärer kan lämna spår i form av osorterade sediment, räfflad berggrund och transporterade stenblock. Liknande typer av geologiska spår hjälper forskare att undersöka mycket gamla nedisningar.",
@@ -119,7 +119,7 @@ export const frozenEarthArticles: Record<string, MilestoneArticleData> = {
     lead: "Långt före Pangea fanns en annan enorm landmassa: Rodinia. För omkring en miljard år sedan hade stora delar av jordens kontinenter samlats. Hur kan forskare pussla ihop en värld som sedan länge har spruckit sönder?",
 
     hero: {
-      src: "/images/timeline/frozen-earth/rodinia-hero.png",
+      src: "/images/timeline/frozen-earth/rodinia-hero.webp",
       alt: "Konstnärlig vy från hög höjd över en uråldrig superkontinent med bergskedjor, kuster och omgivande hav.",
       caption:
         "Rodinia var en superkontinent som existerade långt före Pangea. Dess exakta utseende och kontinenternas placering är fortfarande föremål för forskning.",
@@ -148,7 +148,7 @@ export const frozenEarthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/frozen-earth/rodinia-map.png",
+          src: "/images/timeline/frozen-earth/rodinia-map.webp",
           alt: "Konstnärlig och schematisk illustration av superkontinenten Rodinia, med möjliga placeringar av uråldriga kontinentalblock och förklaringar av geologiska undersökningsmetoder.",
           caption:
             "Rodinias utseende rekonstrueras med hjälp av bland annat berggrundens ålder, paleomagnetiska mätningar och geologiska samband mellan kontinenter. Bildens geografi är illustrativ och ska inte tolkas som en exakt vetenskaplig karta.",
@@ -220,7 +220,7 @@ export const frozenEarthArticles: Record<string, MilestoneArticleData> = {
     lead: "Kan nästan hela jorden ha varit täckt av is? Under kryogenium, för ungefär 720–635 miljoner år sedan, inträffade två av de mest omfattande kända nedisningarna. Bergarter från hela världen avslöjar en planet som genomgick extrema klimatförändringar.",
 
     hero: {
-      src: "/images/timeline/frozen-earth/snowball-hero.png",
+      src: "/images/timeline/frozen-earth/snowball-hero.webp",
       alt: "Konstnärlig rekonstruktion av en nästan helt istäckt jord sedd från rymden, med enorma isfält, mörka havsområden och solljus vid horisonten.",
       caption:
         "Under kryogenium, för omkring 720–635 miljoner år sedan, upplevde jorden flera extrema nedisningar. Hur omfattande istäcket var är fortfarande omdiskuterat.",
@@ -252,7 +252,7 @@ export const frozenEarthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/frozen-earth/snowball-albedo.png",
+          src: "/images/timeline/frozen-earth/snowball-albedo.webp",
           alt: "Vetenskaplig infografik i fyra steg som visar hur nedkylning leder till växande istäcken, ökad reflektion av solljus och ytterligare nedkylning, samt hur växthusgaser kan bidra till avsmältning.",
           caption:
             "Is–albedo-återkopplingen kan förstärka en global nedkylning: mer is reflekterar mer solljus, vilket gör planeten ännu kallare. På lång sikt kan bland annat ansamling av vulkanisk koldioxid bidra till att klimatet värms och isen smälter.",

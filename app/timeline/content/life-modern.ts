@@ -8,7 +8,7 @@ export const lifeModernArticles: Record<string, MilestoneArticleData> = {
     kicker: "PALEOCEN–EOCEN · LIVET I EN VÄXTHUSVÄRLD",
     lead: "För omkring 56 miljoner år sedan steg jordens temperatur kraftigt under en geologiskt kort period. Haven förändrades, ekosystem omorganiserades och många arter fick nya livsvillkor. Denna händelse, känd som PETM, visar hur nära sammanflätade klimatet och livet på jorden är.",
     hero: {
-      src: "/images/timeline/life-modern/petm-hero.png",
+      src: "/images/timeline/life-modern/petm-hero.webp",
       alt: "Konstnärlig rekonstruktion av ett varmt landskap under paleocen–eocen med tät subtropisk vegetation, floder och tidiga däggdjur.",
       caption:
         "Under PETM blev jorden betydligt varmare. Många växt- och djursamhällen förändrades när klimat och livsmiljöer skiftade.",
@@ -16,7 +16,7 @@ export const lifeModernArticles: Record<string, MilestoneArticleData> = {
       kind: "illustration",
     },
     showcase: {
-      src: "/images/timeline/showcases/petm-fossil-leaf.png",
+      src: "/images/timeline/showcases/petm-fossil-leaf.webp",
       title: "Fossilt löv – ett spår av en varmare värld",
       description:
         "Fossila blad från tiden kring övergången mellan paleocen och eocen hjälper forskare att förstå hur jordens växtlighet förändrades under en period av kraftig global uppvärmning för omkring 56 miljoner år sedan. Bladens form, storlek och nervmönster kan ge ledtrådar om forntida växtsamhällen och klimatförhållanden. Konstnärlig illustration av ett fossilförande bergartsprov, inte ett autentiskt exemplar från PETM.",
@@ -41,7 +41,7 @@ export const lifeModernArticles: Record<string, MilestoneArticleData> = {
           "Ökade halter av växthusgaser bidrog till uppvärmningen. Samtidigt kunde ett varmare klimat påverka kolets kretslopp ytterligare och därmed förstärka förändringarna.",
         ],
         image: {
-          src: "/images/timeline/life-modern/petm-carbon-cycle.png",
+          src: "/images/timeline/life-modern/petm-carbon-cycle.webp",
           alt: "Pedagogiskt diagram som visar hur ett stort tillskott av kol till atmosfär och hav kan förstärka växthuseffekten och påverka havens kemi.",
           caption:
             "PETM förknippas med en stor störning i kolets kretslopp. Forskare undersöker fortfarande vilka kolkällor som var viktigast.",
@@ -58,7 +58,7 @@ export const lifeModernArticles: Record<string, MilestoneArticleData> = {
           "Andra marina organismer reagerade genom att förändra sin geografiska utbredning eller sammansättningen av sina samhällen. Effekterna varierade mellan havsområden och organismgrupper.",
         ],
         image: {
-          src: "/images/timeline/life-modern/petm-ocean-changes.png",
+          src: "/images/timeline/life-modern/petm-ocean-changes.webp",
           alt: "Pedagogisk jämförelse av havsmiljöer före och under PETM, med förändrad temperatur, havsförsurning och bottenlevande foraminiferer.",
           caption:
             "Uppvärmning och förändrad havskemi påverkade marina ekosystem. Särskilt tydliga förluster syns bland vissa djuphavslevande foraminiferer.",
@@ -75,7 +75,7 @@ export const lifeModernArticles: Record<string, MilestoneArticleData> = {
           "I vissa fossilserier finns tecken på att kroppsstorleken minskade hos vissa däggdjur under den varma perioden. Orsakerna kan ha varit flera, och mönstret gällde inte alla arter.",
         ],
         image: {
-          src: "/images/timeline/life-modern/petm-ecosystems.png",
+          src: "/images/timeline/life-modern/petm-ecosystems.webp",
           alt: "Pedagogisk illustration av förändrade växtmiljöer och däggdjurens geografiska spridning under PETM.",
           caption:
             "Under PETM förändrades livsmiljöer och flera däggdjursgrupper spreds till nya områden. Illustrationens landskap är förenklade rekonstruktioner.",
@@ -140,7 +140,7 @@ export const lifeModernArticles: Record<string, MilestoneArticleData> = {
     kicker: "KENOZOIKUM · NYA EKOSYSTEM VÄXER FRAM",
     lead: "När kritaperioden tog slut försvann många välbekanta livsformer, men livet upphörde inte. Under de följande 66 miljoner åren utvecklades nya ekologiska samhällen. Däggdjur, fåglar, blomväxter och otaliga mikroorganismer blev delar av den föränderliga värld som så småningom skulle bli vår.",
     hero: {
-      src: "/images/timeline/life-modern/biodiversity-hero.png",
+      src: "/images/timeline/life-modern/biodiversity-hero.webp",
       alt: "Konstnärlig rekonstruktion av ett artrikt kenozoiskt landskap med skog, blommande växter, fåglar, däggdjur och ett vattendrag.",
       caption:
         "Efter massutrotningen vid kritas slut förändrades ekosystemen under miljontals år. Dagens biologiska mångfald har formats av denna långa historia.",
@@ -166,7 +166,7 @@ export const lifeModernArticles: Record<string, MilestoneArticleData> = {
           "Utvecklingen var inte en rak väg mot dagens arter. Många framgångsrika grupper från kenozoikum har själva dött ut, och evolutionens förlopp har påverkats av klimat, geografi och slumpmässiga händelser.",
         ],
         image: {
-          src: "/images/timeline/life-modern/cenozoic-diversification.png",
+          src: "/images/timeline/life-modern/cenozoic-diversification.webp",
           alt: "Pedagogiskt diagram som visar hur flera grupper av däggdjur och fåglar utvecklade olika ekologiska roller under kenozoikum.",
           caption:
             "Efter kritas slut diversifierades flera överlevande grupper. Diagrammet visar utvalda exempel, inte ett fullständigt evolutionärt släktträd.",
@@ -192,7 +192,7 @@ export const lifeModernArticles: Record<string, MilestoneArticleData> = {
           "Under kenozoikum förändrades sådana nätverk när kontinenter flyttade sig, bergskedjor höjdes och klimatet växlade mellan varmare och kallare perioder.",
         ],
         image: {
-          src: "/images/timeline/life-modern/ecosystem-food-web.png",
+          src: "/images/timeline/life-modern/ecosystem-food-web.webp",
           alt: "Pedagogiskt näringsvävsdiagram med växter, växtätare, rovdjur, svampar och mikroorganismer samt pilar som visar energiöverföring.",
           caption:
             "Ekosystem är nätverk av organismer och miljöfaktorer. Energi överförs genom näringsvävar medan ämnen återcirkuleras.",
@@ -257,7 +257,7 @@ export const lifeModernArticles: Record<string, MilestoneArticleData> = {
     kicker: "NUTID · EN PLANET FULL AV LIV",
     lead: "Från mörka djuphav till höga bergstoppar finns liv i en häpnadsväckande mångfald av former. Alla nu levande organismer bär spår av en gemensam evolutionär historia. Men livets berättelse är inte färdigskriven – evolutionen fortsätter varje dag.",
     hero: {
-      src: "/images/timeline/life-modern/life-today-hero.png",
+      src: "/images/timeline/life-modern/life-today-hero.webp",
       alt: "Konstnärlig naturillustration som förenar en tropisk skog, ett artrikt hav och ett bergslandskap med många olika växter och djur.",
       caption:
         "Jordens liv finns i nästan alla tänkbara miljöer. Den biologiska mångfalden omfattar mycket mer än de stora djur och växter vi lätt kan se.",
@@ -283,7 +283,7 @@ export const lifeModernArticles: Record<string, MilestoneArticleData> = {
           "Virus spelar en stor roll i biosfären men räknas vanligen inte som cellulära organismer. Frågan om hur liv ska definieras är mer komplicerad än den först kan verka.",
         ],
         image: {
-          src: "/images/timeline/life-modern/tree-of-life.png",
+          src: "/images/timeline/life-modern/tree-of-life.webp",
           alt: "Pedagogiskt förenklat släktträd över bakterier, arkéer och eukaryoter med exempel på organismer och markering av eukaryoternas nära släktskap med arkéer.",
           caption:
             "Livets släktskap rekonstrueras bland annat med DNA. Bilden visar en förenklad modell; hur domänerna bör avgränsas diskuteras fortfarande.",
@@ -309,7 +309,7 @@ export const lifeModernArticles: Record<string, MilestoneArticleData> = {
           "När miljöförhållanden eller artsammansättningar förändras kan dessa processer påverkas. Ekosystem är dynamiska och deras stabilitet beror på många samverkande faktorer.",
         ],
         image: {
-          src: "/images/timeline/life-modern/earth-biosphere.png",
+          src: "/images/timeline/life-modern/earth-biosphere.webp",
           alt: "Pedagogiskt diagram som kopplar samman skogar, hav, jord, atmosfär och mikroorganismer genom fotosyntes, näringsämnen och kolets kretslopp.",
           caption:
             "Biosfären är sammanlänkad med jordens vatten, luft och berggrund. Liv och planet påverkar varandra genom många kretslopp.",

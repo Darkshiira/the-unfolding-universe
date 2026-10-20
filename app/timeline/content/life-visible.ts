@@ -9,7 +9,7 @@ export const lifeVisibleArticles: Record<string, MilestoneArticleData> = {
     kicker: "EDIACARA · LIVETS FRÄMMANDE VÄRLD",
     lead: "Långt före dinosaurier, fiskar och skogar täcktes delar av havsbottnen av mjuka, märkliga organismer. Några liknade blad eller fjädrar, andra låg som mönstrade skivor mot sedimentet. Deras fossil visar en värld där större livsformer redan hade börjat ta plats – men där mycket fortfarande är ett mysterium.",
     hero: {
-      src: "/images/timeline/life-visible/ediacaran-hero.png",
+      src: "/images/timeline/life-visible/ediacaran-hero.webp",
       alt: "Konstnärlig rekonstruktion av en havsbotten under ediacara med Dickinsonia, fjäderliknande rangeomorfer och mikrobiella mattor, utan moderna fiskar eller koraller.",
       caption: "Ediacaras havsbottnar hyste ovanliga mjukkroppade organismer. Bilden är en tolkning: deras färger, livssätt och släktskap är inte helt kända.",
       credit,
@@ -34,7 +34,7 @@ export const lifeVisibleArticles: Record<string, MilestoneArticleData> = {
           "Ediacarabiotan var inte en enda biologisk grupp. Den omfattade organismer med olika former, livssätt och sannolikt olika evolutionärt ursprung.",
         ],
         image: {
-          src: "/images/timeline/life-visible/ediacaran-organisms.png",
+          src: "/images/timeline/life-visible/ediacaran-organisms.webp",
           alt: "Pedagogisk jämförelse av Dickinsonia, Charnia och en annan rangeomorf med deras ungefärliga kroppsformer och skala.",
           caption: "Några typiska ediacaraformer. Rekonstruktionerna är förenklade och deras biologiska släktskap är delvis omdiskuterade.",
           credit,
@@ -50,7 +50,7 @@ export const lifeVisibleArticles: Record<string, MilestoneArticleData> = {
           "Ett fossil kan visa storlek, symmetri och ibland spår av rörelse. Däremot berättar det sällan direkt om färg, inre organ eller exakt hur organismen fick sin energi.",
         ],
         image: {
-          src: "/images/timeline/life-visible/ediacaran-fossilization.png",
+          src: "/images/timeline/life-visible/ediacaran-fossilization.webp",
           alt: "Pedagogiskt tvärsnitt i fyra steg: mjukkroppad organism på mikrobiell matta, övertäckning av sand, nedbrytning och bevarat avtryck i bergart.",
           caption: "Så kan mjuka organismer lämna fossilavtryck. Förhållandena varierade och inte alla ediacarafossil bildades på samma sätt.",
           credit,
@@ -77,7 +77,7 @@ export const lifeVisibleArticles: Record<string, MilestoneArticleData> = {
       },
     ],
     showcase: {
-      src: "/images/timeline/showcases/dickinsonia-fossil.png",
+      src: "/images/timeline/showcases/dickinsonia-fossil.webp",
       title: "Dickinsonia – ett avtryck från en främmande värld",
       description: "Dickinsonia var en platt organism som levde under ediacara. Dess karakteristiska mönster har bevarats som avtryck i sedimentära bergarter. Fynden hjälper forskare att undersöka tidiga djur och deras släktingar. Konstnärlig illustration av ett fossilförande bergartsprov, inte ett autentiskt exemplar.",
       alt: "Konstnärlig museiillustration av en gråbrun sedimentär stenplatta med ett tydligt ovalt, segmentliknande Dickinsonia-avtryck, på en rund polerad träplattform mot transparent bakgrund.",
@@ -111,7 +111,7 @@ export const lifeVisibleArticles: Record<string, MilestoneArticleData> = {
     kicker: "KAMBRIUM · NÄR DJURENS VÄRLD VIDGADES",
     lead: "I de kambriska haven blev många djurgrupper allt tydligare i fossilmaterialet. Rovdjur, grävande organismer, hårda skal och nya sätt att röra sig förändrade samspelet mellan livsformerna. Den så kallade kambriska explosionen var ingen ögonblicklig händelse, utan en utdragen evolutionär omvandling.",
     hero: {
-      src: "/images/timeline/life-visible/cambrian-hero.png",
+      src: "/images/timeline/life-visible/cambrian-hero.webp",
       alt: "Konstnärlig rekonstruktion av ett kambriskt hav med trilobiter, tidiga leddjur, Anomalocaris-liknande rovdjur, svampdjur och andra tidiga marina organismer.",
       caption: "Kambriums hav rymde en snabbt växande mångfald av djurformer. Bilden är en konstnärlig rekonstruktion av organismer som inte nödvändigtvis levde på samma plats eller vid samma tidpunkt.",
       credit,
@@ -136,7 +136,7 @@ export const lifeVisibleArticles: Record<string, MilestoneArticleData> = {
           "Alla dessa organismer levde inte samtidigt eller på samma plats. Fossil från olika kambriska lager ger tillsammans en bild av en föränderlig och allt mer komplex marin värld.",
         ],
         image: {
-          src: "/images/timeline/life-visible/cambrian-creatures.png",
+          src: "/images/timeline/life-visible/cambrian-creatures.webp",
           alt: "Pedagogisk jämförelse av en trilobit, en radiodont, Opabinia och Hallucigenia med namn, kroppsformer och ungefärlig storlek.",
           caption: "Några av kambriums ovanliga djur. De visas tillsammans för jämförelse, inte som en exakt ögonblicksbild av ett ekosystem.",
           credit,
@@ -161,7 +161,7 @@ export const lifeVisibleArticles: Record<string, MilestoneArticleData> = {
           "Men även dessa fantastiska fossil visar bara vissa miljöer och tidpunkter. Fossilmaterialet är alltid ett ofullständigt urval av det liv som en gång fanns.",
         ],
         image: {
-          src: "/images/timeline/life-visible/cambrian-fossil-preservation.png",
+          src: "/images/timeline/life-visible/cambrian-fossil-preservation.webp",
           alt: "Pedagogiskt diagram som jämför ett vanligt fossil med hårda skal och ett ovanligt välbevarat kambriskt fossil där även mjukdelar syns i skiffer.",
           caption: "Exceptionella fossilfynd visar mjuka kroppsdelar som annars sällan bevaras och ger en rikare bild av kambriums djurliv.",
           credit,
@@ -179,7 +179,7 @@ export const lifeVisibleArticles: Record<string, MilestoneArticleData> = {
       },
     ],
     showcase: {
-      src: "/images/timeline/showcases/cambrian-trilobite.png",
+      src: "/images/timeline/showcases/cambrian-trilobite.webp",
       title: "Trilobit – ett skal från kambriums hav",
       description: "Trilobiter var marina leddjur med ett hårt, segmenterat yttre skelett. Deras fossil är vanliga i många paleozoiska bergarter och ger viktiga ledtrådar om tidiga marina ekosystem. Konstnärlig illustration av ett fossilförande bergartsprov, inte ett autentiskt exemplar.",
       alt: "Konstnärlig museiillustration av en mörkgrå stenplatta med ett detaljerat, segmenterat trilobitfossil, placerad på en rund polerad träplattform mot transparent bakgrund.",

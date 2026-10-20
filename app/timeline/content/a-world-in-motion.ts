@@ -13,7 +13,7 @@ export const worldInMotionArticles: Record<string, MilestoneArticleData> = {
     lead: "Tänk dig en jord där nästan alla stora landmassor sitter ihop. För omkring 300 miljoner år sedan växte superkontinenten Pangea fram. Bergskedjor reste sig där kontinenter möttes, medan enorma områden långt från havet fick ett klimat som skilde sig från dagens.",
 
     hero: {
-      src: "/images/timeline/world-in-motion/pangaea-hero.png",
+      src: "/images/timeline/world-in-motion/pangaea-hero.webp",
       alt: "Konstnärlig vy från hög höjd över en enorm uråldrig landmassa med bergskedjor, torra slätter, floder och omgivande hav.",
       caption:
         "För omkring 300 miljoner år sedan hade stora delar av jordens kontinenter förenats till superkontinenten Pangea. Bilden är en konstnärlig rekonstruktion, inte en exakt geografisk karta.",
@@ -50,7 +50,7 @@ export const worldInMotionArticles: Record<string, MilestoneArticleData> = {
           "Kartor över Pangea är därför vetenskapliga modeller. De visar en möjlig geografisk situation vid en bestämd tidpunkt, inte en oföränderlig kontinent under hela dess existens.",
         ],
         image: {
-          src: "/images/timeline/world-in-motion/pangaea-reconstruction.png",
+          src: "/images/timeline/world-in-motion/pangaea-reconstruction.webp",
           alt: "Pedagogisk infografik om superkontinenten Pangea med en schematisk rekonstruktion, dagens kontinenter, fossilfynd, bergskedjor och en tidslinje över kontinenternas rörelser.",
           caption:
             "Pangea bildades när äldre kontinenter förenades. Forskare rekonstruerar superkontinenten genom att jämföra fossil, bergarter, bergskedjor och paleomagnetiska data. Bildens kartor är schematiska och visar inte exakta kontinentgränser.",
@@ -113,7 +113,7 @@ export const worldInMotionArticles: Record<string, MilestoneArticleData> = {
     kicker: "PERM–TRIAS · LIVETS STÖRSTA KRIS",
     lead: "För omkring 252 miljoner år sedan genomgick jorden den största kända massutrotningen i sin historia. Enorma vulkanutbrott, stigande temperaturer och förändrade havsmiljöer sammanföll med att en mycket stor del av arterna försvann. Hur kunde så många ekosystem bryta samman?",
     hero: {
-      src: "/images/timeline/world-in-motion/permian-extinction-hero.png",
+      src: "/images/timeline/world-in-motion/permian-extinction-hero.webp",
       alt: "Dramatisk konstnärlig rekonstruktion av enorma vulkanutbrott med glödande lavaflöden, askmoln och en mörk himmel.",
       caption:
         "För omkring 252 miljoner år sedan sammanföll enorm vulkanisk aktivitet i det som idag är Sibirien med jordens största kända massutrotning. Bilden är en dramatisk konstnärlig tolkning, inte en exakt rekonstruktion.",
@@ -126,7 +126,7 @@ export const worldInMotionArticles: Record<string, MilestoneArticleData> = {
       intensity: "dramatic",
     },
     showcase: {
-      src: "/images/timeline/showcases/siberian-basalt.png",
+      src: "/images/timeline/showcases/siberian-basalt.webp",
       title: "Basalt – spår av enorm vulkanism",
       description:
         "Basalt är en vulkanisk bergart som bildas när lava stelnar. Enorma basaltutbrott i det som idag är Sibirien sammanföll med den största kända massutrotningen för omkring 252 miljoner år sedan. Konstnärlig illustration, inte ett autentiskt prov från Sibirien.",
@@ -160,7 +160,7 @@ export const worldInMotionArticles: Record<string, MilestoneArticleData> = {
           "Det var sannolikt flera samverkande påfrestningar snarare än en enda enkel orsak. Hur betydelsefull varje mekanism var varierade mellan olika havsområden och organismgrupper.",
         ],
         image: {
-          src: "/images/timeline/world-in-motion/permian-ocean-crisis.png",
+          src: "/images/timeline/world-in-motion/permian-ocean-crisis.webp",
           alt: "Pedagogisk infografik om perm–trias-utrotningen, med sibirisk vulkanism, växthusgaser, global uppvärmning, syrebrist i haven och omfattande förluster av arter.",
           caption:
             "Omfattande vulkanism vid de sibiriska trapporna sammanföll med perm–trias-utrotningen för omkring 252 miljoner år sedan. Uppvärmning, syrebrist och förändrad havskemi tros ha bidragit till den ekologiska krisen. Bilden är en förenklad modell.",
@@ -229,7 +229,7 @@ export const worldInMotionArticles: Record<string, MilestoneArticleData> = {
     kicker: "TRIAS–JURA · KONTINENTERNA SKILJS ÅT",
     lead: "Pangea var inte för evigt. Under trias och jura började den väldiga superkontinenten spricka upp. Sprickzoner växte, magma trängde fram och nya havsbassänger började öppnas. Det var början på den långvariga process som formade Atlanten och vår moderna världskarta.",
     hero: {
-      src: "/images/timeline/world-in-motion/pangaea-breakup-hero.png",
+      src: "/images/timeline/world-in-motion/pangaea-breakup-hero.webp",
       alt: "Konstnärlig vy över en superkontinent som spricker upp, med en lång sprickdal, vulkanism och ett begynnande hav.",
       caption:
         "Pangeas uppsprickning skedde stegvis under många miljoner år. Bilden visar en tänkbar sprickzon, inte en exakt historisk plats.",
@@ -264,7 +264,7 @@ export const worldInMotionArticles: Record<string, MilestoneArticleData> = {
           "När havsbottnen fortsätter att bildas ökar avståndet mellan kontinenterna. Det är en av anledningarna till att Afrika och Amerika i dag ligger på var sin sida av Atlanten.",
         ],
         image: {
-          src: "/images/timeline/world-in-motion/pangaea-rifting.png",
+          src: "/images/timeline/world-in-motion/pangaea-rifting.webp",
           alt: "Pedagogisk infografik som visar hur superkontinenten Pangea spricker upp genom kontinental sprickbildning, vulkanism och bildandet av ny oceanbotten.",
           caption:
             "Pangeas uppsprickning började för omkring 200 miljoner år sedan. När kontinentalplattor drogs isär bildades sprickzoner och så småningom nya havsbassänger. Illustrationen visar en förenklad modell av processen.",

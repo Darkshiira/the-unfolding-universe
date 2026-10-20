@@ -6,7 +6,7 @@ export const earthArticles: Record<string, MilestoneArticleData> = {
     kicker: "HADEIKUM · PLANETENS FÖDELSE",
     lead: "Jorden föddes inte på en enda dag. Den växte fram ur stoft, sten och kollisioner runt den unga solen. Under sina första miljoner år förvandlades den från en samling mindre himlakroppar till en planet med en inre struktur, en yta och så småningom förutsättningar för hav.",
     hero: {
-      src: "/images/timeline/earth/young-earth.png",
+      src: "/images/timeline/earth/young-earth.webp",
       alt: "Konstnärlig illustration av den heta, unga jorden i rymden med glödande områden och små himlakroppar.",
       caption:
         "Så kan den mycket unga jorden ha sett ut. Illustration, inte ett fotografi.",
@@ -27,7 +27,7 @@ export const earthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/earth/protoplanetary-disk.png",
+          src: "/images/timeline/earth/protoplanetary-disk.webp",
           alt: "Konstnärlig rekonstruktion av en glödande ung stjärna med en skiva av gas, stoft och stenmaterial.",
           caption:
             "En ung stjärna omgiven av material som kan bilda planeter. Konstnärlig rekonstruktion.",
@@ -43,7 +43,7 @@ export const earthArticles: Record<string, MilestoneArticleData> = {
           "Processen var inte alltid lugn: vissa kollisioner byggde upp nya kroppar medan andra slog sönder dem. Diagrammet är en förenklad förklaring och visar inte exakta storlekar eller tidsintervall.",
         ],
         image: {
-          src: "/images/timeline/earth/accretion.png",
+          src: "/images/timeline/earth/accretion.webp",
           alt: "Pedagogiskt diagram över stoftpartiklar, planetesimaler och en växande planet.",
           caption:
             "Ackretion, förenklat: små partiklar blir till allt större kroppar.",
@@ -60,7 +60,7 @@ export const earthArticles: Record<string, MilestoneArticleData> = {
           "Det finns inga bevarade fotografier av den unga jorden, och nästan alla bergarter från dess första tid har omvandlats eller försvunnit. Därför bygger bilder av ett globalt magmahav på modeller och indirekta spår.",
         ],
         image: {
-          src: "/images/timeline/earth/magma-world.png",
+          src: "/images/timeline/earth/magma-world.webp",
           alt: "Konstnärlig rekonstruktion av en mycket het ung jord med lava, vulkaniska berg och glödande horisont.",
           caption:
             "En tänkbar bild av delar av den tidiga jordens yta. Exakt utseende är osäkert.",
@@ -76,7 +76,7 @@ export const earthArticles: Record<string, MilestoneArticleData> = {
           "Det här kallas differentiering. Jordens lager är viktiga för att förstå hur planeten utvecklades, men diagrammet visar dagens förenklade struktur och inte ett exakt ögonblick under Hadeikum.",
         ],
         image: {
-          src: "/images/timeline/earth/interior.png",
+          src: "/images/timeline/earth/interior.webp",
           alt: "Förenklad genomskärning med jordens yttersta skal, mantel och kärna.",
           caption: "Jordens lager, förenklade och inte skalenliga.",
           credit: "Originaldiagram för The Unfolding Universe",

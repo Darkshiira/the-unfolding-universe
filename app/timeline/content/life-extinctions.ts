@@ -9,7 +9,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
     kicker: "SEN ORDOVICIUM · NÄR HAVEN KYLDES NED",
     lead: "För omkring 444 miljoner år sedan drabbades livet av en av jordens fem stora massutrotningar. Nästan allt mer avancerat liv fanns ännu i haven. När klimatet och havsnivån förändrades försvann livsmiljöer som under lång tid hade fyllts av märkliga och mångformiga djur.",
     hero: {
-      src: "/images/timeline/life-extinctions/ordovician-extinction-hero.png",
+      src: "/images/timeline/life-extinctions/ordovician-extinction-hero.webp",
       alt: "Konstnärlig rekonstruktion av ett kallt hav i slutet av ordovicium med trilobiter, armfotingar och grunda havsmiljöer som påverkas av sjunkande havsnivå.",
       caption:
         "Nedisning och stora havsnivåförändringar påverkade de grunda hav där mycket av ordoviciums liv fanns. Bilden är en konstnärlig rekonstruktion.",
@@ -36,7 +36,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
           "När isarna senare drog sig tillbaka och havet steg uppstod ytterligare omställningar. Utdöendet förknippas därför med flera förändringsfaser, inte en enda plötslig köldknäpp.",
         ],
         image: {
-          src: "/images/timeline/life-extinctions/ordovician-sea-level.png",
+          src: "/images/timeline/life-extinctions/ordovician-sea-level.webp",
           alt: "Pedagogiskt diagram i tre steg över grunda ordoviciska hav före nedisningen, sjunkande havsnivå under istillväxt och stigande havsnivå när isen smälter.",
           caption:
             "När stora mängder vatten binds i inlandsis sjunker havsnivån. När isen smälter stiger havet igen och livsmiljöerna förändras på nytt.",
@@ -53,7 +53,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
           "Att en grupp drabbades betyder inte att alla dess medlemmar försvann. Trilobiter och armfotingar fortsatte exempelvis att existera långt efter ordovicium.",
         ],
         image: {
-          src: "/images/timeline/life-extinctions/ordovician-marine-life.png",
+          src: "/images/timeline/life-extinctions/ordovician-marine-life.webp",
           alt: "Pedagogisk jämförelse av armfotingar, trilobiter, graptoliter och andra marina organismer som påverkades av utdöendet i slutet av ordovicium.",
           caption:
             "Flera stora marina grupper förlorade många arter, men vissa släktlinjer överlevde och fortsatte att utvecklas.",
@@ -89,7 +89,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
       "Hur snabbt olika ekosystem återhämtade sig.",
     ],
     showcase: {
-      src: "/images/timeline/showcases/ordovician-brachiopod-v2.png",
+      src: "/images/timeline/showcases/ordovician-brachiopod-v2.webp",
       title: "Armfoting – ett skal från ordoviciums hav",
       description:
         "Armfotingar var vanliga i ordoviciums marina ekosystem. Deras skal finns bevarade som fossil och hjälper forskare att följa förändringar i havens djurliv. Konstnärlig illustration av ett fossilförande bergartsprov, inte ett autentiskt exemplar.",
@@ -119,7 +119,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
     kicker: "SEN DEVON · NÄR REVENS VÄRLD FÖRÄNDRADES",
     lead: "Devon kallas ibland fiskarnas tidsålder, men dess hav rymde också stora rev och en rik mångfald av ryggradslösa djur. Mot periodens slut drabbades livet av flera långdragna kriser. Många marina ekosystem förändrades för alltid.",
     hero: {
-      src: "/images/timeline/life-extinctions/devonian-extinction-hero.png",
+      src: "/images/timeline/life-extinctions/devonian-extinction-hero.webp",
       alt: "Konstnärlig rekonstruktion av ett devoniskt rev där koralliknande revbyggare, pansarfiskar och andra marina djur lever i ett hav som håller på att förändras.",
       caption:
         "Devons rev och hav var artrika men sårbara för långvariga förändringar i havsmiljön. Bilden är en konstnärlig rekonstruktion.",
@@ -149,7 +149,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
           "Orsakerna behöver inte ha varit identiska vid varje kris. Därför beskriver forskare ofta sen-devon som en utdragen serie av utdöendehändelser.",
         ],
         image: {
-          src: "/images/timeline/life-extinctions/devonian-extinction-timeline.png",
+          src: "/images/timeline/life-extinctions/devonian-extinction-timeline.webp",
           alt: "Pedagogisk tidslinje över sen devon med Kellwasserhändelserna och Hangenberghändelsen, samt symboler för förändringar i havsmiljö och fossilens mångfald.",
           caption:
             "Utdöendena under sen devon inträffade i flera faser. De ska inte förenklas till en enda dag eller en enda orsak.",
@@ -166,7 +166,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
           "När revstrukturer försvinner förlorar också andra arter skydd, föda och livsmiljöer. En ekologisk kris kan därför få följder långt utöver de arter som först påverkas.",
         ],
         image: {
-          src: "/images/timeline/life-extinctions/devonian-reef-collapse.png",
+          src: "/images/timeline/life-extinctions/devonian-reef-collapse.webp",
           alt: "Pedagogisk före-och-efter-jämförelse av ett levande devoniskt rev med stromatoporoider och koraller och ett förändrat rev efter omfattande miljöstress.",
           caption:
             "När revbyggare minskade förändrades hela livsmiljöer. Diagrammet är en förenklad illustration av ekologiska följder, inte ett fotografiskt tidsförlopp.",
@@ -202,7 +202,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
       "Hur stark kopplingen var mellan de tidiga skogarna och förändringarna i haven.",
     ],
     showcase: {
-      src: "/images/timeline/showcases/devonian-coral.png",
+      src: "/images/timeline/showcases/devonian-coral.webp",
       title: "Devonisk korall – ett minne av forntidens rev",
       description:
         "Fossila koraller och andra revbyggare visar hur marina livsmiljöer såg ut under devon. Deras förekomst och försvinnande hjälper forskare att följa förändringar i havens ekosystem. Konstnärlig illustration av ett fossilförande bergartsprov, inte ett autentiskt exemplar.",
@@ -232,7 +232,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
     kicker: "SLUTET AV PERM · LIVETS STÖRSTA KÄNDA KRIS",
     lead: "För omkring 252 miljoner år sedan skakades jordens ekosystem av den största kända massutrotningen. Livet i haven och på land drabbades svårt. Men även när otaliga evolutionära linjer tog slut fanns överlevare som så småningom lade grunden för nya världar.",
     hero: {
-      src: "/images/timeline/life-extinctions/permian-extinction-life-hero.png",
+      src: "/images/timeline/life-extinctions/permian-extinction-life-hero.webp",
       alt: "Konstnärlig rekonstruktion av ett hårt drabbat hav och en vulkaniskt påverkad kust vid slutet av perm, med mörk himmel och få kvarvarande organismer.",
       caption:
         "Vid slutet av perm förändrades klimat och havskemi kraftigt. Bilden gestaltar krisens följder för livet, inte ett exakt dokumenterat ögonblick.",
@@ -259,7 +259,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
           "Forskare undersöker hur dessa processer samverkade och hur snabbt de utvecklades. Krisen hade flera sammanhängande mekanismer snarare än en enda enkel förklaring.",
         ],
         image: {
-          src: "/images/timeline/life-extinctions/permian-extinction-cascade.png",
+          src: "/images/timeline/life-extinctions/permian-extinction-cascade.webp",
           alt: "Pedagogiskt orsakssambandsdiagram från omfattande vulkanism och växthusgaser till uppvärmning, förändrad havscirkulation, syrebrist och ekologisk kris.",
           caption:
             "Vulkanism kan utlösa en kedja av klimat- och havsförändringar. Diagrammet visar viktiga hypoteser och samband, inte en fullständig förklaring.",
@@ -276,7 +276,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
           "Exakta procenttal varierar mellan studier och beror på vilka fossilgrupper och tidsintervall som jämförs. Det råder ändå bred enighet om att detta var den största kända massutrotningen.",
         ],
         image: {
-          src: "/images/timeline/life-extinctions/permian-life-before-after.png",
+          src: "/images/timeline/life-extinctions/permian-life-before-after.webp",
           alt: "Pedagogisk jämförelse av marina och landlevande organismer före och efter massutrotningen i slutet av perm, med trilobiternas slut markerat.",
           caption:
             "Massutrotningen förändrade både havens och landets ekosystem. Vissa grupper försvann helt medan andra överlevde och utvecklades vidare.",
@@ -312,7 +312,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
       "Varför återhämtningen gick olika fort i olika ekosystem.",
     ],
     showcase: {
-      src: "/images/timeline/showcases/permian-brachiopod.png",
+      src: "/images/timeline/showcases/permian-brachiopod.webp",
       title: "Armfoting – en överlevare från ett förändrat hav",
       description:
         "Armfotingar var mångformiga i paleozoikums hav. Många släktlinjer försvann under krisen vid slutet av perm, medan andra överlevde. Fossil hjälper forskare att följa dessa förändringar. Konstnärlig illustration av ett fossilförande bergartsprov, inte ett autentiskt exemplar.",
@@ -342,7 +342,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
     kicker: "SLUTET AV TRIAS · EN NY VÄRLD TAR FORM",
     lead: "För omkring 201 miljoner år sedan drabbades livet åter av en stor massutrotning. När Pangea började spricka upp följde omfattande vulkanism och förändringar i klimat och hav. Efter krisen fick flera överlevande grupper möjlighet att breda ut sig i nya ekologiska roller.",
     hero: {
-      src: "/images/timeline/life-extinctions/triassic-extinction-hero.png",
+      src: "/images/timeline/life-extinctions/triassic-extinction-hero.webp",
       alt: "Konstnärlig rekonstruktion av ett sent triassiskt kustlandskap med vulkanutbrott i fjärran och tidiga reptiler under en mörknande himmel.",
       caption:
         "Vulkanism i samband med Pangeas uppsprickning förändrade miljöerna vid slutet av trias. Bilden är en konstnärlig rekonstruktion.",
@@ -369,7 +369,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
           "Forskare jämför dateringar av vulkaniska bergarter med fossilens försvinnande och kemiska signaler i sediment för att förstå sambanden.",
         ],
         image: {
-          src: "/images/timeline/life-extinctions/triassic-volcanism.png",
+          src: "/images/timeline/life-extinctions/triassic-volcanism.webp",
           alt: "Pedagogiskt diagram som visar Pangeas uppsprickning, omfattande vulkanism i Central Atlantic Magmatic Province och möjliga följder för klimat och hav.",
           caption:
             "Vulkanismen i samband med Pangeas uppsprickning är en central förklaring till krisen vid slutet av trias.",
@@ -386,7 +386,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
           "Dinosaurierna överlevde och kom under jura att dominera många landekosystem. Det betyder inte att de var de enda överlevarna eller att deras senare framgång var förutbestämd.",
         ],
         image: {
-          src: "/images/timeline/life-extinctions/triassic-survivors-v2.png",
+          src: "/images/timeline/life-extinctions/triassic-survivors-v2.webp",
           alt: "Pedagogisk jämförelse av några reptilgrupper och marina organismer före och efter utdöendet vid gränsen trias–jura.",
           caption:
             "Vissa evolutionära linjer försvann medan andra överlevde. Under jura förändrades fördelningen av ekologiska roller på land.",
@@ -422,7 +422,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
       "Hur överlevnad och ekologiska möjligheter påverkade dinosauriernas senare spridning.",
     ],
     showcase: {
-      src: "/images/timeline/showcases/triassic-ammonoid.png",
+      src: "/images/timeline/showcases/triassic-ammonoid.webp",
       title: "Ammonoid – ett spiralformat vittne",
       description:
         "Ammonoider var marina bläckfiskar med skal. Fossil från deras olika släktlinjer hjälper forskare att följa förändringar kring gränsen mellan trias och jura. Konstnärlig illustration av ett fossilförande bergartsprov, inte ett autentiskt exemplar.",
@@ -452,7 +452,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
     kicker: "SLUTET AV KRITA · NÄR LIVETS VÄG ÄNDRADES",
     lead: "För 66 miljoner år sedan slog en stor asteroid ned vid det som i dag är Yucatánhalvön. Följderna drabbade näringskedjor över hela planeten. I katastrofens spår försvann många djurgrupper – men bland överlevarna fanns de fåglar, däggdjur och andra organismer som skulle forma den värld vi känner i dag.",
     hero: {
-      src: "/images/timeline/life-extinctions/cretaceous-extinction-hero.png",
+      src: "/images/timeline/life-extinctions/cretaceous-extinction-hero.webp",
       alt: "Konstnärlig rekonstruktion av ett landskap vid slutet av krita med mörknande himmel efter ett asteroidnedslag, dinosaurier och vegetation i förgrunden.",
       caption:
         "Asteroidnedslaget förändrade livsvillkoren globalt. Bilden är en konstnärlig tolkning av följderna, inte en exakt dokumenterad scen.",
@@ -479,7 +479,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
           "Nedslaget kunde också orsaka regionala bränder, tsunamier och andra omedelbara följder. Hur starka effekterna var varierade mellan platser.",
         ],
         image: {
-          src: "/images/timeline/life-extinctions/cretaceous-food-web-collapse.png",
+          src: "/images/timeline/life-extinctions/cretaceous-food-web-collapse.webp",
           alt: "Pedagogiskt diagram som visar hur asteroidnedslaget kan ha minskat solljuset, bromsat fotosyntesen och påverkat näringskedjor i hav och på land.",
           caption:
             "Minskad fotosyntes efter nedslaget är en viktig mekanism bakom den globala ekologiska krisen.",
@@ -496,7 +496,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
           "Bland överlevarna fanns vissa däggdjur, fåglar, krokodildjur, sköldpaddor, groddjur och andra grupper. Överlevnad berodde sannolikt på flera faktorer, bland annat livsmiljö, föda och fysiologi.",
         ],
         image: {
-          src: "/images/timeline/life-extinctions/cretaceous-survivors.png",
+          src: "/images/timeline/life-extinctions/cretaceous-survivors.webp",
           alt: "Pedagogisk jämförelse av organismgrupper som dog ut vid slutet av krita och grupper som överlevde, inklusive fåglar, däggdjur och krokodildjur.",
           caption:
             "Fåglarna är levande dinosaurier. Massutrotningen förändrade vilka grupper som skulle dominera senare ekosystem.",
@@ -541,7 +541,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
       "Hur andra samtida processer, bland annat vulkanism, påverkade krisens förlopp.",
     ],
     showcase: {
-      src: "/images/timeline/showcases/cretaceous-ammonite.png",
+      src: "/images/timeline/showcases/cretaceous-ammonite.webp",
       title: "Ammonit – ett skal från en förlorad värld",
       description:
         "Ammoniter var marina bläckfiskar med spiralformade skal. Gruppen dog ut vid slutet av krita, och deras fossil hjälper forskare att studera livet före massutrotningen. Konstnärlig illustration av ett fossilförande bergartsprov, inte ett autentiskt exemplar.",

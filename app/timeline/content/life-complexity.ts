@@ -8,7 +8,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
     kicker: "PROTEROZOIKUM · CELLER MED EN NY INRE VÄRLD",
     lead: "Under livets långa historia utvecklades celler med en ny sorts organisation. Ett cellkärneliknande rum för arvsmassan, inre membran och avancerade samarbeten mellan mikroorganismer lade grunden för alla dagens djur, växter och svampar.",
     hero: {
-      src: "/images/timeline/life-complexity/eukaryotes-hero.png",
+      src: "/images/timeline/life-complexity/eukaryotes-hero.webp",
       alt: "Konstnärlig vetenskaplig närbild av en tidig eukaryot cell i vatten, med cellmembran, cellkärna och inre strukturer synliga.",
       caption: "De första eukaryoterna var mikroskopiska. Bilden är en tolkning, eftersom deras exakta utseende inte är känt.",
       credit,
@@ -24,7 +24,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
           "De första eukaryoterna var inte små versioner av dagens djur eller växter. De var encelliga organismer vars tidiga utveckling bara kan rekonstrueras bit för bit.",
         ],
         image: {
-          src: "/images/timeline/life-complexity/cell-types-comparison.png",
+          src: "/images/timeline/life-complexity/cell-types-comparison.webp",
           alt: "Pedagogiskt jämförelsediagram med bakterie, arké och eukaryot cell, där DNA, cellmembran, cellkärna och organeller är markerade.",
           caption: "Bakterier och arkéer saknar cellkärna. Eukaryoter har en cellkärna och flera typer av membranavgränsade strukturer; bilden visar förenklade exempel.",
           credit,
@@ -49,7 +49,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
           "Alla eukaryota celler ser inte likadana ut. Deras inre strukturer varierar med släktskap, livsmiljö och sätt att leva.",
         ],
         image: {
-          src: "/images/timeline/life-complexity/eukaryotic-cell-anatomy.png",
+          src: "/images/timeline/life-complexity/eukaryotic-cell-anatomy.webp",
           alt: "Pedagogiskt tvärsnitt av en generell eukaryot cell med cellkärna, cellmembran, mitokondrier, endoplasmatiskt nätverk, golgiapparat och cellskelett.",
           caption: "En förenklad modell av en eukaryot cell. Olika eukaryoter har olika organeller och cellstrukturer.",
           credit,
@@ -104,7 +104,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
     kicker: "PROTEROZOIKUM · ETT SAMARBETE INUTI CELLEN",
     lead: "En gång i livets tidiga historia uppstod en nära relation mellan två mikroorganismer. Den ena blev så småningom en del av den andra. Spåren av denna gamla symbios finns kvar i mitokondrierna i våra celler.",
     hero: {
-      src: "/images/timeline/life-complexity/mitochondria-hero.png",
+      src: "/images/timeline/life-complexity/mitochondria-hero.webp",
       alt: "Konstnärlig mikroskopisk rekonstruktion av en tidig värdcell och en bakterie som inleder en långvarig symbios.",
       caption: "Mitokondrierna har sitt ursprung i en bakterie som blev en bestående del av en annan cells evolutionära historia.",
       credit,
@@ -120,7 +120,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
           "Vi vet inte exakt hur de första stegen såg ut. Det kan ha handlat om olika former av nära samlevnad och ämnesutbyte, inte nödvändigtvis en enkel händelse där en färdig cell svalde en annan.",
         ],
         image: {
-          src: "/images/timeline/life-complexity/endosymbiosis-steps.png",
+          src: "/images/timeline/life-complexity/endosymbiosis-steps.webp",
           alt: "Stegvis pedagogisk modell över hur en bakteriell symbiont kan ha blivit mitokondrie i en tidig eukaryot cell.",
           caption: "Endosymbiosen är väl belagd, men diagrammets steg är en förenklad modell. Den exakta ordningen är omdiskuterad.",
           credit,
@@ -145,7 +145,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
           "Detta gör mitokondrien till ett särskilt tydligt exempel på hur två tidigare självständiga evolutionära linjer kan bli beroende av varandra.",
         ],
         image: {
-          src: "/images/timeline/life-complexity/mitochondria-evidence.png",
+          src: "/images/timeline/life-complexity/mitochondria-evidence.webp",
           alt: "Pedagogiskt diagram som jämför en bakterie med en mitokondrie och visar dubbla membran, eget DNA och genöverföring till cellkärnan.",
           caption: "Mitokondriernas DNA, membran och släktskap med bakterier är starka belägg för deras endosymbiotiska ursprung.",
           credit,
@@ -200,7 +200,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
     kicker: "PROTEROZOIKUM · NÄR CELLER BÖRJADE SAMARBETA",
     lead: "En enda cell kan leva ett helt liv på egen hand. Men under evolutionen uppstod också organismer där många celler höll samman, delade upp arbetet och blev delar av en större helhet. Det hände mer än en gång.",
     hero: {
-      src: "/images/timeline/life-complexity/multicellular-hero.png",
+      src: "/images/timeline/life-complexity/multicellular-hero.webp",
       alt: "Konstnärlig rekonstruktion av tidiga flercelliga algliknande organismer som svävar och växer i ett förhistoriskt hav.",
       caption: "Flercellighet utvecklades i flera släktlinjer. De tidigaste flercelliga organismerna såg inte nödvändigtvis ut som dagens växter eller djur.",
       credit,
@@ -225,7 +225,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
           "Flercellighet medför också nya problem. Celler behöver få resurser, samordna sin tillväxt och ibland avstå från att föröka sig för helhetens skull.",
         ],
         image: {
-          src: "/images/timeline/life-complexity/from-one-to-many-cells.png",
+          src: "/images/timeline/life-complexity/from-one-to-many-cells.webp",
           alt: "Pedagogiskt diagram som visar en ensam cell, en enkel koloni, sammanhängande celler och en organism med specialiserade celltyper.",
           caption: "Från ensam cell till samarbete och specialisering: en förenklad modell, inte en enda utvecklingskedja som alla organismer följt.",
           credit,
@@ -250,7 +250,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
           "Forskare jämför fossilens struktur med levande organismer och daterar bergarterna för att förstå när olika former av flercellighet hade uppstått.",
         ],
         image: {
-          src: "/images/timeline/life-complexity/early-multicellular-fossils.png",
+          src: "/images/timeline/life-complexity/early-multicellular-fossils.webp",
           alt: "Pedagogisk jämförelse mellan en konstnärlig rekonstruktion av en tidig flercellig alg och ett fossilavtryck i bergart.",
           caption: "Fossil av tidiga eukaryoter hjälper forskare att studera flercellighet, men deras biologiska detaljer är inte alltid möjliga att avgöra.",
           credit,
@@ -268,7 +268,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
       },
     ],
     showcase: {
-      src: "/images/timeline/showcases/bangiomorpha-fossil-v2.png",
+      src: "/images/timeline/showcases/bangiomorpha-fossil-v2.webp",
       title: "Bangiomorpha – spår av tidigt flercelligt liv",
       description: "Bangiomorpha är ett fossil som brukar tolkas som en tidig rödalgsbesläktad eukaryot. Dess bevarade struktur ger ledtrådar om flercelligt liv under proterozoikum. Konstnärlig illustration av ett fossilförande bergartsprov, inte ett autentiskt exemplar.",
       alt: "Konstnärlig museiillustration av en mörk sedimentär stenplatta med tunna förgrenade fossiltrådar, placerad på en rund, polerad träplattform.",
@@ -302,7 +302,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
     kicker: "PROTEROZOIKUM · NÄR ARVSMASSAN BÖRJADE BLANDAS",
     lead: "Evolutionen handlar inte bara om nya organismer, utan också om nya sätt att föra livet vidare. Hos eukaryoter utvecklades processer som blandar genetisk information mellan generationer och skapar nya kombinationer av ärftliga egenskaper.",
     hero: {
-      src: "/images/timeline/life-complexity/sexual-reproduction-hero.png",
+      src: "/images/timeline/life-complexity/sexual-reproduction-hero.webp",
       alt: "Konstnärlig mikroskopisk visualisering av två encelliga eukaryoter och lysande kromosomliknande strukturer som symboliserar genetisk rekombination.",
       caption: "Sexuell fortplantning utvecklades långt före djur och blommor. Bilden är symbolisk och visar inte en bestämd fossil organism.",
       credit,
@@ -327,7 +327,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
           "Meiosens ursprung är en stor evolutionär fråga. Dess molekylära maskineri har kopplingar till äldre system för DNA-reparation och rekombination.",
         ],
         image: {
-          src: "/images/timeline/life-complexity/meiosis-recombination.png",
+          src: "/images/timeline/life-complexity/meiosis-recombination.webp",
           alt: "Pedagogiskt diagram som visar kromosompar, överkorsning, meios och bildning av celler med olika genetiska kombinationer.",
           caption: "Meios och rekombination kan skapa nya kombinationer av arvsanlag. Diagrammet är en förenklad modell av en eukaryot livscykel.",
           credit,
@@ -352,7 +352,7 @@ export const lifeComplexityArticles: Record<string, MilestoneArticleData> = {
           "Vi kan inte ange ett säkert datum för när den första meiosen eller den första sexuella livscykeln uppstod. Tidslinjens datering är en ungefärlig orientering.",
         ],
         image: {
-          src: "/images/timeline/life-complexity/variation-inheritance.png",
+          src: "/images/timeline/life-complexity/variation-inheritance.webp",
           alt: "Pedagogiskt diagram som jämför genetiskt lika avkomma vid klonal förökning med nya kombinationer av alleler vid sexuell fortplantning.",
           caption: "Sexuell fortplantning kan skapa nya kombinationer av befintliga genvarianter. Mutationer är fortfarande den yttersta källan till nya varianter.",
           credit,

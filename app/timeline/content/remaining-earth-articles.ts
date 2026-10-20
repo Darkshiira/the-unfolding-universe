@@ -8,7 +8,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "KRITA · EN GLOBAL KATASTROF",
     lead: "För 66 miljoner år sedan träffade en stor asteroid jorden. Nedslaget lämnade en enorm krater och satte i gång en kedja av händelser som förändrade livet på planeten. Hur kan en enda kollision få konsekvenser över hela världen?",
     hero: {
-      src: "/images/timeline/earth-final/cretaceous-impact-hero.png",
+      src: "/images/timeline/earth-final/cretaceous-impact-hero.webp",
       alt: "Konstnärlig rekonstruktion av en stor asteroid som slår ned i ett grunt hav nära en forntida kust.",
       caption:
         "Chicxulubnedslaget för 66 miljoner år sedan bidrog till en global ekologisk katastrof. Konstnärlig rekonstruktion.",
@@ -20,7 +20,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
       intensity: "dramatic",
     },
     showcase: {
-      src: "/images/timeline/showcases/impact-breccia.png",
+      src: "/images/timeline/showcases/impact-breccia.webp",
       title: "Impaktbreccia – spår av ett asteroidnedslag",
       description:
         "Impaktbreccia är en bergart som kan bildas vid kraftiga asteroidnedslag, när berggrunden krossas och fragment pressas samman. Sådana bergarter ger forskare viktiga ledtrådar om nedslagets enorma krafter. Konstnärlig illustration av ett bergartsprov, inte ett autentiskt prov från Chicxulub.",
@@ -45,7 +45,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
           "Det är fortfarande svårt att bestämma exakt hur länge mörkret varade och hur olika klimatprocesser samverkade.",
         ],
         image: {
-          src: "/images/timeline/earth-final/chicxulub-aftermath.png",
+          src: "/images/timeline/earth-final/chicxulub-aftermath.webp",
           alt: "Pedagogiskt diagram som visar asteroidnedslag, material i atmosfären, minskat solljus och störda näringskedjor.",
           caption:
             "Nedslaget kan ha orsakat kraftigt minskat solljus och omfattande förändringar i klimat och ekosystem. Diagrammet är en förenklad modell.",
@@ -119,7 +119,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "KENOZOIKUM · BERGSKEDJOR I RÖRELSE",
     lead: "Himalaya är ett av de tydligaste exemplen på att jordens yta fortfarande förändras. När den indiska kontinentalplattan kolliderade med Eurasien började berggrunden pressas samman och höjas – en process som pågår än i dag.",
     hero: {
-      src: "/images/timeline/earth-final/himalayas-hero.png",
+      src: "/images/timeline/earth-final/himalayas-hero.webp",
       alt: "Vidsträckt vy över Himalayas snötäckta bergstoppar och djupa dalar i dramatiskt ljus.",
       caption:
         "Himalaya har formats av den långvariga kollisionen mellan Indien och Eurasien.",
@@ -145,7 +145,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
           "Höjden på ett berg är därför resultatet av flera konkurrerande processer, inte bara av att jordskorpan lyfts.",
         ],
         image: {
-          src: "/images/timeline/earth-final/himalaya-collision.png",
+          src: "/images/timeline/earth-final/himalaya-collision.webp",
           alt: "Tvärsnittsdiagram av den indiska och eurasiska kontinentalplattan som kolliderar och förtjockar jordskorpan.",
           caption:
             "Kollisionen mellan två kontinentalplattor pressar samman och förtjockar jordskorpan. Diagrammet är schematiskt.",
@@ -215,7 +215,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "KVARTÄR · KLIMATET VÄXLAR",
     lead: "Under de senaste ungefär 2,6 miljoner åren har jorden upplevt återkommande kalla istider och varmare mellanistider. Isens utbredning har förändrat landskap, havsnivåer och livsmiljöer – och lämnat tydliga spår efter sig.",
     hero: {
-      src: "/images/timeline/earth-final/ice-ages-hero.png",
+      src: "/images/timeline/earth-final/ice-ages-hero.webp",
       alt: "Konstnärlig rekonstruktion av en vidsträckt istidsmiljö med inlandsis, tundra och snötäckta berg.",
       caption:
         "Kvartärperioden präglas av upprepade glaciala och interglaciala perioder.",
@@ -245,7 +245,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
           "Det är alltså inte en enda faktor som ensam förklarar hela växlingen mellan kalla och varma perioder.",
         ],
         image: {
-          src: "/images/timeline/earth-final/glacial-cycles.png",
+          src: "/images/timeline/earth-final/glacial-cycles.webp",
           alt: "Pedagogiskt diagram över jordbanans variationer, istidernas återkomst och förändringar i isutbredning.",
           caption:
             "Jordbanans långsamma variationer påverkar fördelningen av solljus och samverkar med klimatets återkopplingar. Diagrammet är schematiskt.",
@@ -316,7 +316,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "PLEISTOCEN · ISEN NÅR SIN STÖRSTA UTBREDNING",
     lead: "För omkring 20 000 år sedan var stora delar av norra Europa och Nordamerika täckta av mäktiga inlandsisar. Sverige låg till stor del under is, och havsnivån var betydligt lägre än i dag.",
     hero: {
-      src: "/images/timeline/earth-final/last-glacial-maximum-hero.png",
+      src: "/images/timeline/earth-final/last-glacial-maximum-hero.webp",
       alt: "Konstnärlig vy över en enorm inlandsis som täcker ett nordligt landskap under den senaste istidens kallaste skede.",
       caption:
         "Den senaste istidens största globala isutbredning inträffade ungefär för 26 000–19 000 år sedan.",
@@ -328,7 +328,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
       intensity: "dramatic",
     },
     showcase: {
-      src: "/images/timeline/showcases/glacial-striated-stone.png",
+      src: "/images/timeline/showcases/glacial-striated-stone.webp",
       title: "Isräfflad sten – spår efter inlandsisen",
       description:
         "När inlandsisen rörde sig över berggrunden slipade stenar och grus i isens botten långa, parallella räfflor i berget. Dessa spår hjälper forskare att förstå hur inlandsisen rörde sig och hur landskapet formades. Konstnärlig illustration av ett isräfflat bergartsprov.",
@@ -362,7 +362,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
           "När klimatet senare värmdes upp smälte is och haven steg, vilket förändrade geografin på nytt.",
         ],
         image: {
-          src: "/images/timeline/earth-final/last-glacial-map.png",
+          src: "/images/timeline/earth-final/last-glacial-map.webp",
           alt: "Schematisk karta över stora inlandsisar på norra halvklotet under den senaste istidens maximum och en jämförelse av havsnivåer.",
           caption:
             "Under den senaste istidens maximum täcktes stora landområden av is och den globala havsnivån låg omkring 120 meter lägre än i dag. Kartan är schematisk.",
@@ -427,7 +427,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "HOLOCEN · VÅR MELLANISTID",
     lead: "För omkring 11 700 år sedan började holocen, den geologiska epok vi fortfarande lever i. Efter den senaste istiden förändrades klimatet, haven steg och nya landskap växte fram. Det blev också en tid då mänskliga samhällen förändrades på djupet.",
     hero: {
-      src: "/images/timeline/earth-final/holocene-hero.png",
+      src: "/images/timeline/earth-final/holocene-hero.webp",
       alt: "Ljust nordligt landskap med skogar, sjöar och floder som växer fram efter den senaste istiden.",
       caption:
         "Holocen inleddes efter den senaste istidens slut och kännetecknas av en varm mellanistid.",
@@ -462,7 +462,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
           "Landhöjningen går olika fort i olika områden och påverkar hur kusterna förändras över tid.",
         ],
         image: {
-          src: "/images/timeline/earth-final/holocene-land-uplift.png",
+          src: "/images/timeline/earth-final/holocene-land-uplift.webp",
           alt: "Pedagogiskt tvärsnitt som visar hur en inlandsis pressar ned jordskorpan och hur marken höjer sig efter avsmältningen.",
           caption:
             "När inlandsisen smälte började jordskorpan återhämta sig från isens tyngd. Processen kallas postglacial landhöjning.",
@@ -527,7 +527,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "NUTID · EN LEVANDE PLANET",
     lead: "Jordens historia är inte avslutad. Kontinenterna fortsätter att röra sig, berg nöts ned och byggs upp, hav förändras och klimatet påverkar allt levande. Vi bor på en planet som ständigt formas om.",
     hero: {
-      src: "/images/timeline/earth-final/earth-today-hero.png",
+      src: "/images/timeline/earth-final/earth-today-hero.webp",
       alt: "Jorden sedd från rymden med blå hav, kontinenter, vita molnsystem och en tunn atmosfär.",
       caption: "Jorden är fortfarande geologiskt och klimatologiskt aktiv.",
       credit,
@@ -561,7 +561,7 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
           "Genom att jämföra nutida mätningar med klimatarkiv från det förflutna kan forskare förstå både vad som är nytt och vad som har hänt tidigare.",
         ],
         image: {
-          src: "/images/timeline/earth-final/earth-systems.png",
+          src: "/images/timeline/earth-final/earth-systems.webp",
           alt: "Pedagogisk illustration av jordens samverkande system: atmosfär, hav, is, land, inre geologi och liv.",
           caption:
             "Jordens olika system påverkar varandra. Förändringar i atmosfären, haven, isen, landytan och livet kan få följder långt utanför den plats där de börjar.",

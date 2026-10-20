@@ -8,7 +8,7 @@ export const ancientEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "ARKEIKUM · SPÅR FRÅN DEN UNGA JORDEN",
     lead: "Hur kan en sten berätta vad som hände för nästan fyra miljarder år sedan? I några av världens äldsta bergarter finns spår av en jord som redan hade börjat bilda fast mark, trots att planeten fortfarande var ung och mycket annorlunda än i dag.",
     hero: {
-      src: "/images/timeline/ancient-earth/first-rocks-hero.png",
+      src: "/images/timeline/ancient-earth/first-rocks-hero.webp",
       alt: "Konstnärlig närbild av uråldrig, veckad gnejs med mörka och ljusa mineralband.",
       caption:
         "Mycket gamla bergarter kan ha omvandlats flera gånger sedan de bildades. Konstnärlig rekonstruktion.",
@@ -16,7 +16,7 @@ export const ancientEarthArticles: Record<string, MilestoneArticleData> = {
       kind: "illustration",
     },
     showcase: {
-      src: "/images/timeline/showcases/acasta-gneiss.png",
+      src: "/images/timeline/showcases/acasta-gneiss.webp",
       title: "Acastagnejsen",
       description:
         "En av jordens äldsta kända bergarter, omkring fyra miljarder år gammal. Dess veckade mineralband berättar om en lång historia av värme, tryck och geologiska förändringar. Konstnärlig rekonstruktion.",
@@ -33,7 +33,7 @@ export const ancientEarthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/ancient-earth/first-rocks-gneiss.png",
+          src: "/images/timeline/ancient-earth/first-rocks-gneiss.webp",
           alt: "Vetenskaplig illustration av Acastagnejsen med ljusa och mörka mineralband, närbilder av mineral och en genomskärning som visar bergartens omvandling.",
           caption:
             "Acastagnejsen i nordvästra Kanada hör till jordens äldsta kända bergarter. Dess mineral och strukturer hjälper forskarna att undersöka en nästan fyra miljarder år gammal geologisk historia.",
@@ -60,7 +60,7 @@ export const ancientEarthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/ancient-earth/first-rocks-dating.png",
+          src: "/images/timeline/ancient-earth/first-rocks-dating.webp",
           alt: "Vetenskaplig infografik om datering av uråldriga bergarter, med zirkonkristaller, uran–bly-analys och en tidslinje över bergartens geologiska historia.",
           caption:
             "En bergart kan innehålla mineral som bildats eller förändrats vid olika tidpunkter. Genom att undersöka deras åldrar kan forskare återskapa delar av bergartens långa historia.",
@@ -122,7 +122,7 @@ export const ancientEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "ARKEIKUM · KONTINENTERNAS BÖRJAN",
     lead: "De kontinenter vi känner i dag fanns inte från början. Under miljarder år bildades nya bergarter, äldre delar av jordskorpan omvandlades och allt större områden av relativt lätt kontinental skorpa växte fram.",
     hero: {
-      src: "/images/timeline/ancient-earth/continents-hero.png",
+      src: "/images/timeline/ancient-earth/continents-hero.webp",
       alt: "Konstnärlig vy över uråldriga klippiga landmassor omgivna av ett stort hav.",
       caption:
         "Hur de första kontinenterna såg ut är osäkert. Bilden är en konstnärlig rekonstruktion.",
@@ -158,7 +158,7 @@ export const ancientEarthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/ancient-earth/continents-cratons.png",
+          src: "/images/timeline/ancient-earth/continents-cratons.webp",
           alt: "Vetenskaplig genomskärning av en kontinent med en uråldrig kraton, djup litosfärisk rot, kontinental jordskorpa och omgivande oceanisk jordskorpa. Nederdelen visar hur mindre landmassor kan växa samman.",
           caption:
             "Kratoner är mycket gamla och relativt stabila delar av kontinenterna. Deras djupa rötter i litosfären kan hjälpa dem att överleva i miljarder år. Illustrationen visar också en förenklad modell av hur kontinenter kan växa fram.",
@@ -220,7 +220,7 @@ export const ancientEarthArticles: Record<string, MilestoneArticleData> = {
     kicker: "JORDENS HISTORIA · EN PLANET I RÖRELSE",
     lead: "Marken känns stilla under våra fötter. Men jordens yttersta skal är uppdelat i stora plattor som rör sig långsamt. Deras rörelser bygger bergskedjor, öppnar hav och orsakar jordbävningar – och har förändrat vår planet under en mycket lång tid.",
     hero: {
-      src: "/images/timeline/ancient-earth/plate-tectonics-hero.png",
+      src: "/images/timeline/ancient-earth/plate-tectonics-hero.webp",
       alt: "Konstnärlig genomskärning av två jordskorpeplattor som möts vid en vulkanisk kust.",
       caption:
         "Plattektonik formar jordens yta. Bilden är en förenklad konstnärlig rekonstruktion.",
@@ -248,7 +248,7 @@ export const ancientEarthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/ancient-earth/plate-boundaries.png",
+          src: "/images/timeline/ancient-earth/plate-boundaries.webp",
           alt: "Vetenskaplig infografik som visar tre typer av plattgränser: divergerande, konvergerande och transformförkastningar, med genomskärningar och exempel från jorden.",
           caption:
             "Jordens tektoniska plattor kan glida isär, röra sig mot varandra eller förskjutas längs varandra. Rörelserna formar havsbottnar, bergskedjor och vulkaner och orsakar många jordbävningar.",
@@ -266,7 +266,7 @@ export const ancientEarthArticles: Record<string, MilestoneArticleData> = {
         ],
 
         image: {
-          src: "/images/timeline/ancient-earth/seafloor-spreading.png",
+          src: "/images/timeline/ancient-earth/seafloor-spreading.webp",
           alt: "Vetenskaplig infografik som visar en mittoceanisk rygg, symmetriska magnetiska band på havsbotten och hur ny oceanisk jordskorpa bildas när plattorna glider isär.",
           caption:
             "När ny oceanisk jordskorpa bildas registrerar magnetiska mineral riktningen på jordens magnetfält. Eftersom magnetfältet har växlat riktning genom historien finns matchande magnetiska mönster på båda sidor om mittoceaniska ryggar. Det är ett viktigt bevis för havsbottenspridning.",
