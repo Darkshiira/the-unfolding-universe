@@ -11,6 +11,7 @@ import { lifeOxygenArticles } from "./life-oxygen";
 import { lifeComplexityArticles } from "./life-complexity";
 import { lifeVisibleArticles } from "./life-visible";
 import { lifeExtinctionsArticles } from "./life-extinctions"
+import { lifeModernArticles } from "./life-modern"
 import type { MilestoneArticleData } from "./types";
 
 
@@ -28,6 +29,7 @@ export const articles: Record<string, MilestoneArticleData> = {
   ...lifeComplexityArticles,
   ...lifeVisibleArticles,
   ...lifeExtinctionsArticles,
+  ...lifeModernArticles,
 
 
 };

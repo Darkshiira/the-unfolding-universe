@@ -386,7 +386,7 @@ export const lifeExtinctionsArticles: Record<string, MilestoneArticleData> = {
           "Dinosaurierna överlevde och kom under jura att dominera många landekosystem. Det betyder inte att de var de enda överlevarna eller att deras senare framgång var förutbestämd.",
         ],
         image: {
-          src: "/images/timeline/life-extinctions/triassic-survivors.png",
+          src: "/images/timeline/life-extinctions/triassic-survivors-v2.png",
           alt: "Pedagogisk jämförelse av några reptilgrupper och marina organismer före och efter utdöendet vid gränsen trias–jura.",
           caption:
             "Vissa evolutionära linjer försvann medan andra överlevde. Under jura förändrades fördelningen av ekologiska roller på land.",

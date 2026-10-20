@@ -24,6 +24,7 @@ export const MILESTONE_AGES_MA: Record<string, number> = {
   "pangaea-breakup": 190,
   "cretaceous-impact": 66,
   himalayas: 50,
+  "paleocene-eocene-warming": 56,
   "ice-ages": 2.6,
   "last-glacial-maximum": 0.02,
   holocene: 0.0117,

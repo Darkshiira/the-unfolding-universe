@@ -36,15 +36,13 @@ export const palette: Record<
 
 // Ursprungliga x-värden används inte längre: positionen beräknas från ageMa.
 const sourceMilestones: Milestone[] = [
-  
   {
     id: "big-bang",
     title: "Den stora smällen",
     date: "För cirka 13,8 miljarder år sedan",
     description:
       "Universum börjar expandera från ett extremt hett och tätt tillstånd. Med tiden bildas de första partiklarna, atomerna, stjärnorna och galaxerna.",
-    fact:
-      "Den stora smällen var inte en explosion på en plats i rymden. Det är själva rymden som har expanderat.",
+    fact: "Den stora smällen var inte en explosion på en plats i rymden. Det är själva rymden som har expanderat.",
     x: -750,
     y: 195,
     category: "earth",
@@ -567,6 +565,19 @@ const sourceMilestones: Milestone[] = [
     y: 435,
     category: "life",
     symbol: "🌱",
+  },
+
+  {
+    id: "paleocene-eocene-warming",
+    title: "Livet i en växthusvärld",
+    date: "För omkring 56 miljoner år sedan",
+    description:
+      "En period av snabb global uppvärmning förändrar havens och landets ekosystem.",
+    fact: "PETM visar hur klimatförändringar kan påverka arters utbredning, utveckling och överlevnad.",
+    x: 5300,
+    y: 435,
+    category: "life",
+    symbol: "🌡️",
   },
   {
     id: "life-today",
