@@ -14,6 +14,7 @@ import { milestones, palette } from "../timeline-data";
 import type { MilestoneArticleData } from "../content/types";
 import MuseumShowcase from "./MuseumShowcase";
 import ArticleAtmosphere from "./ArticleAtmosphere";
+import EarthWaterMuseumSidebar from "./EarthWaterMuseumSidebar";
 
 export default function MilestoneArticle({
   milestone,
@@ -152,6 +153,7 @@ export default function MilestoneArticle({
 
         <aside className="space-y-5">
           {/* Museum showcase in the desktop sidebar */}
+          {milestone.id === "earth-today" && <EarthWaterMuseumSidebar />}
           {article.showcase && (
             <div className="hidden lg:block">
               <MuseumShowcase

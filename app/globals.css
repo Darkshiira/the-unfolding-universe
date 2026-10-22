@@ -74,3 +74,874 @@ canvas {
     animation: none;
   }
 }
+
+/* Water Cycle Explorer — cinematic drifting mist */
+
+/* Water Cycle Explorer — procedural drifting mist */
+
+@keyframes waterFogSlow {
+  from {
+    transform: translate3d(-8%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(8%, 0, 0);
+  }
+}
+
+@keyframes waterFogFast {
+  from {
+    transform: translate3d(9%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-9%, 0, 0);
+  }
+}
+
+.water-fog-layer {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Water Cycle Explorer — organic drifting mist */
+
+@keyframes waterFogSlow {
+  0% {
+    transform: translate3d(-3%, 0, 0);
+    opacity: 0.65;
+  }
+
+  50% {
+    transform: translate3d(3%, -1%, 0);
+    opacity: 0.95;
+  }
+
+  100% {
+    transform: translate3d(-3%, 0, 0);
+    opacity: 0.65;
+  }
+}
+
+@keyframes waterFogFast {
+  0% {
+    transform: translate3d(3%, 0, 0);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: translate3d(-4%, 1%, 0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate3d(3%, 0, 0);
+    opacity: 0.7;
+  }
+}
+
+.water-fog-layer {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes waterMistBreathing {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.water-fog-slow {
+  animation:
+    waterFogSlow 70s ease-in-out infinite,
+    waterMistBreathing 19s ease-in-out infinite;
+}
+
+.water-fog-fast {
+  animation:
+    waterFogFast 48s ease-in-out infinite,
+    waterMistBreathing 27s ease-in-out infinite reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .water-fog-slow,
+  .water-fog-fast {
+    animation: none !important;
+  }
+}
+
+/* ========================================
+   WATER CYCLE — SOFT SUNLIGHT & EVAPORATION
+   ======================================== */
+
+@keyframes waterEvapSunshine {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes waterEvapWarmth {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes waterEvapWisp {
+  0% {
+    transform: translate(0, 12px) scale(0.85);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+
+  75% {
+    opacity: 0.45;
+  }
+
+  100% {
+    transform: translate(var(--wisp-drift, 0px), -95px) scale(1.1);
+    opacity: 0;
+  }
+}
+
+.water-evap-sunshine {
+  animation: waterEvapSunshine 8s ease-in-out infinite;
+}
+
+.water-evap-warmth {
+  animation: waterEvapWarmth 6s ease-in-out infinite;
+}
+
+.water-evap-wisp {
+  transform-box: view-box;
+  transform-origin: center;
+  animation: waterEvapWisp 7s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .water-evap-sunshine,
+  .water-evap-warmth,
+  .water-evap-wisp {
+    animation: none !important;
+  }
+
+  .water-evap-wisp {
+    opacity: 0.55;
+  }
+}
+
+/* ==========================================
+
+/* ==========================================
+   WATER CYCLE — CONDENSATION
+   ========================================== */
+
+.condensation-density {
+  transform-origin: 860px 120px;
+  animation: condensation-density-grow 8s ease-in-out infinite;
+}
+
+@keyframes condensation-density-grow {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.94);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.06);
+  }
+}
+
+.condensation-gather {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: condensation-gather-in 9s ease-in-out infinite alternate;
+}
+
+.condensation-gather-left {
+  animation-delay: -2s;
+}
+
+.condensation-gather-right {
+  animation-delay: -5s;
+  animation-duration: 11s;
+}
+
+.condensation-gather-center {
+  animation-delay: -3s;
+  animation-duration: 13s;
+}
+
+@keyframes condensation-gather-in {
+  0% {
+    opacity: 0.15;
+    transform: translateY(14px) scaleX(1.12);
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0.7;
+    transform: translateY(-8px) scaleX(0.88);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .condensation-density,
+  .condensation-gather {
+    animation: none;
+  }
+
+  .condensation-density {
+    opacity: 0.65;
+  }
+}
+
+/* Cloud darkens and becomes heavier during condensation */
+
+.condensation-storm {
+  transform-origin: 870px 105px;
+  animation: condensation-storm-build 7s ease-in-out infinite;
+}
+
+@keyframes condensation-storm-build {
+  0% {
+    opacity: 0.35;
+    transform: scale(0.96);
+  }
+
+  50% {
+    opacity: 0.95;
+    transform: scale(1.04);
+  }
+
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .condensation-storm {
+    animation: none;
+    opacity: 0.75;
+  }
+}
+
+/* ==========================================
+   WATER CYCLE — RAIN
+   ========================================== */
+
+.water-rain-drop {
+  animation: water-rain-fall var(--rain-duration) linear var(--rain-delay)
+    infinite;
+}
+
+@keyframes water-rain-fall {
+  0% {
+    transform: translate(0, -65px);
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 0.5;
+  }
+
+  82% {
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translate(-13px, 170px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .water-rain-drop {
+    animation: none;
+    opacity: 0.25;
+  }
+}
+
+/* ==========================================
+   WATER CYCLE — SNOW
+   ========================================== */
+
+.water-snow-particle {
+  animation: water-snow-fall var(--snow-duration) linear var(--snow-delay)
+    infinite;
+}
+
+@keyframes water-snow-fall {
+  0% {
+    transform: translate(0, -55px);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.75;
+  }
+
+  75% {
+    opacity: 0.65;
+  }
+
+  100% {
+    transform: translate(var(--snow-drift), 135px);
+    opacity: 0;
+  }
+}
+
+/* Slowly breathing cold atmosphere */
+.water-snow-atmosphere {
+  transform-origin: 365px 175px;
+  animation: water-snow-breathe 8s ease-in-out infinite;
+}
+
+@keyframes water-snow-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.98);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.03);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .water-snow-particle,
+  .water-snow-atmosphere {
+    animation: none;
+  }
+}
+
+/* ==========================================
+   WATER CYCLE — ORGANIC FROST
+   ========================================== */
+
+.water-frost-organic {
+  transform-origin: center;
+  animation: water-frost-grow 5s ease-out both;
+}
+
+@keyframes water-frost-grow {
+  0% {
+    opacity: 0;
+    filter: blur(4px);
+  }
+
+  45% {
+    opacity: 0.4;
+    filter: blur(1.5px);
+  }
+
+  100% {
+    opacity: 0.9;
+    filter: blur(0.25px);
+  }
+}
+
+.water-frost-specks {
+  animation: water-frost-grains 6s ease-in-out infinite;
+}
+
+@keyframes water-frost-grains {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .water-frost-organic,
+  .water-frost-specks {
+    animation: none;
+  }
+}
+
+/* ==========================================
+   WATER CYCLE — WATERFALL MIST
+   ========================================== */
+
+.waterfall-mist-cloud {
+  transform-box: fill-box;
+  transform-origin: center;
+
+  animation: waterfall-mist-rise 7s ease-in-out infinite;
+}
+
+@keyframes waterfall-mist-rise {
+  0% {
+    opacity: 0.3;
+    translate: -6px 8px;
+    scale: 0.9;
+  }
+
+  45% {
+    opacity: 1;
+    translate: 5px -14px;
+    scale: 1.2;
+  }
+
+  100% {
+    opacity: 0.2;
+    translate: 18px -38px;
+    scale: 1.45;
+  }
+}
+
+/* ==========================================
+   WATER CYCLE — MELTING DROPLETS
+   ========================================== */
+
+.water-melting-drop {
+  opacity: 0;
+
+  animation: water-melting-drip var(--melt-duration) linear var(--melt-delay)
+    infinite;
+}
+
+@keyframes water-melting-drip {
+  0% {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.4);
+  }
+
+  15% {
+    opacity: 0.65;
+    transform: translateY(5px) scale(0.85);
+  }
+
+  30% {
+    opacity: 0.9;
+    transform: translateY(18px) scale(1);
+  }
+
+  55% {
+    opacity: 0.85;
+    transform: translateY(calc(var(--melt-distance) * 0.3)) scale(1.1);
+  }
+
+  80% {
+    opacity: 0.65;
+    transform: translateY(calc(var(--melt-distance) * 0.7)) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(var(--melt-distance)) scale(0.7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waterfall-mist-cloud,
+  .water-melting-drop {
+    animation: none;
+  }
+}
+
+/* ========================================
+   WATER CYCLE — GROUNDWATER
+   Warm soil and underground infiltration
+======================================== */
+
+.groundwater-earth-glow {
+  animation: groundwater-earth-breathe 9s ease-in-out infinite;
+}
+
+@keyframes groundwater-earth-breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.95);
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: scale(1.08);
+  }
+}
+
+/* Tiny moisture particles sinking into soil */
+.groundwater-soil-particle {
+  opacity: 0;
+  animation: groundwater-soil-seep 10s ease-in-out infinite;
+}
+
+/* Very slow underground movement */
+.groundwater-underground-particle {
+  opacity: 0;
+  animation: groundwater-underground-flow 16s ease-in-out infinite;
+}
+
+@keyframes groundwater-soil-seep {
+  0% {
+    opacity: 0;
+    transform: translate(0, -8px) scale(0.6);
+  }
+
+  20% {
+    opacity: 0.85;
+  }
+
+  60% {
+    opacity: 0.65;
+    transform: translate(5px, 35px) scale(0.9);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(10px, 85px) scale(0.4);
+  }
+}
+
+@keyframes groundwater-underground-flow {
+  0% {
+    opacity: 0;
+    transform: translate(-12px, 3px);
+  }
+
+  30% {
+    opacity: 0.75;
+  }
+
+  70% {
+    opacity: 0.55;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(75px, 16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .groundwater-earth-glow,
+  .groundwater-soil-particle,
+  .groundwater-underground-particle {
+    animation: none;
+  }
+
+  .groundwater-earth-glow {
+    opacity: 0.55;
+  }
+
+  .groundwater-soil-particle,
+  .groundwater-underground-particle {
+    opacity: 0.3;
+  }
+}
+
+/* ========================================
+   GROUNDWATER — UNDERGROUND EARTH FRAME
+======================================== */
+
+.groundwater-earth-frame {
+  opacity: 0;
+  animation: groundwater-enter-earth 2.8s ease-out forwards;
+}
+
+@keyframes groundwater-enter-earth {
+  0% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .groundwater-earth-frame {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ========================================
+   WATER CYCLE — PLANT TRANSPIRATION
+======================================== */
+
+/* Forest breathing glow */
+.water-plant-glow {
+  animation: water-plant-breathe 8s ease-in-out infinite;
+}
+
+@keyframes water-plant-breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.95);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.08);
+  }
+}
+
+/* Water rising through the plants */
+.water-plant-uptake {
+  opacity: 0;
+  animation: water-plant-water-rise 8s ease-in-out infinite;
+}
+
+@keyframes water-plant-water-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(25px) scale(0.6);
+  }
+
+  20% {
+    opacity: 0.85;
+  }
+
+  65% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-75px) scale(0.4);
+  }
+}
+
+/* Invisible vapor visualized as soft mist */
+.water-plant-transpiration {
+  opacity: 0;
+  animation: water-plant-vapor-rise 10s ease-out infinite;
+}
+
+@keyframes water-plant-vapor-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 10px) scale(0.6);
+  }
+
+  25% {
+    opacity: 0.45;
+  }
+
+  65% {
+    opacity: 0.25;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(24px, -110px) scale(1.8);
+  }
+}
+
+/* Sunlight breathing gently */
+.water-plant-sunlight {
+  animation: water-plant-sunlight-pulse 10s ease-in-out infinite;
+}
+
+@keyframes water-plant-sunlight-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .water-plant-glow,
+  .water-plant-uptake,
+  .water-plant-transpiration,
+  .water-plant-sunlight {
+    animation: none;
+  }
+
+  .water-plant-glow,
+  .water-plant-sunlight {
+    opacity: 0.6;
+  }
+
+  .water-plant-uptake,
+  .water-plant-transpiration {
+    opacity: 0.25;
+  }
+}
+
+/* ========================================
+   GROWING PLANT
+======================================== */
+
+.water-plant-corner {
+  transform-origin: bottom center;
+  animation: plant-corner-appear 1.5s ease-out both;
+}
+
+@keyframes plant-corner-appear {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stem draws itself upward */
+.water-growing-stem {
+  stroke-dasharray: 450;
+  stroke-dashoffset: 450;
+  animation: plant-stem-grow 3.2s ease-in-out forwards;
+}
+
+.water-growing-branch {
+  animation-delay: 1s;
+}
+
+@keyframes plant-stem-grow {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Leaves unfurl one after another */
+.water-growing-leaf {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: plant-leaf-unfurl 2.2s
+    cubic-bezier(0.22, 0.65, 0.25, 1) forwards;
+}
+
+@keyframes plant-leaf-unfurl {
+  0% {
+    opacity: 0;
+    transform: scale(0.12) rotate(-12deg);
+  }
+
+  45% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.water-growing-leaf-one {
+  animation-delay: 1.3s;
+}
+
+.water-growing-leaf-two {
+  animation-delay: 1.9s;
+}
+
+.water-growing-leaf-three {
+  animation-delay: 2.5s;
+}
+
+.water-growing-leaf-four {
+  animation-delay: 3.1s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .water-plant-corner,
+  .water-growing-stem,
+  .water-growing-leaf {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ========================================
+   WATER JOURNEY — ICON MORPH
+======================================== */
+
+.water-marker-icon-out {
+  animation: water-icon-out 3.2s ease-in-out both;
+}
+
+.water-marker-icon-in {
+  animation: water-icon-in 3.2s ease-in-out both;
+}
+
+@keyframes water-icon-out {
+  0%,
+  25% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  65%,
+  100% {
+    opacity: 0;
+    transform: scale(0.65) rotate(-25deg);
+  }
+}
+
+@keyframes water-icon-in {
+  0%,
+  25% {
+    opacity: 0;
+    transform: scale(0.65) rotate(25deg);
+  }
+
+  65%,
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .water-marker-icon-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .water-marker-icon-out {
+    animation: none;
+    opacity: 0;
+  }
+}

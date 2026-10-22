@@ -579,6 +579,15 @@ export const remainingEarthArticles: Record<string, MilestoneArticleData> = {
         ],
       },
       {
+        id: "vattnets-vagar",
+        heading: "Vattnets väg genom mark och växter",
+        paragraphs: [
+          "När regn når marken kan vattnet rinna vidare på ytan, tränga ned mellan jordpartiklar eller avdunsta. Hur vattnet fördelas påverkas bland annat av markens porer, vegetation, lutning och hur kraftigt det regnar.",
+          "Växternas finaste rötter tar upp vatten från marken. Vattnet transporteras upp genom vedkärlen, xylemet, till stjälkar och blad. Där behövs det bland annat för fotosyntesen och för att cellerna ska behålla sin stadga.",
+          "Mycket av vattnet lämnar sedan bladen som vattenånga genom klyvöppningarna. Den processen kallas transpiration. Samtidigt kan vatten som inte tas upp av växter fortsätta nedåt och bidra till att fylla på grundvattnet.",
+        ],
+      },
+      {
         id: "framtiden",
         heading: "Hur ser jorden ut i framtiden?",
         paragraphs: [
