@@ -30,6 +30,7 @@ const particles = Array.from({ length: 16 }, (_, i) => ({
 
 export default function WaterTemperatureLab({ onClose }: Props) {
   const [temperature, setTemperature] = useState(22);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const phase: Phase =
     temperature < 0 ? "ice" : temperature >= 100 ? "steam" : "water";
   const clamp = (v: number) => Math.max(0, Math.min(1, v));
@@ -54,7 +55,7 @@ export default function WaterTemperatureLab({ onClose }: Props) {
     ice: {
       title: "Fast form · Is",
       subtitle:
-        "Molekylerna sitter i en ordnad struktur och vibrerar på plats.",
+        "Vattenmolekylerna sitter i en ordnad struktur och vibrerar på plats.",
       accent: "text-sky-200",
       detail:
         "Vid normalt lufttryck är vatten oftast fruset under 0 °C. Is har en öppen kristallstruktur och är därför mindre tät än flytande vatten.",
@@ -77,7 +78,7 @@ export default function WaterTemperatureLab({ onClose }: Props) {
 
   return (
     <section
-      className="pointer-events-auto absolute inset-0 z-20 overflow-y-auto bg-[#061724]/95 px-4 pb-24 pt-24 text-white backdrop-blur-xl sm:px-8 md:pt-28"
+      className="museum-lab-shell pointer-events-auto absolute inset-0 z-20 overflow-y-auto bg-[#061724]/95 px-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-20 text-white backdrop-blur-xl sm:px-8 sm:pt-24"
       aria-label="Experimentera med vattnets temperatur"
     >
       <style>{`
@@ -100,13 +101,13 @@ export default function WaterTemperatureLab({ onClose }: Props) {
         .lab-range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #22d3ee; border: 3px solid #e0fbff; cursor: grab; }
         @media (prefers-reduced-motion: reduce) { .lab-motion { animation: none !important; } }
       `}</style>
-      <div className="mx-auto max-w-5xl">
-        <div className="flex items-start justify-between gap-4">
+      <div className="museum-lab-inner mx-auto max-w-5xl">
+        <div className="museum-lab-heading flex items-start justify-between gap-4">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[.25em] text-teal-300">
               03 · Experimentera / Laboratorium 01
             </p>
-            <h2 className="mt-3 font-serif text-3xl font-bold sm:text-5xl">
+            <h2 className="mt-2 font-serif text-2xl font-bold sm:text-5xl">
               Vattnets tre former
             </h2>
             <p className="mt-3 max-w-xl text-sm leading-7 text-slate-300">
@@ -118,19 +119,19 @@ export default function WaterTemperatureLab({ onClose }: Props) {
             type="button"
             onClick={onClose}
             aria-label="Stäng experimentet"
-            className="rounded-full border border-white/20 bg-white/10 p-3 transition hover:bg-white/20"
+            className="museum-temp-close rounded-full border border-white/20 bg-white/10 p-3 transition hover:bg-white/20"
           >
             <X size={20} />
           </button>
         </div>
 
-        <div className="mt-7 grid items-start gap-5 lg:grid-cols-[1.1fr_.9fr]">
-          <div className="relative flex h-[510px] items-center justify-center overflow-hidden rounded-[30px] sm:h-[550px] lg:h-[590px] border border-cyan-200/20 bg-[radial-gradient(ellipse_at_50%_80%,#18556a_0%,#0b293b_44%,#071b2b_85%)] sm:min-h-[450px]">
-            <div className="absolute left-5 top-5 flex items-center gap-2 text-xs font-medium text-white/60">
+        <div className="museum-temp-layout mt-7 grid items-start gap-5 lg:grid-cols-[1.1fr_.9fr]">
+          <div className="museum-temp-scene relative flex h-[min(480px,65dvh)] min-h-[320px] items-center justify-center overflow-hidden rounded-[30px] sm:h-[550px] lg:h-[590px] border border-cyan-200/20 bg-[radial-gradient(ellipse_at_50%_80%,#18556a_0%,#0b293b_44%,#071b2b_85%)] sm:min-h-[450px]">
+            <div className="museum-temp-scene-label absolute left-5 top-5 flex items-center gap-2 text-xs font-medium text-white/60">
               <Droplets size={15} /> Simulerad vattenbehållare
             </div>
             <div className="absolute bottom-9 h-5 w-64 rounded-[100%] bg-black/40 blur-xl" />
-            <div className="relative mt-0 -translate-y-12 h-64 w-52 sm:h-72 sm:w-60 lg:-translate-y-10">
+            <div className="museum-temp-glass relative mt-0 -translate-y-12 h-64 w-52 sm:h-72 sm:w-60 lg:-translate-y-10">
               {/* Rim and transparent glass */}
               <div className="absolute inset-x-1 bottom-0 top-3 overflow-hidden rounded-b-[42px] border-x-[3px] border-b-[4px] border-cyan-100/45 bg-white/[.035] shadow-[inset_16px_0_20px_-14px_rgba(255,255,255,.32),inset_-12px_0_20px_-15px_rgba(255,255,255,.25),0_25px_50px_rgba(0,0,0,.25)]">
                 <div className="absolute left-3 top-4 z-10 h-[75%] w-2 rounded-full bg-white/10 blur-[2px]" />
@@ -433,7 +434,7 @@ export default function WaterTemperatureLab({ onClose }: Props) {
             </div>
             {/* Reserved caption area BELOW the vessel; its height never changes. */}
             <div
-              className={`pointer-events-none absolute inset-x-5 bottom-5 z-20 mx-auto flex h-[88px] max-w-[430px] items-center rounded-2xl border px-4 py-3 text-xs leading-5 shadow-xl backdrop-blur-xl transition-opacity duration-300 sm:h-[76px] ${
+              className={`museum-temp-caption pointer-events-none absolute inset-x-5 bottom-5 z-20 mx-auto flex h-[88px] max-w-[430px] items-center rounded-2xl border px-4 py-3 text-xs leading-5 shadow-xl backdrop-blur-xl transition-opacity duration-300 sm:h-[76px] ${
                 temperature > -12 && temperature <= 2
                   ? "border-sky-200/30 bg-[#0b2b40]/90 text-sky-100 opacity-100"
                   : temperature >= 70 && temperature < 100
@@ -458,7 +459,7 @@ export default function WaterTemperatureLab({ onClose }: Props) {
             </div>
           </div>
 
-          <div className="flex flex-col gap-5">
+          <div className="museum-temp-controls flex flex-col gap-5">
             <div className="rounded-[26px] border border-white/15 bg-white/[.06] p-6 sm:p-7">
               <div className="flex items-center justify-between gap-3">
                 <span className="flex items-center gap-2 text-sm font-semibold text-slate-200">
@@ -546,7 +547,7 @@ export default function WaterTemperatureLab({ onClose }: Props) {
               </div>
             </div>
             <div
-              className="h-[285px] overflow-y-auto overscroll-contain rounded-[26px] border border-cyan-200/15 bg-[#102d3b]/80 p-6 sm:h-[270px] sm:p-7"
+              className={`museum-temp-explanation rounded-[26px] border border-cyan-200/15 bg-[#102d3b]/80 p-6 sm:p-7 ${detailsOpen ? "museum-temp-explanation-open" : ""}`}
               aria-live="polite"
             >
               <p className="text-[10px] font-bold uppercase tracking-[.22em] text-teal-300">
@@ -560,20 +561,78 @@ export default function WaterTemperatureLab({ onClose }: Props) {
               <p className="mt-3 text-sm leading-6 text-white/90">
                 {phaseInfo.subtitle}
               </p>
-              <p className="mt-4 text-sm leading-6 text-slate-300">
-                {phaseInfo.detail}
-              </p>
+              <button
+                type="button"
+                className="museum-temp-details-toggle mt-3 inline-flex min-h-10 items-center rounded-full border border-cyan-200/30 bg-cyan-200/10 px-3 text-xs font-semibold text-cyan-100"
+                onClick={() => setDetailsOpen((v) => !v)}
+                aria-haspopup="dialog"
+                aria-expanded={detailsOpen}
+              >
+                Varför händer det? ↗
+              </button>
             </div>
           </div>
         </div>
-        <p className="mt-5 text-center text-xs leading-6 text-slate-400">
+        {detailsOpen && (
+          <div
+            className="museum-temp-modal fixed inset-0 z-[100] flex items-center justify-center bg-[#03121d]/75 p-4 backdrop-blur-sm"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setDetailsOpen(false);
+            }}
+          >
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="museum-temp-modal-title"
+              className="w-full max-w-md overflow-y-auto rounded-2xl border border-cyan-200/25 bg-[#0b2838] p-5 shadow-2xl sm:p-7"
+              style={{ maxHeight: "min(85dvh, 480px)" }}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") setDetailsOpen(false);
+              }}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[.2em] text-teal-300">
+                    Vad händer med vattnet?
+                  </p>
+                  <h3
+                    id="museum-temp-modal-title"
+                    className={`mt-2 font-serif text-xl font-bold ${phaseInfo.accent}`}
+                  >
+                    {phaseInfo.title}
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  autoFocus
+                  aria-label="Stäng förklaringen"
+                  onClick={() => setDetailsOpen(false)}
+                  className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 hover:bg-white/20"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-white/90">
+                {phaseInfo.subtitle}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-slate-300">
+                {phaseInfo.detail}
+              </p>
+              <p className="mt-4 border-t border-white/10 pt-3 text-xs leading-5 text-slate-400">
+                Förenklad modell vid normalt lufttryck. Vid fasövergångar kan
+                två former finnas samtidigt.
+              </p>
+            </section>
+          </div>
+        )}
+        <p className="museum-bottom-note mt-5 text-center text-xs leading-6 text-slate-400">
           Förenklad modell vid normalt lufttryck (cirka 1 atmosfär). Vid exakt 0
           °C och 100 °C kan två faser förekomma samtidigt.
         </p>
         <button
           type="button"
           onClick={onClose}
-          className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 hover:text-white"
+          className="museum-bottom-note mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 hover:text-white"
         >
           <ArrowLeft size={16} /> Tillbaka till landskapet
         </button>

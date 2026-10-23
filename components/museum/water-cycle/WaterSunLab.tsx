@@ -21,6 +21,8 @@ import {
   CheckCircle2,
   Sparkles,
   Target,
+  ScrollText,
+  X,
 } from "lucide-react";
 
 type Props = { onClose: () => void };
@@ -92,6 +94,10 @@ const challenges: {
 ];
 
 export default function WaterSunLab({ onClose }: Props) {
+  const [mobilePanel, setMobilePanel] = useState<
+    "scene" | "controls" | "results"
+  >("scene");
+  const [challengesOpen, setChallengesOpen] = useState(false);
   const [sun, setSun] = useState(65);
   const [waterTemp, setWaterTemp] = useState(22);
   const [airTemp, setAirTemp] = useState(17);
@@ -333,7 +339,9 @@ export default function WaterSunLab({ onClose }: Props) {
 
   return (
     <section
-      className="pointer-events-auto absolute inset-0 z-20 overflow-y-auto bg-[#061724]/95 px-4 pb-16 pt-24 text-white backdrop-blur-xl sm:px-8"
+      data-mobile-panel={mobilePanel}
+      data-weather-lab="true"
+      className="museum-lab-shell pointer-events-auto absolute inset-0 z-20 overflow-y-auto bg-[#061724]/95 px-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-20 text-white backdrop-blur-xl sm:px-8 sm:pt-24"
       aria-label="Laboratorium 02 – Skapa ditt eget väder"
     >
       <style>{`
@@ -347,8 +355,8 @@ export default function WaterSunLab({ onClose }: Props) {
         @keyframes weather-haze { 0%,100% {transform:translateX(-2%);opacity:.6} 50% {transform:translateX(2%);opacity:1} }
         @media (prefers-reduced-motion:reduce) { .weather-motion {animation:none!important} }
       `}</style>
-      <div className="mx-auto max-w-[1320px]">
-        <div className="mb-6 flex items-start justify-between gap-4">
+      <div className="museum-lab-inner mx-auto max-w-[1320px]">
+        <div className="museum-lab-heading mb-6 flex items-start justify-between gap-4">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[.24em] text-cyan-300">
               03 · Experimentera / Laboratorium 02
@@ -371,9 +379,160 @@ export default function WaterSunLab({ onClose }: Props) {
           </button>
         </div>
 
-        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(340px,1fr)]">
-          <div className="space-y-4">
-            <div className="relative isolate aspect-[16/10] min-h-[310px] overflow-hidden rounded-[26px] border border-cyan-200/20 bg-[#10364a] sm:aspect-[16/9]">
+        <div
+          className="museum-mobile-tabs"
+          role="group"
+          aria-label="Mobil vy för laboratoriet"
+        >
+          <button
+            type="button"
+            aria-pressed={mobilePanel === "scene"}
+            onClick={() => setMobilePanel("scene")}
+          >
+            Landskap
+          </button>
+          <button
+            type="button"
+            aria-pressed={mobilePanel === "controls"}
+            onClick={() =>
+              setMobilePanel(mobilePanel === "controls" ? "scene" : "controls")
+            }
+          >
+            Reglage
+          </button>
+          <button
+            type="button"
+            aria-pressed={mobilePanel === "results"}
+            onClick={() =>
+              setMobilePanel(mobilePanel === "results" ? "scene" : "results")
+            }
+          >
+            Resultat
+          </button>
+        </div>
+        <button
+          className="museum-panel-scrim"
+          data-visible={mobilePanel !== "scene"}
+          aria-label="Stäng panelen"
+          type="button"
+          onClick={() => setMobilePanel("scene")}
+        />
+
+        <button
+          type="button"
+          className="museum-weather-challenge-trigger"
+          onClick={() => {
+            setMobilePanel("scene");
+            setChallengesOpen(true);
+          }}
+          aria-label="Öppna vetenskapliga utmaningar"
+        >
+          <ScrollText size={16} /> <span>Utmaningar</span>
+          <span className="museum-challenge-count">
+            {completedChallenges.length}/{challenges.length}
+          </span>
+        </button>
+        {challengesOpen && (
+          <div
+            className="museum-weather-challenge-overlay"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget)
+                setChallengesOpen(false);
+            }}
+          >
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-label="Vetenskapliga utmaningar"
+              className="museum-weather-challenge-dialog"
+            >
+              <div className="museum-weather-challenge-heading">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-300">
+                    Vetenskapliga utmaningar
+                  </p>
+                  <h3 className="font-serif text-xl font-bold">
+                    Kan du styra vädret?
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setChallengesOpen(false)}
+                  aria-label="Stäng utmaningarna"
+                  className="museum-weather-icon-close"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+              <p className="mt-1 text-xs text-slate-300">
+                {completedChallenges.length} av {challenges.length} klara · Välj
+                ett uppdrag och justera vädret.
+              </p>
+              <div className="museum-weather-challenge-options">
+                {challenges.map((challenge) => (
+                  <button
+                    key={challenge.id}
+                    type="button"
+                    aria-pressed={activeChallenge === challenge.id}
+                    onClick={() => {
+                      setActiveChallenge(challenge.id);
+                      setShowChallengeHint(false);
+                    }}
+                    className={`museum-weather-challenge-option ${activeChallenge === challenge.id ? "is-active" : ""}`}
+                  >
+                    <span>{challenge.icon}</span>
+                    <span>{challenge.title}</span>
+                    {completedChallenges.includes(challenge.id) && (
+                      <CheckCircle2 size={15} className="text-emerald-300" />
+                    )}
+                  </button>
+                ))}
+              </div>
+              {currentChallenge && (
+                <div className="museum-weather-challenge-detail">
+                  {challengeIsAchieved ||
+                  completedChallenges.includes(currentChallenge.id) ? (
+                    <>
+                      <p className="font-semibold text-emerald-200">
+                        Uppdrag slutfört! ✨
+                      </p>
+                      <p>{currentChallenge.why}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="font-semibold text-cyan-100">
+                        {currentChallenge.mission}
+                      </p>
+                      <button
+                        type="button"
+                        className="text-cyan-200 underline underline-offset-4"
+                        onClick={() => setShowChallengeHint((v) => !v)}
+                      >
+                        {showChallengeHint ? "Dölj ledtråd" : "Visa ledtråd"}
+                      </button>
+                      {showChallengeHint && <p>{currentChallenge.hint}</p>}
+                    </>
+                  )}
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  setChallengesOpen(false);
+                  setMobilePanel("controls");
+                }}
+                className="museum-weather-challenge-action"
+              >
+                {currentChallenge
+                  ? "Experimentera med reglagen →"
+                  : "Till reglagen →"}
+              </button>
+            </section>
+          </div>
+        )}
+        <div className="museum-landscape-stage grid items-start gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(340px,1fr)]">
+          <div className="museum-landscape-scene-column space-y-4">
+            <div className="museum-weather-scene relative isolate aspect-[16/10] min-h-[220px] overflow-hidden rounded-[26px] border border-cyan-200/20 bg-[#10364a] sm:aspect-[16/9]">
               {/* Save the accompanying landscape at public/images/museum/weather-lab-landscape.webp */}
               <div
                 className="absolute inset-0 bg-cover bg-center"
@@ -709,7 +868,7 @@ export default function WaterSunLab({ onClose }: Props) {
                   />
                 ))}
               </div>
-              <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center gap-2 text-xs">
+              <div className="museum-weather-scene-status absolute bottom-4 left-4 right-4 flex flex-wrap items-center gap-2 text-xs">
                 <span className="rounded-full border border-white/20 bg-[#061724]/80 px-3 py-2 backdrop-blur-md">
                   {cloudAmount > 20 ? "☁️ Moln utvecklas" : "☀️ Klarare himmel"}
                 </span>
@@ -726,161 +885,163 @@ export default function WaterSunLab({ onClose }: Props) {
                 </span>
               </div>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              <Metric
-                title="Avdunstning"
-                value={evaporationLevel}
-                note="Relativ takt"
-                color="#42d5e4"
-              />
-              <Metric
-                title="Vattenånga"
-                value={moistAir}
-                note="Relativ mängd"
-                color="#81b7f6"
-              />
-              <Metric
-                title="Relativ luftfuktighet"
-                value={rh}
-                note="Andel av mättnad"
-                color="#b7a7ff"
-              />
-              <Metric
-                title="Moln / nederbörd"
-                value={cloudAmount}
-                note={`Moln ${Math.round(cloudAmount)} · Regn ${Math.round(liquidRainAmount)} · Snö ${Math.round(snowAmount)}`}
-                color="#65d6b0"
-              />
+            <div
+              data-panel="results"
+              className="museum-mobile-panel museum-weather-results"
+            >
+              <div className="museum-weather-panel-header">
+                <span>Resultat</span>
+                <button
+                  type="button"
+                  onClick={() => setMobilePanel("scene")}
+                  aria-label="Stäng resultat"
+                >
+                  <X size={15} />
+                </button>
+              </div>
+              <div className="museum-weather-metrics grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                <Metric
+                  title="Avdunstning"
+                  value={evaporationLevel}
+                  note="Relativ takt"
+                  color="#42d5e4"
+                />
+                <Metric
+                  title="Vattenånga"
+                  value={moistAir}
+                  note="Relativ mängd"
+                  color="#81b7f6"
+                />
+                <Metric
+                  title="Relativ luftfuktighet"
+                  value={rh}
+                  note="Andel av mättnad"
+                  color="#b7a7ff"
+                />
+                <Metric
+                  title="Moln / nederbörd"
+                  value={cloudAmount}
+                  note={`Moln ${Math.round(cloudAmount)} · Regn ${Math.round(liquidRainAmount)} · Snö ${Math.round(snowAmount)}`}
+                  color="#65d6b0"
+                />
+              </div>
+              <div className="museum-weather-extras rounded-2xl border border-cyan-200/15 bg-[#0d2b3c] p-5">
+                <p className="text-[11px] font-bold uppercase tracking-[.18em] text-cyan-300">
+                  Vad händer just nu?
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-200">
+                  {snowing && !liquidRaining
+                    ? "Du skapade snö! ❄️ Molnet ger nederbörd och luften är tillräckligt kall i vår förenklade modell för att snöflingor ska nå marken."
+                    : snowing && liquidRaining
+                      ? "Snöblandat regn! Temperaturen ligger nära gränsen där snö kan smälta på väg mot marken."
+                      : liquidRaining
+                        ? "Molndropparna har vuxit tillräckligt i modellen för att ge regn. Prova att kyla luften för att skapa snö!"
+                        : cloudAmount > 12
+                          ? "Luften har blivit mättad och en del vattenånga har kondenserat till små molndroppar. Låt tiden gå så kan dropparna växa."
+                          : rh > 92
+                            ? "Luften är nästan mättad. Sänk lufttemperaturen lite till så kan kondensation börja."
+                            : "Sjön avger vattenånga till luften. För att bilda moln behöver luften bli tillräckligt fuktig och kylas till mättnad."}
+                </p>
+              </div>
             </div>
-            <div className="rounded-2xl border border-cyan-200/15 bg-[#0d2b3c] p-5">
-              <p className="text-[11px] font-bold uppercase tracking-[.18em] text-cyan-300">
-                Vad händer just nu?
-              </p>
-              <p className="mt-2 text-sm leading-6 text-slate-200">
-                {snowing && !liquidRaining
-                  ? "Du skapade snö! ❄️ Molnet ger nederbörd och luften är tillräckligt kall i vår förenklade modell för att snöflingor ska nå marken."
-                  : snowing && liquidRaining
-                    ? "Snöblandat regn! Temperaturen ligger nära gränsen där snö kan smälta på väg mot marken."
-                    : liquidRaining
-                      ? "Molndropparna har vuxit tillräckligt i modellen för att ge regn. Prova att kyla luften för att skapa snö!"
-                      : cloudAmount > 12
-                        ? "Luften har blivit mättad och en del vattenånga har kondenserat till små molndroppar. Låt tiden gå så kan dropparna växa."
-                        : rh > 92
-                          ? "Luften är nästan mättad. Sänk lufttemperaturen lite till så kan kondensation börja."
-                          : "Sjön avger vattenånga till luften. För att bilda moln behöver luften bli tillräckligt fuktig och kylas till mättnad."}
-              </p>
-            </div>
-            {/* Challenge panel stays in the left column, below the simulation. */}
-            <div className="rounded-[26px] border border-cyan-200/20 bg-[#102d3e] p-5 sm:p-6">
+            {/* Desktop: the four challenges remain visible below the results. */}
+            <section
+              className="museum-weather-desktop-challenges rounded-[26px] border border-cyan-200/20 bg-[#0d2b3c] p-5 sm:p-6"
+              aria-labelledby="weather-desktop-challenges-title"
+            >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.18em] text-cyan-300">
-                    <Target size={15} /> Vetenskapliga utmaningar
+                  <p className="text-[11px] font-bold uppercase tracking-[.16em] text-cyan-300">
+                    Vetenskapliga utmaningar
                   </p>
-                  <h3 className="mt-2 font-serif text-2xl font-bold">
+                  <h3
+                    id="weather-desktop-challenges-title"
+                    className="mt-2 font-serif text-2xl font-bold"
+                  >
                     Kan du styra vädret?
                   </h3>
                 </div>
-                <span className="inline-flex items-center gap-2 rounded-full border border-amber-200/20 bg-amber-100/10 px-3 py-2 text-xs font-semibold text-amber-100">
-                  <Trophy size={15} /> {completedChallenges.length} /{" "}
-                  {challenges.length} klara
+                <span className="rounded-full border border-amber-200/25 bg-amber-100/10 px-3 py-2 text-xs font-semibold text-amber-100">
+                  <Trophy size={14} className="mr-1 inline" />{" "}
+                  {completedChallenges.length} / {challenges.length} klara
                 </span>
               </div>
-              <p className="mt-2 text-sm leading-6 text-slate-300">
+              <p className="mt-3 text-sm text-slate-300">
                 Välj ett uppdrag och experimentera med reglagen. Laboratoriet
                 känner av när du lyckas!
               </p>
-              <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                {challenges.map((challenge) => {
-                  const selected = activeChallenge === challenge.id;
-                  const completed = completedChallenges.includes(challenge.id);
-                  return (
-                    <button
-                      key={challenge.id}
-                      type="button"
-                      aria-pressed={selected}
-                      onClick={() => {
-                        setActiveChallenge(challenge.id);
-                        setShowChallengeHint(false);
-                      }}
-                      className={`flex min-h-16 items-center gap-3 rounded-xl border p-3 text-left transition-colors ${
-                        selected
-                          ? "border-cyan-300/70 bg-cyan-300/15"
-                          : "border-white/15 bg-white/5 hover:border-cyan-200/40 hover:bg-white/10"
-                      }`}
-                    >
-                      <span className="text-2xl" aria-hidden="true">
-                        {challenge.icon}
-                      </span>
-                      <span className="min-w-0 flex-1 text-sm font-semibold">
-                        {challenge.title}
-                      </span>
-                      {completed && (
-                        <CheckCircle2
-                          size={19}
-                          className="shrink-0 text-emerald-300"
-                          aria-label="Avklarad"
-                        />
-                      )}
-                    </button>
-                  );
-                })}
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                {challenges.map((challenge) => (
+                  <button
+                    key={challenge.id}
+                    type="button"
+                    aria-pressed={activeChallenge === challenge.id}
+                    onClick={() => {
+                      setActiveChallenge(challenge.id);
+                      setShowChallengeHint(false);
+                    }}
+                    className={`flex min-h-14 items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold transition ${activeChallenge === challenge.id ? "border-cyan-300/70 bg-cyan-300/15" : "border-white/15 bg-white/5 hover:bg-white/10"}`}
+                  >
+                    <span className="text-xl" aria-hidden="true">
+                      {challenge.icon}
+                    </span>
+                    <span className="flex-1">{challenge.title}</span>
+                    {completedChallenges.includes(challenge.id) && (
+                      <CheckCircle2 size={17} className="text-emerald-300" />
+                    )}
+                  </button>
+                ))}
               </div>
-              {currentChallenge && (
-                <div
-                  className="mt-4 min-h-[165px] rounded-2xl border border-cyan-200/20 bg-[#092435] p-4"
-                  aria-live="polite"
-                >
+              {currentChallenge ? (
+                <div className="mt-4 rounded-xl border border-cyan-200/15 bg-[#082535] p-4 text-sm leading-6 text-slate-200">
                   {challengeIsAchieved ||
                   completedChallenges.includes(currentChallenge.id) ? (
                     <>
-                      <p className="flex items-center gap-2 font-bold text-emerald-200">
-                        <Sparkles size={18} /> Uppdrag slutfört!{" "}
-                        {currentChallenge.icon}
+                      <p className="font-bold text-emerald-200">
+                        Uppdrag slutfört! ✨
                       </p>
-                      <p className="mt-2 text-sm leading-6 text-slate-200">
-                        {currentChallenge.why}
-                      </p>
-                      <p className="mt-2 text-xs text-emerald-200">
-                        Välj gärna ett nytt uppdrag – dina upptäckter sparas
-                        tills du lämnar laboratoriet.
-                      </p>
+                      <p>{currentChallenge.why}</p>
                     </>
                   ) : (
                     <>
-                      <p className="font-bold text-cyan-100">
+                      <p className="font-semibold text-cyan-100">
                         {currentChallenge.mission}
-                      </p>
-                      <p className="mt-2 text-xs text-slate-400">
-                        Ändra förhållandena och låt simuleringen gå. Det finns
-                        ingen tidspress!
                       </p>
                       <button
                         type="button"
-                        onClick={() => setShowChallengeHint((value) => !value)}
-                        aria-expanded={showChallengeHint}
-                        className="mt-3 rounded-lg border border-cyan-200/25 px-3 py-2 text-xs font-semibold text-cyan-200 hover:bg-white/10"
+                        className="mt-2 text-cyan-200 underline underline-offset-4"
+                        onClick={() => setShowChallengeHint((v) => !v)}
                       >
-                        {showChallengeHint ? "Dölj ledtråd" : "💡 Visa ledtråd"}
+                        {showChallengeHint ? "Dölj ledtråd" : "Visa ledtråd"}
                       </button>
                       {showChallengeHint && (
-                        <p className="mt-3 text-sm leading-6 text-slate-200">
-                          {currentChallenge.hint}
-                        </p>
+                        <p className="mt-2">{currentChallenge.hint}</p>
                       )}
                     </>
                   )}
                 </div>
-              )}
-              {!currentChallenge && (
+              ) : (
                 <p className="mt-3 text-xs text-slate-400">
                   Välj en utmaning ovan för att börja.
                 </p>
               )}
-            </div>
+            </section>
           </div>
 
-          <div className="space-y-4">
+          <div
+            data-panel="controls"
+            className="museum-mobile-panel museum-weather-controls space-y-4"
+          >
+            <div className="museum-weather-panel-header">
+              <span>Reglage</span>
+              <button
+                type="button"
+                onClick={() => setMobilePanel("scene")}
+                aria-label="Stäng reglagen"
+              >
+                <X size={15} />
+              </button>
+            </div>
             <div className="rounded-[26px] border border-white/15 bg-[#1b2e3b] p-5 sm:p-6">
               <div className="mb-5 flex items-center justify-between gap-2">
                 <h3 className="font-bold">Styr förhållandena</h3>
@@ -892,7 +1053,7 @@ export default function WaterSunLab({ onClose }: Props) {
                   <RotateCcw size={14} /> Återställ
                 </button>
               </div>
-              <div className="space-y-5">
+              <div className="museum-weather-control-stack space-y-5">
                 <Control
                   icon={<Sun size={18} />}
                   title="Solens energi"
@@ -938,7 +1099,7 @@ export default function WaterSunLab({ onClose }: Props) {
                   hint="Vind påverkar avdunstning och hur fukt blandas bort."
                 />
               </div>
-              <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-white/10 pt-5">
+              <div className="museum-weather-toolbar mt-6 flex flex-wrap items-center gap-2 border-t border-white/10 pt-5">
                 <button
                   type="button"
                   onClick={() => setRunning((v) => !v)}
@@ -959,16 +1120,16 @@ export default function WaterSunLab({ onClose }: Props) {
                     <option value={8}>8×</option>
                   </select>
                 </label>
+                <button
+                  type="button"
+                  onClick={toggleSound}
+                  aria-pressed={soundEnabled}
+                  className="museum-weather-sound inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition-colors hover:bg-white/10"
+                >
+                  {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                  {soundEnabled ? "Stäng av ljud" : "Aktivera ljud"}
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={toggleSound}
-                aria-pressed={soundEnabled}
-                className="mt-3 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition-colors hover:bg-white/10"
-              >
-                {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-                {soundEnabled ? "Stäng av ljud" : "Aktivera ljud"}
-              </button>
               {audioError && (
                 <p role="alert" className="mt-2 text-xs text-amber-200">
                   Ljudet {audioError}.mp3 kunde inte spelas. Kontrollera filen i
@@ -1026,7 +1187,7 @@ export default function WaterSunLab({ onClose }: Props) {
         <button
           onClick={onClose}
           type="button"
-          className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 hover:text-white"
+          className="museum-bottom-note mt-7 inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 hover:text-white"
         >
           <ArrowLeft size={16} /> Tillbaka till landskapet
         </button>
@@ -1080,7 +1241,9 @@ function Control({
         className="w-full cursor-pointer"
         style={{ accentColor: color }}
       />
-      <p className="mt-1 text-xs leading-5 text-slate-400">{hint}</p>
+      <p className="museum-weather-control-hint mt-1 text-xs leading-5 text-slate-400">
+        {hint}
+      </p>
     </div>
   );
 }

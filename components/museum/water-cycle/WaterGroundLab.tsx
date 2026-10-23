@@ -84,11 +84,16 @@ export default function WaterGroundLab({ onClose }: Props) {
     rain: number;
     sun: number;
   } | null>(null);
+  const [mobilePanel, setMobilePanel] = useState<
+    "scene" | "controls" | "results"
+  >("scene");
+  const [groundInfo, setGroundInfo] = useState<"soil" | "plant" | null>(null);
   const [rain, setRain] = useState(55);
   const [sun, setSun] = useState(55);
   const [soil, setSoil] = useState<Soil>("loam");
   const [follow, setFollow] = useState(false);
   const [step, setStep] = useState(0);
+  const [journeyOpen, setJourneyOpen] = useState(false);
   // Keep plant-health readings based on the visitor's experiment settings
   // while the guided droplet journey temporarily pauses the weather.
   const modelRain = follow ? (savedWeather?.rain ?? rain) : rain;
@@ -169,7 +174,9 @@ export default function WaterGroundLab({ onClose }: Props) {
   ];
   return (
     <section
-      className="pointer-events-auto absolute inset-0 z-20 overflow-y-auto bg-[#061724]/95 px-4 pb-24 pt-24 text-white backdrop-blur-xl sm:px-8 md:pt-28"
+      data-mobile-panel={mobilePanel}
+      data-lab="ground"
+      className="museum-lab-shell pointer-events-auto absolute inset-0 z-20 overflow-y-auto bg-[#061724]/95 px-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-20 text-white backdrop-blur-xl sm:px-8 sm:pt-24 landscape:max-h-[100dvh]"
       aria-label="Laboratorium 03 – Vart tar regnet vägen?"
     >
       <style>{`
@@ -177,14 +184,22 @@ export default function WaterGroundLab({ onClose }: Props) {
         @keyframes groundFlow { to { stroke-dashoffset:-32 } }
         @keyframes groundPulse { 0%,100% { opacity:.25 } 50% { opacity:1 } }
         @media(prefers-reduced-motion:reduce){.ground-motion{animation:none!important}}
+        /* The desktop journey must never appear alongside the portrait journey. */
+        @media (orientation:portrait) and (max-width:900px) {
+          #water-museum-root section.museum-lab-shell[data-lab="ground"] .ground-original-journey.ground-original-journey { display:none!important; }
+          .museum-lab-shell[data-lab="ground"] .museum-ground-tour-mobile { display:block; }
+        }
+        @media (orientation:landscape), (min-width:901px) {
+          .museum-lab-shell[data-lab="ground"] .museum-ground-tour-mobile { display:none!important; }
+        }
       `}</style>
-      <div className="mx-auto max-w-6xl">
-        <div className="flex items-start justify-between gap-4">
+      <div className="museum-lab-inner mx-auto max-w-6xl">
+        <div className="museum-lab-heading flex items-start justify-between gap-4">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[.25em] text-emerald-300">
               03 · Experimentera / Laboratorium 03
             </p>
-            <h2 className="mt-3 font-serif text-3xl font-bold sm:text-5xl">
+            <h2 className="mt-2 font-serif text-2xl font-bold sm:text-5xl">
               Vart tar regnet vägen?
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">
@@ -201,7 +216,18 @@ export default function WaterGroundLab({ onClose }: Props) {
             <X size={20} />
           </button>
         </div>
-        <div className="mt-5 rounded-[22px] border border-cyan-200/20 bg-cyan-200/[.055] px-4 py-3 sm:px-5">
+        <div
+          data-journey-open={journeyOpen}
+          className="museum-ground-journey museum-ground-journey-desktop ground-original-journey mt-5 rounded-[22px] border border-cyan-200/20 bg-cyan-200/[.055] px-4 py-3 sm:px-5"
+        >
+          <button
+            type="button"
+            className="museum-ground-journey-dismiss"
+            onClick={() => setJourneyOpen(false)}
+            aria-label="Dölj vattendroppens resa"
+          >
+            <X size={14} />
+          </button>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="text-[11px] font-bold uppercase tracking-widest text-cyan-200">
@@ -259,7 +285,7 @@ export default function WaterGroundLab({ onClose }: Props) {
             </div>
           </div>
           <div
-            className="mt-3 grid grid-cols-6 gap-1.5"
+            className="museum-ground-steps mt-3 grid grid-cols-6 gap-1.5"
             aria-label="Resans steg"
           >
             {journey.map((item, i) => (
@@ -276,8 +302,72 @@ export default function WaterGroundLab({ onClose }: Props) {
             ))}
           </div>
         </div>
-        <div className="mt-7 grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(300px,.7fr)]">
-          <div className="overflow-hidden rounded-[28px] border border-emerald-200/20 bg-[#102b36]">
+        <div
+          className="museum-mobile-tabs"
+          role="group"
+          aria-label="Mobil vy för laboratoriet"
+        >
+          <button
+            type="button"
+            className="museum-ground-journey-tab"
+            aria-expanded={journeyOpen}
+            aria-label="Visa eller dölj vattendroppens resa"
+            onClick={() => {
+              setMobilePanel("scene");
+              setJourneyOpen((open) => !open);
+            }}
+          >
+            <Droplets size={18} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            aria-pressed={mobilePanel === "scene"}
+            onClick={() => setMobilePanel("scene")}
+          >
+            Landskap
+          </button>
+          <button
+            type="button"
+            aria-pressed={mobilePanel === "controls"}
+            onClick={() => {
+              stopWaterdropJourney();
+              setJourneyOpen(false);
+              setMobilePanel(mobilePanel === "controls" ? "scene" : "controls");
+            }}
+          >
+            Reglage
+          </button>
+          <button
+            type="button"
+            aria-pressed={mobilePanel === "results"}
+            onClick={() => {
+              stopWaterdropJourney();
+              setJourneyOpen(false);
+              setMobilePanel(mobilePanel === "results" ? "scene" : "results");
+            }}
+          >
+            Resultat
+          </button>
+        </div>
+        <button
+          className="museum-panel-scrim"
+          data-visible={mobilePanel !== "scene"}
+          aria-label="Stäng panelen"
+          type="button"
+          onClick={() => setMobilePanel("scene")}
+        />
+        {mobilePanel !== "scene" && (
+          <button
+            className="museum-drawer-close hidden"
+            type="button"
+            aria-label="Stäng panelen"
+            onClick={() => setMobilePanel("scene")}
+          >
+            <X size={14} />
+          </button>
+        )}
+        <div className="museum-landscape-stage mt-5 grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1.3fr)_minmax(300px,.7fr)]">
+          <div className="museum-ground-scene overflow-hidden rounded-[28px] border border-emerald-200/20 bg-[#102b36]">
             <div className="flex items-center justify-between gap-3 px-5 py-4">
               <span className="text-xs font-semibold text-emerald-100">
                 Genomskärning · mark, rötter och grundvatten
@@ -292,7 +382,7 @@ export default function WaterGroundLab({ onClose }: Props) {
               viewBox="0 0 800 400"
               role="img"
               aria-label="Realistisk genomskärning av sjö, skogsmark, rötter, jord och grundvatten. Animerade blå linjer visar vattnets rörelse."
-              className="w-full"
+              className="block h-auto w-full"
             >
               <defs>
                 <linearGradient id="ground-label-bg" x1="0" x2="1">
@@ -653,6 +743,91 @@ export default function WaterGroundLab({ onClose }: Props) {
                 ))}
               </g>
             </svg>
+            {/* Portrait-only tour controls live beneath the scene, not above it.
+                Desktop and phone landscape keep the original tour controls. */}
+            {journeyOpen && mobilePanel === "scene" && (
+              <div
+                className="museum-ground-tour-mobile"
+                aria-label="Vattendroppens resa"
+              >
+                <div className="museum-ground-tour-mobile-head">
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-200">
+                      Vattendroppens resa ·{" "}
+                      {follow ? `${step + 1} av ${journey.length}` : "6 steg"}
+                    </p>
+                    <h3 className="mt-1 text-sm font-semibold text-white">
+                      {follow
+                        ? journey[step].title
+                        : "Från regn till trädets blad"}
+                    </h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setJourneyOpen(false)}
+                    aria-label="Dölj resans information"
+                    className="museum-ground-tour-hide"
+                  >
+                    <X size={17} />
+                  </button>
+                </div>
+                <p className="mt-2 text-xs leading-5 text-slate-300">
+                  {follow
+                    ? journey[step].body
+                    : "Starta resan och följ en lysande droppe genom landskapet."}
+                </p>
+                <div className="museum-ground-tour-mobile-actions">
+                  {follow && step > 0 && (
+                    <button
+                      type="button"
+                      className="museum-ground-tour-secondary"
+                      onClick={() => setStep((s) => Math.max(0, s - 1))}
+                    >
+                      Föregående
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="museum-ground-tour-next"
+                    onClick={() => {
+                      if (follow) setStep((s) => (s + 1) % journey.length);
+                      else startWaterdropJourney();
+                    }}
+                  >
+                    {!follow
+                      ? "Starta resan"
+                      : step === journey.length - 1
+                        ? "Börja om"
+                        : "Nästa steg"}
+                    <ArrowRight size={15} />
+                  </button>
+                  {follow && (
+                    <button
+                      type="button"
+                      className="museum-ground-tour-secondary"
+                      onClick={stopWaterdropJourney}
+                    >
+                      Avsluta
+                    </button>
+                  )}
+                </div>
+                <div
+                  className="museum-ground-tour-dots"
+                  aria-label="Resans sex steg"
+                >
+                  {journey.map((item, i) => (
+                    <button
+                      key={item.title}
+                      type="button"
+                      aria-label={item.title}
+                      aria-current={follow && step === i ? "step" : undefined}
+                      className={follow && i <= step ? "is-complete" : ""}
+                      onClick={() => startWaterdropJourney(i)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
             <p className="px-5 pb-4 text-xs leading-5 text-slate-300">
               Bakgrundsbilden är en konstnärlig illustration. Den lysande
               droppen visar en möjlig väg genom marken. Sista steget visar en
@@ -660,7 +835,10 @@ export default function WaterGroundLab({ onClose }: Props) {
               förenklade pedagogiska modeller, inte uppmätta värden.
             </p>
           </div>
-          <div className="space-y-4 rounded-[28px] border border-white/10 bg-white/[.045] p-5 sm:p-6">
+          <div
+            data-panel="controls"
+            className="museum-mobile-panel space-y-4 rounded-[28px] border border-white/10 bg-white/[.045] p-5 sm:p-6"
+          >
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-lg">Styr naturen</h3>
               <button
@@ -728,7 +906,14 @@ export default function WaterGroundLab({ onClose }: Props) {
                 ))}
               </div>
             </fieldset>
-            <div className="min-h-[106px] rounded-xl border border-emerald-300/15 bg-emerald-300/[.06] p-4">
+            <button
+              type="button"
+              className="museum-ground-soil-info"
+              onClick={() => setGroundInfo("soil")}
+            >
+              Om marktypen <ArrowRight size={13} />
+            </button>
+            <div className="museum-ground-soil-description min-h-[106px] rounded-xl border border-emerald-300/15 bg-emerald-300/[.06] p-4">
               <p className="text-xs font-bold text-emerald-200">
                 MARKENS EGENSKAPER
               </p>
@@ -738,175 +923,269 @@ export default function WaterGroundLab({ onClose }: Props) {
             </div>
           </div>
         </div>
-        <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          <Metric label="Vatten som tränger ner" value={values.infiltration} />
-          <Metric label="Ytavrinning" value={values.runoff} />
-          <Metric label="Avdunstning" value={values.evap} />
-        </div>
-        {/* Plant-health exhibit: matching photographic foliage crossfades in place. */}
-        <div className="mt-5 overflow-hidden rounded-[26px] border border-emerald-300/35 bg-[#082330] shadow-[0_12px_50px_rgba(0,0,0,.16)]">
-          <div className="grid min-h-[235px] items-stretch lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_250px]">
-            <div className="relative min-h-[220px] overflow-hidden bg-[#082330]">
-              <h3 className="absolute left-5 top-5 z-10 flex items-center gap-2 text-lg font-bold text-white">
-                <Leaf size={21} className="text-emerald-400" />
-                Hur mår växten?
-              </h3>
-              <div
-                className="absolute inset-x-0 bottom-0 top-10"
-                style={{
-                  maskImage:
-                    "radial-gradient(ellipse 76% 85% at 50% 72%, black 50%, transparent 100%)",
-                  WebkitMaskImage:
-                    "radial-gradient(ellipse 76% 85% at 50% 72%, black 50%, transparent 100%)",
-                }}
-                role="img"
-                aria-label={`Växtens illustrerade tillstånd: ${values.status}.`}
-              >
-                <Image
-                  src="/images/museum/plant-healthy-v2.webp"
-                  alt=""
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 520px"
-                  className="object-contain object-bottom"
-                />
-                <Image
-                  src="/images/museum/plant-drought-v2.webp"
-                  alt=""
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 520px"
-                  className="object-contain object-bottom transition-opacity duration-[1400ms] ease-in-out motion-reduce:transition-none"
-                  style={{
-                    opacity: values.waterlogging
-                      ? 0
-                      : Math.max(
-                          0,
-                          Math.min(1, (35 - values.waterAvailable) / 28),
-                        ),
-                  }}
-                />
-                <Image
-                  src="/images/museum/plant-waterlogged-v2.webp"
-                  alt=""
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 520px"
-                  className="object-contain object-bottom transition-opacity duration-[1400ms] ease-in-out motion-reduce:transition-none"
-                  style={{
-                    opacity: values.waterlogging
-                      ? Math.min(1, (rain - 70) / 20)
-                      : 0,
-                  }}
-                />
-              </div>
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#082330] to-transparent" />
-            </div>
-
-            <div className="flex min-w-0 flex-col justify-center px-5 py-6 lg:px-3">
-              <h4
-                className={`text-xl font-bold ${
-                  values.waterlogging
-                    ? "text-orange-300"
-                    : values.drought
-                      ? "text-amber-300"
-                      : "text-emerald-200"
-                }`}
-              >
-                {values.status}
-              </h4>
-              <p className="mt-2 min-h-[100px] text-sm leading-6 text-slate-200">
-                {values.waterlogging
-                  ? "När jorden är mättad med vatten blir det ont om syre i porerna. Rötterna får svårt att andas och bladen kan så småningom gulna."
-                  : values.drought
-                    ? "Det finns för lite vatten i marken. Bladen kan sloka och växten kan minska transpirationen genom att delvis stänga klyvöppningarna."
-                    : values.waterAvailable < 30
-                      ? "Växten har begränsad tillgång till vatten. Under varma dagar kan det bli svårt att ersätta det vatten som lämnar bladen."
-                      : "Rötterna tar upp vatten som transporteras till bladen. Det mesta av det upptagna vattnet avges så småningom genom transpiration."}
-              </p>
-              <div
-                className="mt-4 h-2.5 overflow-hidden rounded-full bg-white/15"
-                role="progressbar"
-                aria-label="Illustrativ vattentillgång"
-                aria-valuenow={Math.round(values.waterAvailable)}
-                aria-valuemin={0}
-                aria-valuemax={100}
-              >
+        <div
+          data-panel="results"
+          className="museum-mobile-panel museum-ground-results"
+        >
+          <div className="museum-ground-metrics mt-5 grid gap-3 sm:grid-cols-3">
+            <Metric
+              label="Vatten som tränger ner"
+              value={values.infiltration}
+            />
+            <Metric label="Ytavrinning" value={values.runoff} />
+            <Metric label="Avdunstning" value={values.evap} />
+          </div>
+          <button
+            type="button"
+            className="museum-ground-plant-summary"
+            onClick={() => setGroundInfo("plant")}
+          >
+            <span className="flex items-center gap-2 font-semibold">
+              <Leaf size={16} className="text-emerald-300" /> Hur mår växten?{" "}
+              <ArrowRight size={14} />
+            </span>
+            <span className="text-emerald-200">{values.status}</span>
+            <span className="block h-1.5 overflow-hidden rounded-full bg-white/15">
+              <span
+                className="block h-full rounded-full bg-emerald-400"
+                style={{ width: `${values.waterAvailable}%` }}
+              />
+            </span>
+            <span className="text-[10px] text-slate-400">
+              Vattentillgång: {Math.round(values.waterAvailable)} / 100 · Tryck
+              för att läsa mer
+            </span>
+          </button>
+          {/* Plant-health exhibit: matching photographic foliage crossfades in place. */}
+          <div className="museum-ground-plant-exhibit mt-5 overflow-hidden rounded-[26px] border border-emerald-300/35 bg-[#082330] shadow-[0_12px_50px_rgba(0,0,0,.16)]">
+            <div className="grid min-h-[235px] items-stretch lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_250px]">
+              <div className="relative min-h-[220px] overflow-hidden bg-[#082330]">
+                <h3 className="absolute left-5 top-5 z-10 flex items-center gap-2 text-lg font-bold text-white">
+                  <Leaf size={21} className="text-emerald-400" />
+                  Hur mår växten?
+                </h3>
                 <div
-                  className={`h-full rounded-full transition-[width] duration-700 ${
-                    values.waterlogging
-                      ? "bg-orange-400"
-                      : values.drought
-                        ? "bg-amber-300"
-                        : "bg-emerald-400"
-                  }`}
-                  style={{ width: `${values.waterAvailable}%` }}
-                />
+                  className="absolute inset-x-0 bottom-0 top-10"
+                  style={{
+                    maskImage:
+                      "radial-gradient(ellipse 76% 85% at 50% 72%, black 50%, transparent 100%)",
+                    WebkitMaskImage:
+                      "radial-gradient(ellipse 76% 85% at 50% 72%, black 50%, transparent 100%)",
+                  }}
+                  role="img"
+                  aria-label={`Växtens illustrerade tillstånd: ${values.status}.`}
+                >
+                  <Image
+                    src="/images/museum/plant-healthy-v2.webp"
+                    alt=""
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 520px"
+                    className="object-contain object-bottom"
+                  />
+                  <Image
+                    src="/images/museum/plant-drought-v2.webp"
+                    alt=""
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 520px"
+                    className="object-contain object-bottom transition-opacity duration-[1400ms] ease-in-out motion-reduce:transition-none"
+                    style={{
+                      opacity: values.waterlogging
+                        ? 0
+                        : Math.max(
+                            0,
+                            Math.min(1, (35 - values.waterAvailable) / 28),
+                          ),
+                    }}
+                  />
+                  <Image
+                    src="/images/museum/plant-waterlogged-v2.webp"
+                    alt=""
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 520px"
+                    className="object-contain object-bottom transition-opacity duration-[1400ms] ease-in-out motion-reduce:transition-none"
+                    style={{
+                      opacity: values.waterlogging
+                        ? Math.min(1, (modelRain - 70) / 20)
+                        : 0,
+                    }}
+                  />
+                </div>
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#082330] to-transparent" />
               </div>
-              <p className="mt-2 text-xs text-slate-400">
-                Illustrativ vattentillgång: {Math.round(values.waterAvailable)}{" "}
-                / 100
-              </p>
-            </div>
 
-            <div className="m-3 rounded-2xl border border-white/10 bg-white/[.045] p-4 lg:self-center">
-              <p className="flex items-center gap-2 text-sm font-semibold text-white">
-                <Leaf size={17} className="text-emerald-400" /> Växtens status
-              </p>
-              <div className="mt-3 space-y-3">
-                {[
-                  {
-                    label: "Tillräckligt med vatten",
-                    active: !values.drought,
-                    warning: false,
-                  },
-                  {
-                    label: "Gynnsamma förhållanden",
-                    active:
-                      !values.drought &&
-                      !values.waterlogging &&
-                      values.waterAvailable >= 30,
-                    warning: false,
-                  },
-                  {
-                    label: "Risk för vattenstress",
-                    active: values.drought,
-                    warning: true,
-                  },
-                  {
-                    label: "Risk för syrebrist",
-                    active: values.waterlogging,
-                    warning: true,
-                  },
-                ].map((item) => (
+              <div className="flex min-w-0 flex-col justify-center px-5 py-6 lg:px-3">
+                <h4
+                  className={`text-xl font-bold ${
+                    values.waterlogging
+                      ? "text-orange-300"
+                      : values.drought
+                        ? "text-amber-300"
+                        : "text-emerald-200"
+                  }`}
+                >
+                  {values.status}
+                </h4>
+                <p className="mt-2 min-h-[100px] text-sm leading-6 text-slate-200">
+                  {values.waterlogging
+                    ? "När jorden är mättad med vatten blir det ont om syre i porerna. Rötterna får svårt att andas och bladen kan så småningom gulna."
+                    : values.drought
+                      ? "Det finns för lite vatten i marken. Bladen kan sloka och växten kan minska transpirationen genom att delvis stänga klyvöppningarna."
+                      : values.waterAvailable < 30
+                        ? "Växten har begränsad tillgång till vatten. Under varma dagar kan det bli svårt att ersätta det vatten som lämnar bladen."
+                        : "Rötterna tar upp vatten som transporteras till bladen. Det mesta av det upptagna vattnet avges så småningom genom transpiration."}
+                </p>
+                <div
+                  className="mt-4 h-2.5 overflow-hidden rounded-full bg-white/15"
+                  role="progressbar"
+                  aria-label="Illustrativ vattentillgång"
+                  aria-valuenow={Math.round(values.waterAvailable)}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                >
                   <div
-                    key={item.label}
-                    className={`flex items-center gap-2.5 text-xs ${item.active ? (item.warning ? "text-amber-300" : "text-slate-100") : "text-slate-500"}`}
-                  >
-                    <span
-                      className={`flex size-5 shrink-0 items-center justify-center rounded-full ${
-                        item.active
-                          ? item.warning
-                            ? "bg-amber-400 text-[#092632]"
-                            : "bg-emerald-400 text-[#092632]"
-                          : "bg-white/15 text-slate-500"
-                      }`}
-                    >
-                      {item.active && item.warning ? (
-                        <AlertTriangle size={12} />
-                      ) : (
-                        <Check size={12} strokeWidth={3} />
-                      )}
-                    </span>
-                    {item.label}
-                  </div>
-                ))}
+                    className={`h-full rounded-full transition-[width] duration-700 ${
+                      values.waterlogging
+                        ? "bg-orange-400"
+                        : values.drought
+                          ? "bg-amber-300"
+                          : "bg-emerald-400"
+                    }`}
+                    style={{ width: `${values.waterAvailable}%` }}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-slate-400">
+                  Illustrativ vattentillgång:{" "}
+                  {Math.round(values.waterAvailable)} / 100
+                </p>
               </div>
+
+              <div className="m-3 rounded-2xl border border-white/10 bg-white/[.045] p-4 lg:self-center">
+                <p className="flex items-center gap-2 text-sm font-semibold text-white">
+                  <Leaf size={17} className="text-emerald-400" /> Växtens status
+                </p>
+                <div className="mt-3 space-y-3">
+                  {[
+                    {
+                      label: "Tillräckligt med vatten",
+                      active: !values.drought,
+                      warning: false,
+                    },
+                    {
+                      label: "Gynnsamma förhållanden",
+                      active:
+                        !values.drought &&
+                        !values.waterlogging &&
+                        values.waterAvailable >= 30,
+                      warning: false,
+                    },
+                    {
+                      label: "Risk för vattenstress",
+                      active: values.drought,
+                      warning: true,
+                    },
+                    {
+                      label: "Risk för syrebrist",
+                      active: values.waterlogging,
+                      warning: true,
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className={`flex items-center gap-2.5 text-xs ${item.active ? (item.warning ? "text-amber-300" : "text-slate-100") : "text-slate-500"}`}
+                    >
+                      <span
+                        className={`flex size-5 shrink-0 items-center justify-center rounded-full ${
+                          item.active
+                            ? item.warning
+                              ? "bg-amber-400 text-[#092632]"
+                              : "bg-emerald-400 text-[#092632]"
+                            : "bg-white/15 text-slate-500"
+                        }`}
+                      >
+                        {item.active && item.warning ? (
+                          <AlertTriangle size={12} />
+                        ) : (
+                          <Check size={12} strokeWidth={3} />
+                        )}
+                      </span>
+                      {item.label}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <p className="border-t border-white/5 px-5 py-2 text-[11px] text-slate-400">
+              Illustrativ förändring över tid – växter reagerar inte omedelbart
+              när regn eller jordtyp ändras.
+            </p>
+          </div>
+        </div>
+        {groundInfo && (
+          <div
+            className="museum-ground-info-overlay museum-ground-info-overlay-contained"
+            onClick={() => setGroundInfo(null)}
+          >
+            <div
+              className="museum-ground-info-dialog museum-ground-info-dialog-contained"
+              role="dialog"
+              aria-modal="true"
+              aria-label={
+                groundInfo === "soil" ? "Om marktypen" : "Växtens hälsa"
+              }
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="museum-ground-info-close"
+                onClick={() => setGroundInfo(null)}
+                aria-label="Stäng informationen"
+              >
+                <X size={16} />
+              </button>
+              {groundInfo === "soil" ? (
+                <>
+                  <h3>Markens egenskaper · {soilData[soil].name}</h3>
+                  <p>{soilData[soil].explanation}</p>
+                </>
+              ) : (
+                <>
+                  <h3>Hur mår växten?</h3>
+                  <p className="font-semibold text-emerald-200">
+                    {values.status}
+                  </p>
+                  <div className="museum-ground-modal-plant">
+                    <Image
+                      src={
+                        values.waterlogging
+                          ? "/images/museum/plant-waterlogged-v2.webp"
+                          : values.drought
+                            ? "/images/museum/plant-drought-v2.webp"
+                            : "/images/museum/plant-healthy-v2.webp"
+                      }
+                      alt="Illustration av växtens tillstånd"
+                      fill
+                      sizes="(max-width: 900px) 75vw, 360px"
+                      className="object-contain"
+                    />
+                  </div>
+                  <p>
+                    {values.waterlogging
+                      ? "När jorden är vattenmättad kan rötterna få syrebrist. Bladen kan med tiden gulna."
+                      : values.drought
+                        ? "När vatten saknas kan bladen sloka och växten minska transpirationen."
+                        : values.waterAvailable < 30
+                          ? "Växten har begränsad tillgång till vatten och kan få svårt att ersätta det som avges från bladen."
+                          : "Rötterna tar upp vatten som transporteras till bladen. En stor del lämnar växten genom transpiration."}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    Illustrativ förändring över tid, inte en omedelbar reaktion.
+                  </p>
+                </>
+              )}
             </div>
           </div>
-          <p className="border-t border-white/5 px-5 py-2 text-[11px] text-slate-400">
-            Illustrativ förändring över tid – växter reagerar inte omedelbart
-            när regn eller jordtyp ändras.
-          </p>
-        </div>
-        <p className="mt-6 max-w-4xl text-xs leading-6 text-slate-400">
+        )}
+        <p className="museum-bottom-note mt-6 max-w-4xl text-xs leading-6 text-slate-400">
           Vetenskaplig förenkling: Flödena är relativa modellvärden som
           illustrerar samband, inte exakta hydrologiska prognoser. I
           verkligheten påverkas infiltration och växters vattenupptag även av
