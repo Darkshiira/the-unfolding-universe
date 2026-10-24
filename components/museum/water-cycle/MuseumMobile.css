@@ -3002,3 +3002,63 @@
     animation: none !important;
   }
 }
+
+/* ==========================================
+   WATER JOURNEY — MOBILE PANEL FIX
+   ========================================== */
+
+@media (max-width: 900px) and (orientation: portrait) {
+  .museum-journey-panel {
+    /* Keep the panel above the bottom navigation */
+    bottom: calc(5.75rem + env(safe-area-inset-bottom)) !important;
+
+    /* Allow more room for stages with several choices */
+    max-height: min(65dvh, 520px) !important;
+
+    /* Scroll the panel rather than clipping its content */
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+
+    /* Smoother touch scrolling */
+    -webkit-overflow-scrolling: touch;
+
+    padding: 14px !important;
+    scrollbar-width: thin;
+  }
+
+  .museum-journey-panel .museum-journey-choices {
+    margin-top: 12px !important;
+    padding-top: 12px !important;
+  }
+
+  .museum-journey-panel .museum-journey-choices > div {
+    gap: 8px !important;
+  }
+
+  .museum-journey-panel .museum-journey-choices button {
+    min-height: 44px;
+    flex-shrink: 0;
+  }
+
+  .museum-journey-panel .museum-journey-description {
+    line-height: 1.5 !important;
+    margin-top: 10px !important;
+  }
+
+  .museum-journey-panel .museum-journey-footer {
+    margin-top: 12px !important;
+    padding-top: 12px !important;
+    padding-bottom: 4px;
+  }
+}
+
+@media (max-width: 900px) and (orientation: portrait) {
+  .museum-journey-header {
+    position: sticky;
+    top: -14px;
+    z-index: 5;
+    padding: 10px 0;
+    margin-top: -10px;
+    background: #071d2c;
+  }
+}

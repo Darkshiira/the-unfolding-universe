@@ -671,7 +671,7 @@ export default function WaterDropletJourney({
         data-collapsed={sheetCollapsed}
         className="museum-journey-panel pointer-events-auto absolute inset-x-3 bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-30 max-h-[min(48dvh,420px)] overflow-y-auto overscroll-contain rounded-[22px] border border-cyan-200/25 bg-[#071d2c]/95 p-4 shadow-2xl backdrop-blur-2xl md:inset-x-auto md:bottom-7 md:right-7 md:w-[400px] md:max-h-[65dvh] md:p-7"
       >
-        <div className="flex items-start justify-between gap-4">
+        <div className="museum-journey-header flex items-start justify-between gap-4">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-300">
               Interaktiv resa
