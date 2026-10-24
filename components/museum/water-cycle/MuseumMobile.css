@@ -3130,3 +3130,91 @@
     margin: 8px !important;
   }
 }
+
+/* ============================================
+   LAB 01 — compact mobile explanation (V14)
+   Scoped to the temperature lab only.
+   ============================================ */
+.museum-temp-explanation-mobile {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  #water-museum-root .museum-temp-explanation-desktop {
+    display: none !important;
+  }
+  #water-museum-root .museum-temp-explanation-mobile {
+    display: flex !important;
+    width: 100%;
+    min-width: 0;
+    min-height: 68px !important;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-sizing: border-box;
+    padding: 12px 16px !important;
+    border: 1px solid rgba(165, 243, 252, 0.25);
+    border-radius: 18px;
+    background: #102d3b;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+  }
+  #water-museum-root .museum-temp-explanation-mobile:focus-visible {
+    outline: 2px solid #67e8f9;
+    outline-offset: 3px;
+  }
+  #water-museum-root .museum-temp-scene-label {
+    display: none !important;
+  }
+  #water-museum-root .museum-temp-scale > span:nth-child(2),
+  #water-museum-root .museum-temp-scale > span:nth-child(3) {
+    display: none !important;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 900px) {
+  #water-museum-root .museum-temp-controls {
+    gap: 10px !important;
+  }
+  #water-museum-root .museum-temp-controls > div:first-child {
+    padding: 16px !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) and (pointer: coarse) {
+  /* Preserve the two-column lab, but allow the controls to start at the top
+     and scroll independently if the browser leaves little vertical space. */
+  #water-museum-root .museum-lab-shell:has(.museum-temp-layout) {
+    padding: 6px !important;
+  }
+  #water-museum-root .museum-temp-layout {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr) !important;
+    align-items: stretch !important;
+  }
+  #water-museum-root .museum-temp-controls {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: flex-start !important;
+    align-items: stretch;
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    gap: 8px !important;
+    padding: 0 2px 8px 0 !important;
+    scroll-padding-top: 4px;
+  }
+  #water-museum-root .museum-temp-controls > div:first-child {
+    flex-shrink: 0 !important;
+    padding: 12px !important;
+  }
+  #water-museum-root .museum-temp-explanation-mobile {
+    min-height: 58px !important;
+    padding: 9px 12px !important;
+  }
+  #water-museum-root .museum-temp-scale {
+    font-size: 10px;
+  }
+}
