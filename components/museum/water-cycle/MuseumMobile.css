@@ -687,6 +687,7 @@
     font-size: 11px;
     color: #a5f3fc;
     margin-top: 5px;
+    padding-left: 24px;
   }
 }
 @media (orientation: landscape) and (max-height: 600px) and (max-width: 950px) {
@@ -3024,12 +3025,17 @@
   }
 
   #water-museum-root .museum-journey-scroll {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
     min-height: 0;
     max-height: inherit;
+
     overflow-x: hidden;
     overflow-y: auto;
 
-    padding: 14px 14px 20px;
+    /* Restore the inset spacing around all content */
+    padding: 8px 18px px !important;
 
     border-radius: inherit;
     overscroll-behavior: contain;
@@ -3040,13 +3046,15 @@
   #water-museum-root .museum-journey-header {
     position: relative;
     z-index: 1;
-    padding: 0;
+    padding: 8px;
     margin: 0;
   }
 
   #water-museum-root .museum-journey-description {
     margin-top: 10px !important;
     line-height: 1.5 !important;
+    padding-right: 8px;
+    padding-left: 8px;
   }
 
   #water-museum-root .museum-journey-choices {
@@ -3066,7 +3074,7 @@
     position: static !important;
     transform: none !important;
 
-    margin-top: 12px !important;
+    margin: 12px 8px 0;
     padding-top: 12px !important;
     padding-bottom: 8px !important;
 
@@ -3090,5 +3098,35 @@
     max-height: none;
     overflow: hidden;
     padding: 12px 14px;
+  }
+}
+
+/* ==========================================
+   JOURNEY PANEL — LANDSCAPE SPACING
+   ========================================== */
+
+@media (orientation: landscape) and (max-height: 600px) {
+  #water-museum-root .museum-journey-panel {
+    padding: 0 !important;
+  }
+
+  #water-museum-root .museum-journey-scroll {
+    padding: 0 4px 14px !important;
+    max-height: inherit;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  #water-museum-root .museum-journey-header {
+    margin: 0 !important;
+    padding: 0 8px !important;
+  }
+
+  #water-museum-root .museum-journey-header h2 {
+    margin-top: 3px !important;
+  }
+
+  #water-museum-root .museum-journey-description {
+    margin: 8px !important;
   }
 }
