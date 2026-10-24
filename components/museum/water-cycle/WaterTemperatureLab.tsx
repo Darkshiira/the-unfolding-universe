@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   ArrowLeft,
   Droplets,
+  ChevronRight,
   RotateCcw,
   Snowflake,
   Thermometer,
@@ -501,7 +502,7 @@ export default function WaterTemperatureLab({ onClose }: Props) {
                 aria-valuetext={`${temperature} grader Celsius`}
               />
               <div
-                className="relative mt-2 h-6 text-[11px] text-slate-400"
+                className="museum-temp-scale relative mt-2 h-6 text-[11px] text-slate-400"
                 aria-hidden="true"
               >
                 {[-20, 0, 100, 120].map((value) => (
@@ -546,10 +547,8 @@ export default function WaterTemperatureLab({ onClose }: Props) {
                 </button>
               </div>
             </div>
-            <div
-              className={`museum-temp-explanation rounded-[26px] border border-cyan-200/15 bg-[#102d3b]/80 p-6 sm:p-7 ${detailsOpen ? "museum-temp-explanation-open" : ""}`}
-              aria-live="polite"
-            >
+            {/* Full explanation remains visible on desktop. */}
+            <div className="museum-temp-explanation museum-temp-explanation-desktop rounded-[26px] border border-cyan-200/15 bg-[#102d3b]/80 p-6 sm:p-7">
               <p className="text-[10px] font-bold uppercase tracking-[.22em] text-teal-300">
                 Vad händer med vattnet?
               </p>
@@ -564,13 +563,38 @@ export default function WaterTemperatureLab({ onClose }: Props) {
               <button
                 type="button"
                 className="museum-temp-details-toggle mt-3 inline-flex min-h-10 items-center rounded-full border border-cyan-200/30 bg-cyan-200/10 px-3 text-xs font-semibold text-cyan-100"
-                onClick={() => setDetailsOpen((v) => !v)}
+                onClick={() => setDetailsOpen(true)}
                 aria-haspopup="dialog"
                 aria-expanded={detailsOpen}
               >
                 Varför händer det? ↗
               </button>
             </div>
+
+            {/* Compact entry point for both mobile orientations. */}
+            <button
+              type="button"
+              className="museum-temp-explanation-mobile"
+              onClick={() => setDetailsOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={detailsOpen}
+            >
+              <span className="min-w-0 text-left">
+                <span className="block text-[10px] font-bold uppercase tracking-[.15em] text-teal-300">
+                  Vad händer med vattnet?
+                </span>
+                <span
+                  className={`mt-1 block font-serif text-base font-bold ${phaseInfo.accent}`}
+                >
+                  {phaseInfo.title}
+                </span>
+              </span>
+              <ChevronRight
+                size={19}
+                className="shrink-0 text-cyan-200"
+                aria-hidden="true"
+              />
+            </button>
           </div>
         </div>
         {detailsOpen && (
