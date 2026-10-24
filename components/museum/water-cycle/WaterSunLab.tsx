@@ -23,6 +23,9 @@ import {
   Target,
   ScrollText,
   X,
+  Maximize2,
+  Minimize2,
+  ChevronDown,
 } from "lucide-react";
 
 type Props = { onClose: () => void };
@@ -38,13 +41,13 @@ const clamp = (v: number, min = 0, max = 100) =>
 const saturation = (temp: number) =>
   6.112 * Math.exp((17.67 * temp) / (temp + 243.5));
 const initial: Atmosphere = { vapor: 7.8, cloud: 0, rain: 0, seconds: 0 };
-const rainDrops = Array.from({ length: 210 }, (_, i) => ({
+const rainDrops = Array.from({ length: 48 }, (_, i) => ({
   x: 5 + ((i * 71 + 19) % 90),
   y: (i * 29) % 32,
   delay: -((i * 17) % 27) / 10,
   duration: 0.85 + (i % 6) * 0.12,
 }));
-const wisps = Array.from({ length: 34 }, (_, i) => ({
+const wisps = Array.from({ length: 20 }, (_, i) => ({
   x: 12 + ((i * 41 + 9) % 72),
   delay: -((i * 7) % 19) / 3,
   duration: 4 + (i % 5) * 0.8,
@@ -98,6 +101,53 @@ export default function WaterSunLab({ onClose }: Props) {
     "scene" | "controls" | "results"
   >("scene");
   const [challengesOpen, setChallengesOpen] = useState(false);
+  const [weatherControlsOpen, setWeatherControlsOpen] = useState(true);
+  const [weatherExplanationOpen, setWeatherExplanationOpen] = useState(false);
+  const [weatherFullscreen, setWeatherFullscreen] = useState(false);
+  const shellRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const onFullscreenChange = () =>
+      setWeatherFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
+  }, []);
+
+  useEffect(() => {
+    const shell = shellRef.current;
+    if (!shell) return;
+    let previousScroll = shell.scrollTop;
+    const onScroll = () => {
+      if (
+        !window.matchMedia("(orientation: portrait) and (max-width: 900px)")
+          .matches
+      )
+        return;
+      const currentScroll = shell.scrollTop;
+      if (
+        mobilePanel === "controls" &&
+        currentScroll > 90 &&
+        currentScroll > previousScroll + 3
+      ) {
+        setWeatherControlsOpen(false);
+        setWeatherExplanationOpen(true);
+      }
+      previousScroll = currentScroll;
+    };
+    shell.addEventListener("scroll", onScroll, { passive: true });
+    return () => shell.removeEventListener("scroll", onScroll);
+  }, [mobilePanel]);
+
+  async function toggleWeatherFullscreen() {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (shellRef.current?.requestFullscreen)
+        await shellRef.current.requestFullscreen();
+    } catch {
+      // Fullscreen is not supported in all mobile browsers.
+    }
+  }
   const [sun, setSun] = useState(65);
   const [waterTemp, setWaterTemp] = useState(22);
   const [airTemp, setAirTemp] = useState(17);
@@ -136,14 +186,14 @@ export default function WaterSunLab({ onClose }: Props) {
         const difference = target - audio.volume;
         audio.volume = clamp(
           audio.volume +
-            Math.sign(difference) * Math.min(Math.abs(difference), 0.025),
+            Math.sign(difference) * Math.min(Math.abs(difference), 0.05),
           0,
           1,
         );
         if (target === 0 && audio.volume < 0.015 && !audio.paused)
           audio.pause();
       }
-    }, 60);
+    }, 120);
     return () => {
       window.clearInterval(fadeTimer);
       for (const audio of Object.values(tracks)) {
@@ -177,8 +227,8 @@ export default function WaterSunLab({ onClose }: Props) {
     if (!running) return;
     const interval = window.setInterval(() => {
       const c = controls.current;
-      // 0.5 simulation minutes per tick at 1x speed.
-      const dt = 0.5 * c.speed;
+      // 1 simulation minute per tick at 1x speed; half as many React renders.
+      const dt = 1 * c.speed;
       setAtmosphere((previous) => {
         const effectiveWater = c.waterTemp + (c.sun - 50) * 0.09;
         const lakeSat = saturation(effectiveWater);
@@ -211,7 +261,7 @@ export default function WaterSunLab({ onClose }: Props) {
         );
         return { vapor, cloud, rain, seconds: previous.seconds + dt };
       });
-    }, 160);
+    }, 320);
     return () => window.clearInterval(interval);
   }, [running]);
 
@@ -339,6 +389,7 @@ export default function WaterSunLab({ onClose }: Props) {
 
   return (
     <section
+      ref={shellRef}
       data-mobile-panel={mobilePanel}
       data-weather-lab="true"
       className="museum-lab-shell pointer-events-auto absolute inset-0 z-20 overflow-y-auto bg-[#061724]/95 px-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-20 text-white backdrop-blur-xl sm:px-8 sm:pt-24"
@@ -379,6 +430,23 @@ export default function WaterSunLab({ onClose }: Props) {
           </button>
         </div>
 
+        <button
+          type="button"
+          className="museum-weather-fullscreen"
+          onClick={toggleWeatherFullscreen}
+          aria-label={
+            weatherFullscreen
+              ? "Avsluta helskärm"
+              : "Visa väderlaboratoriet i helskärm"
+          }
+        >
+          {weatherFullscreen ? (
+            <Minimize2 size={16} />
+          ) : (
+            <Maximize2 size={16} />
+          )}
+          {weatherFullscreen ? "Avsluta helskärm" : "Helskärm"}
+        </button>
         <div
           className="museum-mobile-tabs"
           role="group"
@@ -572,7 +640,7 @@ export default function WaterSunLab({ onClose }: Props) {
                 {wisps.map((w, i) => (
                   <span
                     key={i}
-                    className="weather-motion absolute bottom-[19%] h-[19%] w-[4px] rounded-full bg-white/70 blur-[5px]"
+                    className="weather-motion weather-mist-particle absolute bottom-[19%] h-[19%] w-[4px] rounded-full bg-white/70 blur-[5px]"
                     style={{
                       left: `${w.x}%`,
                       animation: `weather-mist ${w.duration}s ${w.delay}s infinite linear`,
@@ -712,7 +780,7 @@ export default function WaterSunLab({ onClose }: Props) {
                 {rainDrops.map((d, i) => (
                   <span
                     key={i}
-                    className="weather-motion absolute h-10 w-px bg-gradient-to-b from-transparent via-cyan-100/90 to-transparent"
+                    className="weather-motion weather-rain-particle absolute h-10 w-px bg-gradient-to-b from-transparent via-cyan-100/90 to-transparent"
                     style={{
                       left: `${d.x}%`,
                       top: `${d.y}%`,
@@ -730,10 +798,10 @@ export default function WaterSunLab({ onClose }: Props) {
                 style={{ opacity: clamp(snowAmount / 45, 0, 0.95) }}
                 aria-hidden="true"
               >
-                {Array.from({ length: 100 }, (_, i) => (
+                {Array.from({ length: 48 }, (_, i) => (
                   <span
                     key={i}
-                    className="weather-motion absolute rounded-full bg-white/90 shadow-[0_0_5px_rgba(255,255,255,.7)]"
+                    className="weather-motion weather-snow-particle absolute rounded-full bg-white/90 shadow-[0_0_5px_rgba(255,255,255,.7)]"
                     style={{
                       left: `${(i * 71 + 13) % 100}%`,
                       top: `${(i * 31) % 38}%`,
@@ -855,10 +923,10 @@ export default function WaterSunLab({ onClose }: Props) {
                 style={{ opacity: rippleStrength }}
                 aria-hidden="true"
               >
-                {Array.from({ length: 18 }, (_, i) => (
+                {Array.from({ length: 12 }, (_, i) => (
                   <span
                     key={i}
-                    className="weather-motion absolute h-[7px] w-[22px] rounded-[50%] border border-cyan-100/80"
+                    className="weather-motion weather-ripple-particle absolute h-[7px] w-[22px] rounded-[50%] border border-cyan-100/80"
                     style={{
                       left: `${(i * 43 + 13) % 90}%`,
                       top: `${(i * 29 + 11) % 85}%`,
@@ -889,7 +957,7 @@ export default function WaterSunLab({ onClose }: Props) {
               data-panel="results"
               className="museum-mobile-panel museum-weather-results"
             >
-              <div className="museum-weather-panel-header">
+              <div className="museum-weather-panel-header museum-weather-file-heading">
                 <span>Resultat</span>
                 <button
                   type="button"
@@ -1032,7 +1100,7 @@ export default function WaterSunLab({ onClose }: Props) {
             data-panel="controls"
             className="museum-mobile-panel museum-weather-controls space-y-4"
           >
-            <div className="museum-weather-panel-header">
+            <div className="museum-weather-panel-header museum-weather-file-heading">
               <span>Reglage</span>
               <button
                 type="button"
@@ -1042,8 +1110,30 @@ export default function WaterSunLab({ onClose }: Props) {
                 <X size={15} />
               </button>
             </div>
-            <div className="rounded-[26px] border border-white/15 bg-[#1b2e3b] p-5 sm:p-6">
-              <div className="mb-5 flex items-center justify-between gap-2">
+            <button
+              type="button"
+              className="museum-weather-collapse-toggle"
+              data-expanded={weatherControlsOpen}
+              aria-label={
+                weatherControlsOpen
+                  ? "Dölj väderreglagen"
+                  : "Visa väderreglagen"
+              }
+              aria-expanded={weatherControlsOpen}
+              onClick={() => setWeatherControlsOpen((v) => !v)}
+            >
+              <span>
+                Styr vädret <small>Sol, temperatur och vind</small>
+              </span>
+              <ChevronDown
+                size={20}
+                className={weatherControlsOpen ? "rotate-180" : ""}
+              />
+            </button>
+            <div
+              className={`museum-weather-controls-content rounded-[26px] border border-white/15 bg-[#1b2e3b] p-5 sm:p-6 ${weatherControlsOpen ? "is-expanded" : ""}`}
+            >
+              <div className="museum-weather-content-heading mb-5 flex items-center justify-between gap-2">
                 <h3 className="font-bold">Styr förhållandena</h3>
                 <button
                   type="button"
@@ -1141,10 +1231,37 @@ export default function WaterSunLab({ onClose }: Props) {
                 {running ? "Spelar" : "Pausad"}
               </p>
             </div>
-            <div className="rounded-[26px] border border-cyan-200/15 bg-[#0c2b3c] p-5 sm:p-6">
-              <p className="text-[11px] font-bold uppercase tracking-[.18em] text-cyan-300">
-                Så hänger det ihop
-              </p>
+            <button
+              type="button"
+              className="museum-weather-collapse-toggle museum-weather-explanation-toggle"
+              data-expanded={weatherExplanationOpen}
+              aria-label={
+                weatherExplanationOpen
+                  ? "Dölj förklaringen"
+                  : "Visa förklaringen"
+              }
+              aria-expanded={weatherExplanationOpen}
+              onClick={() => {
+                setWeatherExplanationOpen((v) => !v);
+                setWeatherControlsOpen(false);
+              }}
+            >
+              <span>
+                Så hänger det ihop <small>Förstå hur vädret bildas</small>
+              </span>
+              <ChevronDown
+                size={20}
+                className={weatherExplanationOpen ? "rotate-180" : ""}
+              />
+            </button>
+            <div
+              className={`museum-weather-explanation-content rounded-[26px] border border-cyan-200/15 bg-[#0c2b3c] p-5 sm:p-6 ${weatherExplanationOpen ? "is-expanded" : ""}`}
+            >
+              <div className="museum-weather-content-heading museum-weather-explanation-heading">
+                <p className="text-[11px] font-bold uppercase tracking-[.18em] text-cyan-300">
+                  Så hänger det ihop
+                </p>
+              </div>
               <div className="mt-4 space-y-3 text-sm text-slate-200">
                 <p>
                   <Sun className="mr-2 inline text-amber-300" size={16} />{" "}

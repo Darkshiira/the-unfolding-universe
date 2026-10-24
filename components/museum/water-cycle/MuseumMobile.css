@@ -3218,3 +3218,350 @@
     font-size: 10px;
   }
 }
+
+/* Lab 02 · Mobile document-flow workspace. Overrides older sticky and fixed rules. */
+.museum-weather-collapse-toggle {
+  display: none;
+}
+.museum-weather-fullscreen {
+  display: none;
+}
+@media (orientation: portrait) and (max-width: 900px) {
+  #water-museum-root .museum-lab-shell[data-weather-lab="true"] {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding-bottom: calc(22px + env(safe-area-inset-bottom)) !important;
+    scroll-padding-top: 10px;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-mobile-tabs {
+    position: relative !important;
+    top: auto !important;
+    z-index: 2 !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-scene {
+    position: relative !important;
+    z-index: 1 !important;
+    flex-shrink: 0;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-mobile-panel.museum-weather-controls,
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-mobile-panel.museum-weather-results {
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    border: 0 !important;
+    pointer-events: auto !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-bottom-note,
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-challenge-trigger {
+    position: static !important;
+    inset: auto !important;
+    margin-top: 14px !important;
+    max-width: none !important;
+    z-index: auto !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-bottom-note {
+    display: inline-flex !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-challenge-trigger {
+    display: inline-flex !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-panel-header {
+    position: relative !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-controls-content,
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-explanation-content {
+    display: none !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-controls-content.is-expanded,
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-explanation-content.is-expanded {
+    display: block !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-collapse-toggle {
+    display: flex !important;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 17px;
+    margin: 10px 0;
+    border: 1px solid #8be7ee55;
+    border-radius: 16px;
+    background: #123343;
+    color: #d5fbff;
+    font-weight: 700;
+    text-align: left;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-collapse-toggle
+    small {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    font-weight: 400;
+    color: #a5bbc7;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-collapse-toggle
+    svg {
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+}
+@media (orientation: landscape) and (max-height: 600px) and (pointer: coarse) {
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-fullscreen {
+    display: inline-flex;
+    position: absolute;
+    top: max(12px, env(safe-area-inset-top));
+    left: max(145px, env(safe-area-inset-left));
+    z-index: 65;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid #a5f3fc66;
+    background: #082637ed;
+    color: #cffafe;
+    font-size: 12px;
+    font-weight: 700;
+  }
+}
+
+/* Weather Lab · reduced mobile animation workload, without changing panel layout. */
+@media (max-width: 900px) and (pointer: coarse) {
+  #water-museum-root
+    [data-weather-lab="true"]
+    .weather-rain-particle:nth-child(n + 49),
+  #water-museum-root
+    [data-weather-lab="true"]
+    .weather-snow-particle:nth-child(n + 29),
+  #water-museum-root
+    [data-weather-lab="true"]
+    .weather-mist-particle:nth-child(n + 13),
+  #water-museum-root
+    [data-weather-lab="true"]
+    .weather-ripple-particle:nth-child(n + 9) {
+    display: none !important;
+  }
+  #water-museum-root
+    [data-weather-lab="true"]
+    .museum-weather-scene-status
+    span {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Weather Lab — refined portrait panels and consistent spacing (V14) */
+@media (orientation: portrait) and (max-width: 900px) {
+  /* Keep the challenges action in the page flow with the same rhythm as other cards. */
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-challenge-trigger {
+    position: relative !important;
+    inset: auto !important;
+    margin: 12px 0 12px !important;
+    width: max-content;
+    max-width: 100%;
+    min-height: 38px;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-mobile-panel.museum-weather-controls,
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-mobile-panel.museum-weather-results {
+    margin-top: 12px !important;
+  }
+
+  /* The heading and close icon become a single attached card-top, not a floating X. */
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-panel-header {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-sizing: border-box;
+    width: 100% !important;
+    min-height: 44px !important;
+    margin: 0 0 10px !important;
+    padding: 8px 12px 8px 15px !important;
+    border: 1px solid rgba(139, 231, 238, 0.28);
+    border-radius: 14px;
+    background: #102f3f !important;
+    color: #c8f7fb;
+    font-size: 13px;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-panel-header
+    > button {
+    position: static !important;
+    inset: auto !important;
+    display: grid;
+    place-items: center;
+    width: 34px !important;
+    height: 34px !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    color: #b8eaf0;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-panel-header
+    > button:focus-visible {
+    outline: 2px solid #67e8f9;
+    outline-offset: 1px;
+  }
+
+  /* An expanded section leaves only a slim arrow handle, not another full card. */
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-collapse-toggle[data-expanded="true"] {
+    min-height: 28px !important;
+    height: 28px !important;
+    padding: 0 12px !important;
+    margin: 6px 0 8px !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+    background: #102d3b !important;
+    border-color: rgba(139, 231, 238, 0.28) !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-collapse-toggle[data-expanded="true"]
+    > span {
+    display: none !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-collapse-toggle[data-expanded="true"]
+    > svg {
+    width: 19px;
+    height: 19px;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-controls-content,
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-explanation-content {
+    margin-top: 0 !important;
+  }
+}
+
+/* V15 — final weather lab panel polish. Placed last to beat V10/V14 rules. */
+@media (orientation: landscape) and (max-height: 600px) and (pointer: coarse) {
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-mobile-panel
+    .museum-weather-panel-header
+    > button {
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    width: 30px !important;
+    height: 30px !important;
+    padding: 5px !important;
+    color: #d2f7fa !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-mobile-panel
+    .museum-weather-panel-header {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+}
+@media (orientation: portrait) and (max-width: 900px) {
+  /* The title is a file-tab attached to the content, not a separate button/card. */
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-mobile-panel
+    .museum-weather-panel-header {
+    background: transparent !important;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(139, 231, 238, 0.22) !important;
+    border-radius: 0 !important;
+    padding: 5px 4px 8px !important;
+    min-height: 38px !important;
+    margin: 0 0 8px !important;
+  }
+  /* The expanded chevron becomes the attached top edge of its content card. */
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-collapse-toggle[data-expanded="true"] {
+    height: 30px !important;
+    min-height: 30px !important;
+    padding: 0 !important;
+    margin: 8px 0 -1px !important;
+    border: 1px solid rgba(139, 231, 238, 0.25) !important;
+    border-bottom: 0 !important;
+    border-radius: 18px 18px 0 0 !important;
+    background: #1b2e3b !important;
+    box-shadow: none !important;
+    position: relative;
+    z-index: 1;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-collapse-toggle[data-expanded="true"]
+    + .museum-weather-controls-content,
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-collapse-toggle[data-expanded="true"]
+    + .museum-weather-explanation-content {
+    border-top: 0 !important;
+    border-radius: 0 0 22px 22px !important;
+    margin-top: 0 !important;
+  }
+  #water-museum-root
+    .museum-lab-shell[data-weather-lab="true"]
+    .museum-weather-collapse-toggle[data-expanded="true"]
+    > svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
