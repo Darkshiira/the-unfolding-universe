@@ -3062,3 +3062,35 @@
     background: #071d2c;
   }
 }
+
+/* ==========================================
+   JOURNEY PANEL — FOOTER FIX
+   ========================================== */
+
+@media (max-width: 900px) and (orientation: portrait) {
+  #water-museum-root .museum-journey-panel {
+    /* Keep the panel inside the visible screen */
+    box-sizing: border-box !important;
+
+    /* Allow scrolling all the way to the footer */
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+
+    /* Extra room at the bottom */
+    padding-bottom: 28px !important;
+  }
+
+  #water-museum-root .museum-journey-footer {
+    /* Keep the footer in normal document flow */
+    position: relative !important;
+    bottom: auto !important;
+    transform: none !important;
+
+    /* Space below the last controls */
+    padding-bottom: 12px !important;
+
+    /* Avoid squeezing the audio button */
+    flex-shrink: 0;
+  }
+}
