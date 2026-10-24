@@ -2944,3 +2944,61 @@
     display: none !important;
   }
 }
+
+/* ==========================================
+   MOBILE MIST PERFORMANCE
+   ========================================== */
+
+.water-mist-mobile-layer {
+  position: absolute;
+  inset: -10% -25%;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+}
+
+.water-mist-mobile-back {
+  opacity: 0.35;
+
+  background:
+    radial-gradient(
+      ellipse 60% 40% at 35% 45%,
+      rgba(220, 242, 250, 0.24),
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 55% 35% at 75% 55%,
+      rgba(215, 238, 250, 0.18),
+      transparent 80%
+    );
+
+  animation: museum-mist-drift 32s ease-in-out infinite alternate;
+}
+
+.water-mist-mobile-front {
+  opacity: 0.28;
+
+  background: radial-gradient(
+    ellipse 55% 30% at 60% 65%,
+    rgba(235, 248, 255, 0.28),
+    transparent 80%
+  );
+
+  animation: museum-mist-drift 42s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes museum-mist-drift {
+  from {
+    transform: translate3d(-3%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(3%, -2%, 0);
+  }
+}
+
+/* Reduce animation for visitors requesting less motion */
+@media (prefers-reduced-motion: reduce) {
+  .water-mist-mobile-layer {
+    animation: none !important;
+  }
+}
