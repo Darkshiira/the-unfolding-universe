@@ -102,6 +102,9 @@ export default function WaterSunLab({ onClose }: Props) {
   >("scene");
   const [challengesOpen, setChallengesOpen] = useState(false);
   const [weatherControlsOpen, setWeatherControlsOpen] = useState(true);
+  // Ignore taps that began as a vertical scroll on the collapse handle.
+  const controlsTouchStartY = useRef<number | null>(null);
+  const controlsTouchMoved = useRef(false);
   const [weatherExplanationOpen, setWeatherExplanationOpen] = useState(false);
   const [weatherFullscreen, setWeatherFullscreen] = useState(false);
   const shellRef = useRef<HTMLElement>(null);
@@ -113,31 +116,6 @@ export default function WaterSunLab({ onClose }: Props) {
     return () =>
       document.removeEventListener("fullscreenchange", onFullscreenChange);
   }, []);
-
-  useEffect(() => {
-    const shell = shellRef.current;
-    if (!shell) return;
-    let previousScroll = shell.scrollTop;
-    const onScroll = () => {
-      if (
-        !window.matchMedia("(orientation: portrait) and (max-width: 900px)")
-          .matches
-      )
-        return;
-      const currentScroll = shell.scrollTop;
-      if (
-        mobilePanel === "controls" &&
-        currentScroll > 90 &&
-        currentScroll > previousScroll + 3
-      ) {
-        setWeatherControlsOpen(false);
-        setWeatherExplanationOpen(true);
-      }
-      previousScroll = currentScroll;
-    };
-    shell.addEventListener("scroll", onScroll, { passive: true });
-    return () => shell.removeEventListener("scroll", onScroll);
-  }, [mobilePanel]);
 
   async function toggleWeatherFullscreen() {
     try {
@@ -1120,7 +1098,33 @@ export default function WaterSunLab({ onClose }: Props) {
                   : "Visa väderreglagen"
               }
               aria-expanded={weatherControlsOpen}
-              onClick={() => setWeatherControlsOpen((v) => !v)}
+              onTouchStart={(event) => {
+                controlsTouchStartY.current = event.touches[0]?.clientY ?? null;
+                controlsTouchMoved.current = false;
+              }}
+              onTouchMove={(event) => {
+                const startY = controlsTouchStartY.current;
+                const currentY = event.touches[0]?.clientY;
+                if (
+                  startY !== null &&
+                  currentY !== undefined &&
+                  Math.abs(currentY - startY) > 8
+                ) {
+                  controlsTouchMoved.current = true;
+                }
+              }}
+              onTouchCancel={() => {
+                controlsTouchStartY.current = null;
+                controlsTouchMoved.current = true;
+              }}
+              onClick={(event) => {
+                if (controlsTouchMoved.current) {
+                  event.preventDefault();
+                  controlsTouchMoved.current = false;
+                  return;
+                }
+                setWeatherControlsOpen((v) => !v);
+              }}
             >
               <span>
                 Styr vädret <small>Sol, temperatur och vind</small>
