@@ -17,6 +17,7 @@ import WaterSnowEffect from "./WaterSnowEffect";
 import WaterRiverEffect from "./WaterRiverEffect";
 import WaterGroundwaterEffect from "./WaterGroundwaterEffect";
 import WaterPlantEffect from "./WaterPlantEffect";
+import MuseumExhibitMenuSection from "@/components/MuseumExhibitMenuSection";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
@@ -154,6 +155,7 @@ export default function WaterCycleExplorer() {
   const [dismissRotateTip, setDismissRotateTip] = useState(false);
   const [rotateTipVisible, setRotateTipVisible] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [museumMenuView, setMuseumMenuView] = useState(false);
   const [journeyMoving, setJourneyMoving] = useState(false);
   const [portraitTopicsOpen, setPortraitTopicsOpen] = useState(false);
   const [portraitCamera, setPortraitCamera] = useState(false);
@@ -838,79 +840,113 @@ export default function WaterCycleExplorer() {
                 className="museum-menu-dismiss fixed inset-0 z-[-1] cursor-default"
                 onClick={() => setMobileMenuOpen(false)}
               />
+
               <nav
                 aria-label="Museimenyn"
-                className="museum-overview-dropdown absolute bottom-[calc(100%+0.5rem)] right-0 flex w-52 flex-col gap-1 rounded-2xl border border-white/20 bg-[#071b28]/95 p-2 shadow-2xl backdrop-blur-xl"
+                className="museum-overview-dropdown absolute bottom-[calc(100%+0.5rem)] right-0 flex max-h-[calc(100dvh-5.5rem)] w-52 flex-col gap-1 overflow-y-auto overscroll-contain rounded-2xl border border-white/20 bg-[#071b28]/95 p-2 shadow-2xl backdrop-blur-xl"
               >
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedId(null);
-                    setShowIntroduction(false);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-teal-100 hover:bg-white/10"
-                >
-                  ✦ Utforska
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedId(null);
-                    setShowIntroduction(true);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-white hover:bg-white/10"
-                >
-                  ⓘ Om utställningen
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveMode("journey");
-                    setSelectedId(null);
-                    setShowIntroduction(false);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-cyan-100 hover:bg-white/10"
-                >
-                  💧 Följ droppen
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveMode("experiment");
-                    setSelectedId(null);
-                    setShowIntroduction(false);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-amber-100 hover:bg-white/10"
-                >
-                  🔬 Experimentera
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    void toggleFullscreen();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-cyan-100 hover:bg-white/10"
-                >
-                  {isFullscreen ? "⤢ Avsluta helskärm" : "⛶ Visa i helskärm"}
-                </button>
-                <Link
-                  href="/timeline"
-                  className="rounded-xl border-t border-white/10 px-3 py-2.5 text-left text-xs font-semibold text-white hover:bg-white/10"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  ← Tillbaka till tidslinjen
-                </Link>
+                {museumMenuView ? (
+                  <MuseumExhibitMenuSection
+                    currentExhibitId="water-cycle"
+                    onBack={() => setMuseumMenuView(false)}
+                  />
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedId(null);
+                        setShowIntroduction(false);
+                        setMobileMenuOpen(false);
+                      }}
+                      className="rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-teal-100 hover:bg-white/10"
+                    >
+                      ✦ Utforska
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedId(null);
+                        setShowIntroduction(true);
+                        setMobileMenuOpen(false);
+                      }}
+                      className="rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-white hover:bg-white/10"
+                    >
+                      ⓘ Om utställningen
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveMode("journey");
+                        setSelectedId(null);
+                        setShowIntroduction(false);
+                        setMobileMenuOpen(false);
+                      }}
+                      className="rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-cyan-100 hover:bg-white/10"
+                    >
+                      💧 Följ droppen
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveMode("experiment");
+                        setSelectedId(null);
+                        setShowIntroduction(false);
+                        setMobileMenuOpen(false);
+                      }}
+                      className="rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-amber-100 hover:bg-white/10"
+                    >
+                      🔬 Experimentera
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        void toggleFullscreen();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-cyan-100 hover:bg-white/10"
+                    >
+                      {isFullscreen
+                        ? "⤢ Avsluta helskärm"
+                        : "⛶ Visa i helskärm"}
+                    </button>
+
+                    <div className="border-t border-white/10 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setMuseumMenuView(true)}
+                        className="flex min-h-11 w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
+                      >
+                        <span>🏛 Museets utställningar</span>
+                        <span aria-hidden="true">›</span>
+                      </button>
+                    </div>
+
+                    <Link
+                      href="/timeline"
+                      className="rounded-xl border-t border-white/10 px-3 py-2.5 text-left text-xs font-semibold text-white hover:bg-white/10"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      ← Tillbaka till tidslinjen
+                    </Link>
+                  </>
+                )}
               </nav>
             </>
           )}
           <button
             type="button"
-            onClick={() => setMobileMenuOpen((v) => !v)}
+            onClick={() => {
+              if (!mobileMenuOpen) {
+                setMuseumMenuView(false);
+              }
+
+              setMobileMenuOpen((v) => !v);
+            }}
             aria-expanded={mobileMenuOpen}
             aria-label={
               mobileMenuOpen ? "Stäng museimenyn" : "Öppna museimenyn"

@@ -1,4 +1,5 @@
 import MilestoneArticle from "../components/MilestoneArticle";
+import MuseumDropdown from "@/components/MuseumDropdown";
 import { getArticle } from "../content";
 import { Suspense } from "react";
 import Link from "next/link";
@@ -103,14 +104,24 @@ export default function MilestonePage({ params }: Props) {
 function MilestoneLoading() {
   return (
     <main className="min-h-svh bg-[#F8F5EE] text-[#34473C]">
-      <header className="border-b border-[#DDD8CD] bg-[#FBF9F3] px-5 py-5 sm:px-10">
-        <div className="mx-auto max-w-6xl">
+      <header className="relative z-50 border-b border-[#DDD8CD] bg-[#FBF9F3] px-5 py-3 sm:px-10 sm:py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
           <Link
             href="/timeline"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#657D69]"
+            className="inline-flex shrink-0 items-center gap-2 text-xs font-semibold text-[#657D69] transition-colors hover:text-[#344F3B] sm:text-sm"
           >
-            <ArrowLeft size={17} /> Tillbaka till tidslinjen
+            <ArrowLeft size={17} />
+            <span className="hidden sm:inline">Tillbaka till tidslinjen</span>
+            <span className="sm:hidden">Tidslinjen</span>
           </Link>
+
+          <div className="flex items-center gap-4 sm:gap-6">
+            <span className="hidden text-[10px] font-bold uppercase tracking-[0.24em] text-[#9B8972] lg:block">
+              HUR ALLT FORTSATTE
+            </span>
+
+            <MuseumDropdown />
+          </div>
         </div>
       </header>
       <div
@@ -138,17 +149,24 @@ async function MilestoneContent({ params }: Props) {
   if (richArticle) {
     return (
       <main className="min-h-svh bg-[#F8F5EE] text-[#34473C]">
-        <header className="border-b border-[#DDD8CD] bg-[#FBF9F3] px-5 py-5 sm:px-10">
-          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
+        <header className="relative z-50 border-b border-[#DDD8CD] bg-[#FBF9F3] px-5 py-3 sm:px-10 sm:py-4">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
             <Link
               href="/timeline"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[#657D69] hover:text-[#344F3B]"
+              className="inline-flex shrink-0 items-center gap-2 text-xs font-semibold text-[#657D69] transition-colors hover:text-[#344F3B] sm:text-sm"
             >
-              <ArrowLeft size={17} /> Tillbaka till tidslinjen
+              <ArrowLeft size={17} />
+              <span className="hidden sm:inline">Tillbaka till tidslinjen</span>
+              <span className="sm:hidden">Tidslinjen</span>
             </Link>
-            <span className="hidden text-[10px] font-bold uppercase tracking-[0.24em] text-[#9B8972] sm:block">
-              HUR ALLT FORTSATTE
-            </span>
+
+            <div className="flex items-center gap-4 sm:gap-6">
+              <span className="hidden text-[10px] font-bold uppercase tracking-[0.24em] text-[#9B8972] lg:block">
+                HUR ALLT FORTSATTE
+              </span>
+
+              <MuseumDropdown />
+            </div>
           </div>
         </header>
         <MilestoneArticle milestone={milestone} article={richArticle} />

@@ -30,6 +30,7 @@ export default function MilestoneArticle({
 
   return (
     <article className="mx-auto max-w-6xl px-5 pb-24 pt-10 sm:px-10 sm:pt-16">
+
       {/* A cinematic image with REAL HTML text, not lettering baked into the image. */}
       <div className="relative -mx-5 overflow-hidden bg-[#151F26] sm:-mx-10 sm:rounded-[28px]">
         <div className="relative min-h-[390px] sm:min-h-[470px]">

@@ -13,6 +13,7 @@ import { geologicalBoundaries, getMilestoneEra } from "./timeline-eras";
 import { swedishHistoryBoundaries } from "./timeline-history";
 import Link from "next/link";
 import Image from "next/image";
+import MuseumDropdown from "@/components/MuseumDropdown";
 import { milestoneVisualX } from "./timeline-layout";
 import {
   milestones,
@@ -487,13 +488,17 @@ export default function TimelinePage() {
           </div>
         </div>
 
-        <Link
-          href="/"
-          className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#DCD4C6] p-2.5 text-xs font-semibold text-[#6C7066] transition-colors hover:bg-[#EFE8DB] sm:px-4"
-        >
-          <ArrowLeft size={15} />
-          <span className="hidden sm:inline">Tillbaka till universum</span>
-        </Link>
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <Link
+            href="/"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#DCD4C6] p-2.5 text-xs font-semibold text-[#6C7066] transition-colors hover:bg-[#EFE8DB] sm:px-4"
+          >
+            <ArrowLeft size={15} />
+            <span className="hidden sm:inline">Tillbaka till universum</span>
+          </Link>
+
+          <MuseumDropdown />
+        </div>
       </header>
 
       {/* Intro strip */}
