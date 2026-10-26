@@ -324,7 +324,9 @@ export default function TimelinePage() {
   }
 
   function onWheel(event: WheelEvent<HTMLDivElement>) {
-    event.preventDefault();
+    if (event.cancelable) {
+      event.preventDefault();
+    }
     const rect = event.currentTarget.getBoundingClientRect();
     const px = event.clientX - rect.left - rect.width / 2;
     zoomAt(Math.exp(-event.deltaY * 0.00065), px);
@@ -630,7 +632,7 @@ export default function TimelinePage() {
         {/* Mobile controls float above the canvas instead of consuming its height. */}
         <div
           data-timeline-ui
-          className="absolute left-3 right-3 top-3 z-20 flex items-start justify-between gap-2 sm:hidden"
+          className="timeline-landscape-mobile-controls absolute left-3 right-3 top-3 z-20 hidden items-start justify-between gap-2 max-sm:flex"
           onPointerDown={(e) => e.stopPropagation()}
         >
           <button
@@ -664,7 +666,7 @@ export default function TimelinePage() {
         {mobileMenuOpen && (
           <div
             data-timeline-ui
-            className="absolute left-3 right-3 top-16 z-30 max-h-[min(65svh,480px)] overflow-y-auto rounded-2xl border border-[#DED7CA] bg-[#FFFCF6] p-4 shadow-xl sm:hidden"
+            className="timeline-landscape-mobile-menu absolute left-3 right-3 top-16 z-30 hidden max-h-[min(65svh,480px)] overflow-y-auto rounded-2xl border border-[#DED7CA] bg-[#FFFCF6] p-4 shadow-xl max-sm:block"
             onPointerDown={(e) => e.stopPropagation()}
           >
             <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#9D8A71]">
@@ -1093,7 +1095,7 @@ export default function TimelinePage() {
         {/* Interactive minimap. Each line represents a complete branch. */}
         {showMap && (
           <div
-            className={`absolute right-3 top-16 z-20 w-[min(75vw,240px)] rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-3 shadow-lg sm:right-4 sm:top-4 sm:z-10 sm:w-[260px] ${mobileMapOpen ? "block" : "hidden sm:block"}`}
+            className={`timeline-minimap absolute right-3 top-16 z-20 w-[min(75vw,240px)] rounded-2xl border border-[#DED7CA] bg-[#FFFCF6]/95 p-3 shadow-lg sm:right-4 sm:top-4 sm:z-10 sm:w-[260px] ${mobileMapOpen ? "block" : "hidden sm:block"}`}
             onPointerDown={(e) => e.stopPropagation()}
           >
             <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9D8A71] hidden sm:block">
@@ -1369,12 +1371,12 @@ export default function TimelinePage() {
 
       {/* Museum information panel */}
       {selected && (
-        <div className="absolute inset-0 z-40 flex items-end justify-center bg-[#332D24]/20 p-3 backdrop-blur-[2px] sm:items-center sm:p-6">
+        <div className="absolute inset-0 z-40 flex items-center justify-center bg-[#332D24]/20 p-3 backdrop-blur-[2px] sm:p-6">
           <section
             role="dialog"
             aria-modal="true"
             aria-labelledby="event-title"
-            className="relative w-full max-w-lg overflow-hidden rounded-[26px] border border-[#DED6C8] bg-[#FFFCF6] shadow-[0_30px_90px_rgba(53,43,30,0.2)]"
+            className="relative flex max-h-[calc(100svh-1.5rem)] w-full max-w-lg flex-col overflow-hidden rounded-[26px] border border-[#DED6C8] bg-[#FFFCF6] shadow-[0_30px_90px_rgba(53,43,30,0.2)]"
           >
             <button
               type="button"
@@ -1396,7 +1398,7 @@ export default function TimelinePage() {
               </span>
             </div>
 
-            <div className="max-h-[calc(85svh-8rem)] overflow-y-auto p-5 sm:max-h-none sm:p-9">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 sm:p-9">
               <p
                 className="text-[11px] font-bold uppercase tracking-[0.18em]"
                 style={{

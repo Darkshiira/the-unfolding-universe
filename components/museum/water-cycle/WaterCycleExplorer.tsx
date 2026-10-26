@@ -1,7 +1,7 @@
 "use client";
 
 import "./MuseumMobile.css";
-
+import TimelineBackLink from "@/components/TimelineBackLink";
 import WaterCycleScene from "./WaterCycleScene";
 import WaterDropletJourney from "./WaterDropletJourney";
 import WaterTemperatureLab from "./WaterTemperatureLab";
@@ -433,9 +433,11 @@ export default function WaterCycleExplorer() {
                 >
                   ← Vattnets kretslopp
                 </button>
-                <Link href="/timeline" className="museum-lab-menu-item">
-                  ↗ Till tidslinjen
-                </Link>
+                <TimelineBackLink
+                  compact
+                  onClick={() => setLabMenuOpen(false)}
+                  className="museum-lab-menu-item flex items-center gap-2 text-teal-100"
+                />
                 <button
                   type="button"
                   onClick={() => {
@@ -506,13 +508,10 @@ export default function WaterCycleExplorer() {
       >
         <div className="flex items-start justify-between gap-4">
           <div className="pointer-events-auto max-w-xl">
-            <Link
-              href="/timeline"
-              className="museum-timeline-link hidden min-[901px]:inline-flex items-center gap-2 rounded-full border border-white/20 bg-[#071b28]/55 px-4 py-2 text-xs font-semibold text-white backdrop-blur-xl transition hover:bg-[#071b28]/80"
-            >
-              <ArrowLeft size={15} />
-              Tillbaka till tidslinjen
-            </Link>
+            <TimelineBackLink
+              compact
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-[#071b28]/85 px-4 py-2.5 text-xs font-semibold text-teal-100 shadow-lg backdrop-blur-xl transition hover:bg-[#123b4a]"
+            />
 
             {/* Sliding introduction */}
             <div className="museum-intro-anchor relative mt-5">
@@ -863,7 +862,6 @@ export default function WaterCycleExplorer() {
                     >
                       ✦ Utforska
                     </button>
-
                     <button
                       type="button"
                       onClick={() => {
@@ -875,7 +873,6 @@ export default function WaterCycleExplorer() {
                     >
                       ⓘ Om utställningen
                     </button>
-
                     <button
                       type="button"
                       onClick={() => {
@@ -888,7 +885,6 @@ export default function WaterCycleExplorer() {
                     >
                       💧 Följ droppen
                     </button>
-
                     <button
                       type="button"
                       onClick={() => {
@@ -901,7 +897,6 @@ export default function WaterCycleExplorer() {
                     >
                       🔬 Experimentera
                     </button>
-
                     <button
                       type="button"
                       onClick={() => {
@@ -914,7 +909,6 @@ export default function WaterCycleExplorer() {
                         ? "⤢ Avsluta helskärm"
                         : "⛶ Visa i helskärm"}
                     </button>
-
                     <div className="border-t border-white/10 pt-1">
                       <button
                         type="button"
@@ -925,14 +919,11 @@ export default function WaterCycleExplorer() {
                         <span aria-hidden="true">›</span>
                       </button>
                     </div>
-
-                    <Link
-                      href="/timeline"
-                      className="rounded-xl border-t border-white/10 px-3 py-2.5 text-left text-xs font-semibold text-white hover:bg-white/10"
+                    <TimelineBackLink
+                      compact
                       onClick={() => setMobileMenuOpen(false)}
-                    >
-                      ← Tillbaka till tidslinjen
-                    </Link>
+                      className="flex min-h-11 w-full items-center gap-2 rounded-xl border-t border-white/10 px-3 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
+                    />
                   </>
                 )}
               </nav>

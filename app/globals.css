@@ -1379,3 +1379,44 @@ canvas {
 .museum-dropdown-scroll::-webkit-scrollbar-thumb:hover {
   background: #9f704f !important;
 }
+
+/* ==========================================
+   TIMELINE — MOBILE LANDSCAPE
+   ========================================== */
+
+@media (orientation: landscape) and (max-height: 600px) and (pointer: coarse) {
+  /* Keep the header compact */
+  .timeline-page-enter > header {
+    min-height: 0;
+    padding: 6px 16px;
+  }
+
+  /* Smaller compass */
+  .timeline-page-enter > header img {
+    object-fit: contain;
+  }
+
+  /* Hide the secondary desktop navigation */
+  .timeline-page-enter > header + div {
+    display: none;
+  }
+
+  /* Hide the horizontal branch navigation */
+  .timeline-page-enter > header + div + div {
+    display: none;
+  }
+
+  /* Allow the existing mobile controls to appear */
+  .timeline-page-enter .timeline-landscape-mobile-controls {
+    display: flex;
+  }
+
+  .timeline-page-enter .timeline-landscape-mobile-menu {
+    display: block;
+  }
+}
+@media (orientation: landscape) and (max-height: 600px) and (pointer: coarse) {
+  .timeline-page-enter .timeline-minimap {
+    display: none;
+  }
+}

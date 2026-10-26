@@ -15,6 +15,7 @@ import {
 import { notFound } from "next/navigation";
 import { milestones, palette } from "../timeline-data";
 import { getMilestoneEra } from "../timeline-eras";
+import TimelineBackLink from "@/components/TimelineBackLink";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -106,14 +107,10 @@ function MilestoneLoading() {
     <main className="min-h-svh bg-[#F8F5EE] text-[#34473C]">
       <header className="relative z-50 border-b border-[#DDD8CD] bg-[#FBF9F3] px-5 py-3 sm:px-10 sm:py-4">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
-          <Link
-            href="/timeline"
+          <TimelineBackLink
+            compact
             className="inline-flex shrink-0 items-center gap-2 text-xs font-semibold text-[#657D69] transition-colors hover:text-[#344F3B] sm:text-sm"
-          >
-            <ArrowLeft size={17} />
-            <span className="hidden sm:inline">Tillbaka till tidslinjen</span>
-            <span className="sm:hidden">Tidslinjen</span>
-          </Link>
+          />
 
           <div className="flex items-center gap-4 sm:gap-6">
             <span className="hidden text-[10px] font-bold uppercase tracking-[0.24em] text-[#9B8972] lg:block">
@@ -151,14 +148,10 @@ async function MilestoneContent({ params }: Props) {
       <main className="min-h-svh bg-[#F8F5EE] text-[#34473C]">
         <header className="relative z-50 border-b border-[#DDD8CD] bg-[#FBF9F3] px-5 py-3 sm:px-10 sm:py-4">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
-            <Link
-              href="/timeline"
+            <TimelineBackLink
+              compact
               className="inline-flex shrink-0 items-center gap-2 text-xs font-semibold text-[#657D69] transition-colors hover:text-[#344F3B] sm:text-sm"
-            >
-              <ArrowLeft size={17} />
-              <span className="hidden sm:inline">Tillbaka till tidslinjen</span>
-              <span className="sm:hidden">Tidslinjen</span>
-            </Link>
+            />
 
             <div className="flex items-center gap-4 sm:gap-6">
               <span className="hidden text-[10px] font-bold uppercase tracking-[0.24em] text-[#9B8972] lg:block">
@@ -188,12 +181,10 @@ async function MilestoneContent({ params }: Props) {
     <main className="min-h-svh bg-[#F8F5EE] text-[#34473C]">
       <header className="border-b border-[#DDD8CD] bg-[#FBF9F3] px-5 py-5 sm:px-10">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-          <Link
-            href="/timeline"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#657D69] hover:text-[#344F3B]"
-          >
-            <ArrowLeft size={17} /> Tillbaka till tidslinjen
-          </Link>
+          <TimelineBackLink
+            compact
+            className="inline-flex shrink-0 items-center gap-2 text-xs font-semibold text-[#657D69] transition-colors hover:text-[#344F3B] sm:text-sm"
+          />
           <span className="hidden text-[10px] font-bold uppercase tracking-[0.24em] text-[#9B8972] sm:block">
             HUR ALLT FORTSATTE
           </span>
