@@ -1,10 +1,6 @@
-
 export type ExhibitStatus = "available" | "development" | "planned";
 
-export type ExhibitCategory =
-  | "universe"
-  | "earth"
-  | "life";
+export type ExhibitCategory = "universe" | "earth" | "life";
 
 export type MuseumExhibit = {
   id: string;
@@ -43,8 +39,7 @@ export const museumExhibits: MuseumExhibit[] = [
   {
     id: "solar-system",
     title: "Utforska solsystemet",
-    description:
-      "Besök planeterna och jämför deras storlek och avstånd.",
+    description: "Besök planeterna och jämför deras storlek och avstånd.",
     emoji: "🪐",
     category: "universe",
     status: "planned",
@@ -52,8 +47,7 @@ export const museumExhibits: MuseumExhibit[] = [
   {
     id: "atoms-molecules",
     title: "Atomernas och molekylernas värld",
-    description:
-      "Utforska materiens byggstenar och bygg egna molekyler.",
+    description: "Utforska materiens byggstenar och bygg egna molekyler.",
     emoji: "⚛️",
     category: "universe",
     status: "planned",
@@ -61,8 +55,7 @@ export const museumExhibits: MuseumExhibit[] = [
   {
     id: "light",
     title: "Ljusets värld",
-    description:
-      "Experimentera med färger, ljus och hur vi ser.",
+    description: "Experimentera med färger, ljus och hur vi ser.",
     emoji: "🌈",
     category: "universe",
     status: "planned",
@@ -70,8 +63,7 @@ export const museumExhibits: MuseumExhibit[] = [
   {
     id: "supercontinents",
     title: "Superkontinenternas värld",
-    description:
-      "Res genom tiden på en roterande jordglob.",
+    description: "Res genom tiden på en roterande jordglob.",
     emoji: "🌎",
     category: "earth",
     status: "planned",
@@ -79,8 +71,7 @@ export const museumExhibits: MuseumExhibit[] = [
   {
     id: "water-cycle",
     title: "Vattnets kretslopp",
-    description:
-      "Följ en vattendroppe genom naturens kretslopp.",
+    description: "Följ en vattendroppe genom naturens kretslopp.",
     emoji: "💧",
     category: "earth",
     status: "development",
@@ -90,26 +81,25 @@ export const museumExhibits: MuseumExhibit[] = [
   {
     id: "plant-key",
     title: "Upptäck Sveriges växter",
-    description:
-      "Identifiera svenska växter med en interaktiv växtnyckel.",
+    description: "Identifiera svenska växter med en interaktiv växtnyckel.",
     emoji: "🌿",
     category: "earth",
     status: "planned",
   },
   {
     id: "cells",
-    title: "Cellernas värld",
+    title: "Livets osynliga värld",
     description:
-      "Utforska livets minsta byggstenar och deras funktioner.",
+      "Utforska cellens delar i 3D och följ syrets resa genom cellen.",
     emoji: "🔬",
     category: "life",
-    status: "planned",
+    status: "development",
+    href: "/museum/cell-explorer",
   },
   {
     id: "food-web",
     title: "Naturens näringsvävar",
-    description:
-      "Upptäck hur växter och djur är beroende av varandra.",
+    description: "Upptäck hur växter och djur är beroende av varandra.",
     emoji: "🦊",
     category: "life",
     status: "planned",
