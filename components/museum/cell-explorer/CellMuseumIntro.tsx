@@ -332,6 +332,33 @@ export default function CellMuseumIntro({ onEnter }: Props) {
                 <stop offset="1" stopColor="#eeb9a6" stopOpacity="0" />
               </radialGradient>
 
+              {/* Thumb fold strokes fade at both ends, not across the entire hand. */}
+              <linearGradient
+                id="thumbFoldFade"
+                gradientUnits="userSpaceOnUse"
+                x1="169"
+                y1="609"
+                x2="254"
+                y2="526"
+              >
+                <stop offset="0%" stopColor="#704456" stopOpacity="0" />
+                <stop offset="22%" stopColor="#704456" stopOpacity="0.24" />
+                <stop offset="72%" stopColor="#704456" stopOpacity="0.24" />
+                <stop offset="100%" stopColor="#704456" stopOpacity="0" />
+              </linearGradient>
+              <linearGradient
+                id="thumbBaseFade"
+                gradientUnits="userSpaceOnUse"
+                x1="317"
+                y1="604"
+                x2="399"
+                y2="692"
+              >
+                <stop offset="0%" stopColor="#704456" stopOpacity="0" />
+                <stop offset="28%" stopColor="#704456" stopOpacity="0.20" />
+                <stop offset="68%" stopColor="#704456" stopOpacity="0.20" />
+                <stop offset="100%" stopColor="#704456" stopOpacity="0" />
+              </linearGradient>
               <clipPath id="handCellClip">
                 <path d={HAND_PATH} />
               </clipPath>
@@ -438,9 +465,29 @@ export default function CellMuseumIntro({ onEnter }: Props) {
                 <path d="M 570 731 C 601 693 636 660 665 640" />
               </g>
             </g>
-            {/* Anatomical hand creases: present from the first frame.
-                Paired shadow/highlight strokes give the folds depth without
-                turning them into bright drawn-on lines. */}
+            {/* Three curved creases halfway along the thumb: outer two bow
+                away from a straighter center crease. One at the thumb base.
+                Gradient makes each crease dissolve toward its endpoints. */}
+            <g
+              clipPath="url(#handCellClip)"
+              fill="none"
+              strokeLinecap="round"
+              strokeWidth="2.15"
+              opacity={1 - smooth(0.4, 0.57, progress)}
+            >
+              <g stroke="url(#thumbFoldFade)">
+                <path d="M 173 603 C 174 584 188 557 204 543 C 211 537 218 534 224 535" />
+                <path d="M 189 615 C 196 594 209 573 222 555 C 229 546 233 540 236 540" />
+                <path d="M 205 627 C 219 612 232 592 240 574 C 248 556 250 546 248 539" />
+              </g>
+              <path
+                stroke="url(#thumbBaseFade)"
+                d="M 324 607 C 339 615 347 631 355 648 C 366 665 381 677 394 688"
+              />
+            </g>
+            {/* Primary skin folds follow the natural sweep of the thumb, palm,
+                and wrist. These are deliberately irregular, with tapered branches.
+                The lighter companion strokes sit just off the shadows for depth. */}
             <g
               clipPath="url(#handCellClip)"
               opacity={1 - smooth(0.4, 0.57, progress)}
@@ -448,17 +495,24 @@ export default function CellMuseumIntro({ onEnter }: Props) {
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <g stroke="#633b50" strokeOpacity=".34" strokeWidth="3.2">
-                {/* Curved upper palm / heart line, bending down toward the little finger */}
-                <path d="M 516 584 C 537 629 571 665 604 683 Q 628 699 653 692" />
-                {/* Thumb-side life line wrapping around the fleshy thumb pad */}
-                <path d="M 310 635 C 332 655 346 678 355 705 Q 363 733 390 758" />
-                <path d="M 331 655 C 349 680 361 710 369 730" />
-                {/* Lower palm and wrist creases */}
-                <path d="M 398 753 C 443 739 481 743 520 757" />
-                <path d="M 414 771 Q 466 758 506 773" />
-                <path d="M 451 825 Q 486 834 518 825" />
-                {/* Finger joint folds, paired and slightly irregular */}
+              <g stroke="#633b50" strokeOpacity=".15" strokeWidth="2.5">
+                {/* Thumb folds are drawn separately below, with faded endpoints. */}
+                {/* Palm folds traced to the red guide: one flowing diagonal across
+                    the upper palm, one curved descending fold, and a long
+                    thumb-web crease turning down toward the heel. */}
+                <path d="M 378 596 C 397 595 414 617 434 642 C 461 674 495 683 530 685 C 572 688 625 688 707 688" />
+                <path d="M 472 550 C 483 575 501 599 530 618 C 555 634 585 638 602 665 C 619 691 625 722 632 754" />
+                <path d="M 383 603 C 414 615 432 644 447 680 C 462 716 469 750 466 781 C 463 807 451 830 441 850" />
+                {/* Heel and wrist: separate folds, curved and uneven. */}
+                <path d="M 414 762 C 435 780 454 790 478 790 C 504 789 516 777 534 778" />
+                <path d="M 438 800 C 463 809 480 806 497 803 C 518 799 531 804 545 812" />
+                <path d="M 429 846 C 450 853 469 849 489 853 C 507 857 523 856 540 850" />
+                <path d="M 449 864 C 472 871 489 865 510 870 C 527 874 543 868 555 862" />
+                {/* Soft creases directly beneath the finger webs, following the marked-up guide. */}
+                <path d="M 370 468 C 394 467 421 455 450 441" />
+                <path d="M 478 430 C 494 440 521 441 554 440" />
+                <path d="M 579 448 C 593 461 609 474 638 477" />
+                {/* Finger joint folds stay in their existing anatomical positions. */}
                 <path d="M 384 246 Q 406 252 432 246 M 387 253 Q 410 259 430 253" />
                 <path d="M 383 338 Q 409 331 436 341 M 390 347 Q 412 343 432 348" />
                 <path d="M 488 173 Q 516 180 542 173 M 492 182 Q 515 188 539 182" />
@@ -467,37 +521,48 @@ export default function CellMuseumIntro({ onEnter }: Props) {
                 <path d="M 589 356 Q 616 349 644 365 M 593 366 Q 619 361 639 374" />
                 <path d="M 711 418 Q 727 433 739 438 M 708 426 Q 723 443 735 447" />
                 <path d="M 690 487 Q 703 504 716 509 M 685 496 Q 700 512 711 518" />
-                <path d="M 155 570 Q 169 586 168 603 M 164 567 Q 177 583 177 598" />
               </g>
-              <g stroke="#f6bfb6" strokeOpacity=".25" strokeWidth="1.25">
-                <path d="M 517 588 C 542 635 575 670 605 687 Q 631 703 653 697" />
-                <path d="M 313 639 C 336 659 349 682 358 707 Q 369 739 392 762" />
-                <path d="M 402 758 C 442 746 481 748 516 761" />
+              <g stroke="#f6bfb6" strokeOpacity=".09" strokeWidth=".85">
+                <path d="M 381 600 C 401 602 416 625 437 646 C 467 679 496 688 531 689 C 577 692 627 692 704 692" />
+                <path d="M 475 554 C 490 583 508 605 533 622 C 562 641 587 643 605 671 C 620 695 629 729 635 755" />
+                <path d="M 387 606 C 419 621 437 649 452 683 C 466 719 474 752 470 783 C 468 812 457 833 446 849" />
+                <path d="M 416 766 C 439 784 457 795 480 794 C 505 793 520 782 535 782" />
+                <path d="M 432 850 C 451 857 470 853 489 857 C 508 860 526 860 542 854" />
+                <path d="M 376 474 C 401 471 428 459 449 446" />
+                <path d="M 484 436 C 502 445 526 445 552 445" />
+                <path d="M 583 454 C 602 468 618 479 639 482" />
                 <path d="M 386 250 Q 409 256 430 250 M 386 342 Q 409 337 433 345" />
                 <path d="M 490 177 Q 517 184 540 177 M 490 302 Q 516 296 541 306" />
                 <path d="M 594 267 Q 619 273 643 267 M 591 361 Q 615 355 642 370" />
                 <path d="M 713 422 Q 727 438 738 442 M 690 492 Q 704 508 713 514" />
-                <path d="M 159 573 Q 172 589 172 603" />
+              </g>
+              {/* Only tiny tapered forks: no competing palm-wide wrinkles. */}
+              <g stroke="#72465a" strokeOpacity=".07" strokeWidth="1">
+                <path d="M 525 684 Q 545 669 563 670" />
+                <path d="M 448 688 Q 436 670 420 662" />
+                <path d="M 598 658 Q 609 646 621 643" />
               </g>
             </g>
-            {/* Palm folds and thumb-base creases: feathered and deliberately irregular. */}
+            {/* Soft, organic secondary creases across the thumb pad, palm and wrist.
+                Uneven branching curves, not parallel horizontal stripes. */}
             <g
               clipPath="url(#handCellClip)"
-              opacity={1 - smooth(0.22, 0.36, progress)}
               fill="none"
               strokeLinecap="round"
+              opacity={1 - smooth(0.37, 0.55, progress)}
             >
-              <g stroke="#663e50" strokeWidth="3" strokeOpacity=".16">
-                <path d="M 398 621 C 433 601 462 600 494 611 S 563 632 612 612" />
-                <path d="M 396 639 C 432 625 465 633 491 646" />
-                <path d="M 375 676 C 398 702 406 729 404 760" />
-                <path d="M 412 789 C 455 802 487 797 517 786" />
-                <path d="M 493 846 C 524 850 555 846 575 839" />
+              <g stroke="#633d50" strokeWidth="1.45" strokeOpacity=".13">
+                <path d="M 180 589 C 202 598 215 614 230 630 S 253 650 272 658" />
+                <path d="M 228 628 C 241 621 250 622 261 625" />
+                <path d="M 275 658 C 299 668 315 685 327 704 S 341 726 351 731" />
+                <path d="M 323 700 C 334 692 343 694 353 701" />
+                <path d="M 458 807 C 476 816 487 808 503 814 S 526 821 542 811" />
+                <path d="M 483 844 C 497 838 508 842 519 849 S 541 852 553 846" />
               </g>
-              <g stroke="#f5bcb2" strokeWidth="1.3" strokeOpacity=".18">
-                <path d="M 398 625 C 434 606 464 606 493 616 S 561 637 611 617" />
-                <path d="M 379 679 C 402 705 409 730 408 758" />
-                <path d="M 413 794 C 454 807 488 801 518 791" />
+              <g stroke="#f6c9bf" strokeWidth=".8" strokeOpacity=".16">
+                <path d="M 183 592 C 205 603 219 618 234 632 S 254 648 269 653" />
+                <path d="M 279 663 C 305 675 318 694 329 708" />
+                <path d="M 460 813 C 479 820 489 814 505 820 S 526 824 541 816" />
               </g>
             </g>
             <g clipPath="url(#handCellClip)" opacity={fineSkinOpacity * 0.78}>
@@ -707,14 +772,6 @@ export default function CellMuseumIntro({ onEnter }: Props) {
                 strokeWidth=".75"
                 strokeOpacity=".3"
               >
-                <path d="M 404 603 Q 437 591 464 599 T 523 619" />
-                <path d="M 421 615 Q 450 609 474 623" />
-                <path d="M 462 660 Q 493 649 526 666 T 582 678" />
-                <path d="M 451 674 Q 483 666 505 681" />
-                <path d="M 411 703 Q 433 722 441 749" />
-                <path d="M 419 710 Q 446 733 454 758" />
-                <path d="M 490 743 Q 517 753 544 745" />
-                <path d="M 482 759 Q 513 771 549 761" />
                 <path d="M 457 803 Q 484 812 512 805" />
                 <path d="M 530 822 Q 553 830 573 820" />
               </g>
@@ -722,9 +779,6 @@ export default function CellMuseumIntro({ onEnter }: Props) {
                   Fade before the close-up so they do not turn into thick stripes. */}
               <g opacity={1 - smooth(0.36, 0.51, progress)}>
                 <g stroke="#f3c0b6" strokeWidth="1.25" strokeOpacity=".22">
-                  <path d="M 672 528 C 625 517 588 510 548 515 S 474 530 446 525" />
-                  <path d="M 424 580 C 466 577 510 588 555 607" />
-                  <path d="M 365 632 C 393 650 411 676 421 711" />
                   <path d="M 397 759 Q 441 770 485 759" />
                 </g>
                 {/* Short folds across each finger, not across adjacent fingers. */}
