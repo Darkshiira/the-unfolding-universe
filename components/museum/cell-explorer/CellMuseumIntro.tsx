@@ -4,6 +4,60 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowRight, SkipForward } from "lucide-react";
 
 type Props = { onEnter: () => void };
+
+// One shared silhouette drives the skin, volume shading, contour and cell clip.
+const HAND_PATH =
+  // Anatomical left palm, drawn as ONE continuous silhouette.
+  // Rounded thumb web, four separated fingers, full palm heel and soft wrist.
+  "M 376 1280 " +
+  // Left wrist broadens gradually into the heel of the palm.
+  "C 376 1120 376 949 375 858 " +
+  "C 374 817 348 783 312 752 " +
+  "C 277 719 231 687 193 659 " +
+  // Thumb: fuller lower attachment, rounded tip and natural diagonal.
+  "C 157 635 119 608 89 584 " +
+  "C 61 561 54 536 70 517 " +
+  "C 86 496 112 494 138 504 " +
+  "C 170 516 210 546 251 573 " +
+  "C 280 593 303 612 326 614 " +
+  // Deep rounded thumb-index web, curving UP the index side.
+  "C 356 615 372 593 373 558 " +
+  "C 375 511 371 456 369 411 " +
+  // Index outer side: straight, fuller and as wide as the middle.
+  "L 362 160 " +
+  "C 360 124 377 103 403 103 " +
+  "C 431 103 447 123 447 159 " +
+  "L 450 410 " +
+  // Rounded web between index and middle, without overlap.
+  "C 450 427 458 442 464 447 " +
+  "C 471 437 474 424 474 407 " +
+  // Middle finger: tallest and straight.
+  "L 474 91 " +
+  "C 474 57 489 38 515 38 " +
+  "C 542 38 556 58 556 91 " +
+  "L 556 407 " +
+  // Middle-ring web.
+  "C 556 424 563 437 569 442 " +
+  "C 576 432 579 418 580 402 " +
+  // Ring finger: narrower and shorter.
+  "L 586 179 " +
+  "C 587 146 602 128 625 129 " +
+  "C 649 130 662 149 659 180 " +
+  "L 645 414 " +
+  // Lower ring-pinky web, per annotated silhouette.
+  "C 642 455 650 477 658 488 " +
+  "C 668 472 679 449 690 428 " +
+  // Little finger begins lower and is distinctly slimmer.
+  "L 713 344 " +
+  "C 726 320 743 311 758 321 " +
+  "C 773 332 775 351 766 374 " +
+  "C 744 430 723 485 711 535 " +
+  // Full outside palm: convex heel, only then taper into wrist.
+  "C 712 595 712 650 703 700 " +
+  "C 697 739 681 768 656 794 " +
+  "C 632 819 621 828 617 853 " +
+  "C 612 881 614 908 614 949 " +
+  "C 614 1050 616 1170 616 1280 Z";
 const clamp = (v: number) => Math.min(1, Math.max(0, v));
 // Round generated SVG coordinates so server and browser render identical attributes.
 const svgCoord = (value: number) => Number(value.toFixed(3));
@@ -153,14 +207,14 @@ export default function CellMuseumIntro({ onEnter }: Props) {
   const tissueZoom = smooth(0.52, 0.88, progress);
   const skinZoom = smooth(0.04, 0.56, progress);
   // Finish entering the tissue BEFORE the “Under ytan” caption appears.
-  const skinToTissue = smooth(0.3, 0.41, progress);
+  const skinToTissue = smooth(0.27, 0.38, progress);
   const revealInterior = smooth(0.84, 0.98, progress);
   // Fade the entire hand silhouette, including its cellular texture.
-  const handOpacity = 1 - smooth(0.3, 0.41, progress);
+  const handOpacity = 1 - smooth(0.27, 0.38, progress);
   const handCellsOpacity = smooth(0.27, 0.37, progress);
   const skinDetailOpacity =
     smooth(0.025, 0.14, progress) * (1 - smooth(0.5, 0.66, progress));
-  const tissueOpacity = smooth(0.3, 0.41, progress);
+  const tissueOpacity = smooth(0.27, 0.38, progress);
   const surroundingCellsOpacity = 1 - smooth(0.76, 0.91, progress);
   const selectedCellOpacity = 1 - smooth(0.865, 0.94, progress);
   const selectedInteriorOpacity = smooth(0.865, 0.94, progress);
@@ -199,7 +253,8 @@ export default function CellMuseumIntro({ onEnter }: Props) {
             opacity: handOpacity,
             willChange: "transform, opacity",
             transform: `scale(${1.02 + skinZoom * 2.6})`,
-            transformOrigin: "47% 52%",
+            // Zoom toward the center of the palm (not the finger gaps).
+            transformOrigin: "56% 70%",
           }}
         >
           <svg
@@ -244,6 +299,15 @@ export default function CellMuseumIntro({ onEnter }: Props) {
                 <stop offset=".65" stopColor="#f8c3b1" stopOpacity=".06" />
                 <stop offset="1" stopColor="#33263c" stopOpacity=".40" />
               </linearGradient>
+              <filter
+                id="wristFoldBlur"
+                x="-70%"
+                y="-100%"
+                width="240%"
+                height="300%"
+              >
+                <feGaussianBlur stdDeviation="11" />
+              </filter>
               <radialGradient id="skinGlow">
                 <stop stopColor="#eeb9a6" stopOpacity=".28" />
                 <stop offset=".55" stopColor="#eeb9a6" stopOpacity=".12" />
@@ -251,7 +315,7 @@ export default function CellMuseumIntro({ onEnter }: Props) {
               </radialGradient>
 
               <clipPath id="handCellClip">
-                <path d="M270 700 C268 610 267 540 238 472 C209 420 148 391 109 359 C79 335 85 303 111 299 C145 294 201 333 253 365 L183 205 C168 170 180 150 206 150 C229 150 239 168 250 194 L322 333 L276 121 C270 91 283 75 307 77 C334 79 339 101 344 124 L384 322 L385 92 C385 62 402 49 426 54 C452 59 452 84 451 109 L445 331 L491 169 C500 140 517 132 537 144 C559 157 553 181 548 204 L518 389 C506 456 477 503 466 551 L465 700 C463 855 472 1050 489 1280 L250 1280 C267 1050 270 858 270 700 Z" />
+                <path d={HAND_PATH} />
               </clipPath>
               <radialGradient id="selectionGlow">
                 <stop stopColor="#9ce7ff" stopOpacity=".38" />
@@ -282,16 +346,13 @@ export default function CellMuseumIntro({ onEnter }: Props) {
               opacity=".35"
             />
             <path
-              d="M270 700 C268 610 267 540 238 472 C209 420 148 391 109 359 C79 335 85 303 111 299 C145 294 201 333 253 365 L183 205 C168 170 180 150 206 150 C229 150 239 168 250 194 L322 333 L276 121 C270 91 283 75 307 77 C334 79 339 101 344 124 L384 322 L385 92 C385 62 402 49 426 54 C452 59 452 84 451 109 L445 331 L491 169 C500 140 517 132 537 144 C559 157 553 181 548 204 L518 389 C506 456 477 503 466 551 L465 700 C463 855 472 1050 489 1280 L250 1280 C267 1050 270 858 270 700 Z"
+              d={HAND_PATH}
               fill="url(#skin)"
               stroke="#e4b1ad"
               strokeOpacity=".28"
               strokeWidth="3"
             />
-            <path
-              d="M270 700 C268 610 267 540 238 472 C209 420 148 391 109 359 C79 335 85 303 111 299 C145 294 201 333 253 365 L183 205 C168 170 180 150 206 150 C229 150 239 168 250 194 L322 333 L276 121 C270 91 283 75 307 77 C334 79 339 101 344 124 L384 322 L385 92 C385 62 402 49 426 54 C452 59 452 84 451 109 L445 331 L491 169 C500 140 517 132 537 144 C559 157 553 181 548 204 L518 389 C506 456 477 503 466 551 L465 700 C463 855 472 1050 489 1280 L250 1280 C267 1050 270 858 270 700 Z"
-              fill="url(#skinVolume)"
-            />
+            <path d={HAND_PATH} fill="url(#skinVolume)" />
             {/* Broad, blurred contour shading: no interior strokes that resemble bones. */}
             <g
               clipPath="url(#handCellClip)"
@@ -299,11 +360,37 @@ export default function CellMuseumIntro({ onEnter }: Props) {
               opacity=".58"
             >
               <path
-                d="M270 700 C268 610 267 540 238 472 C209 420 148 391 109 359 C79 335 85 303 111 299 C145 294 201 333 253 365 L183 205 C168 170 180 150 206 150 C229 150 239 168 250 194 L322 333 L276 121 C270 91 283 75 307 77 C334 79 339 101 344 124 L384 322 L385 92 C385 62 402 49 426 54 C452 59 452 84 451 109 L445 331 L491 169 C500 140 517 132 537 144 C559 157 553 181 548 204 L518 389 C506 456 477 503 466 551 L465 700 C463 855 472 1050 489 1280 L250 1280 C267 1050 270 858 270 700 Z"
+                d={HAND_PATH}
                 fill="none"
                 stroke="#34243e"
                 strokeOpacity=".6"
                 strokeWidth="27"
+              />
+            </g>
+            {/* Subtle anatomical fold at the thumb-side palm-to-wrist transition.
+                Kept inside the unchanged silhouette and feathered so it never
+                becomes a drawn line as the camera approaches. */}
+            <g
+              clipPath="url(#handCellClip)"
+              opacity={1 - smooth(0.23, 0.38, progress)}
+            >
+              <path
+                d="M 353 790 C 372 804 391 816 421 822"
+                fill="none"
+                stroke="#50313f"
+                strokeWidth="20"
+                strokeOpacity=".25"
+                strokeLinecap="round"
+                filter="url(#wristFoldBlur)"
+              />
+              <path
+                d="M 361 785 C 378 796 393 802 414 807"
+                fill="none"
+                stroke="#f3b4a7"
+                strokeWidth="7"
+                strokeOpacity=".13"
+                strokeLinecap="round"
+                filter="url(#wristFoldBlur)"
               />
             </g>
             <g clipPath="url(#handCellClip)" opacity={skinDetailOpacity * 0.78}>
@@ -327,7 +414,8 @@ export default function CellMuseumIntro({ onEnter }: Props) {
             <g clipPath="url(#handCellClip)" opacity={handCellsOpacity}>
               <path d="M0 0 H800 V1300 H0 Z" fill="#5c3c60" opacity=".68" />
               {Array.from({ length: 100 }, (_, row) =>
-                Array.from({ length: row < 55 ? 50 : 25 }, (_, index) => {
+                Array.from({ length: row < 55 ? 60 : 25 }, (_, index) => {
+                  // Extend across the little finger as well; clip to the hand silhouette.
                   // Below the palm, draw only the wrist/forearm columns.
                   const col = row < 55 ? index : index + 14;
                   const seed = row * 61 + col;
@@ -382,60 +470,55 @@ export default function CellMuseumIntro({ onEnter }: Props) {
               fill="none"
               strokeLinecap="round"
             >
-              {/* Three principal palm creases, shaped around the thumb mound and finger bases. */}
-              <g stroke="#f5c2b5" strokeWidth="2" strokeOpacity=".49">
-                {/* Heart line: starts below the little finger and curves toward the index finger. */}
-                <path d="M 506 363 C 465 375 441 389 400 393 S 320 388 282 364" />
-                {/* Head line: travels diagonally across the middle of the palm. */}
-                <path d="M 287 402 C 333 414 373 436 411 457 S 462 480 486 486" />
-                {/* Life line: arcs around the fleshy base of the thumb toward the wrist. */}
-                <path d="M 254 362 C 287 388 308 428 312 466 C 319 509 342 539 376 563" />
-                {/* Thenar and wrist creases are shorter, uneven, and oblique. */}
-                <path d="M 258 432 C 274 451 285 476 291 496" />
-                <path d="M 347 579 Q 389 596 434 581" />
-                <path d="M 331 608 Q 379 618 424 603" />
-                <path d="M 310 529 Q 334 546 355 552" />
-              </g>
-              {/* Joint folds are perpendicular to each finger’s actual axis. */}
-              <g stroke="#f6c9bf" strokeWidth="1.3" strokeOpacity=".37">
-                {/* Index finger slopes down/right; its folds slope down/left. */}
-                <path d="M191 247 Q202 238 218 235 M195 254 Q207 246 222 243 M226 312 Q238 301 253 299" />
-                {/* Middle finger tilts slightly right. */}
-                <path d="M280 184 Q299 177 324 173 M283 191 Q301 185 326 181 M302 257 Q321 251 341 248" />
-                {/* Ring finger is almost vertical. */}
-                <path d="M389 167 Q413 160 443 166 M389 175 Q414 169 444 174 M386 255 Q411 249 445 254" />
-                {/* Little finger tilts left as it travels downward. */}
-                <path d="M493 237 Q509 239 536 250 M491 245 Q510 247 534 257 M475 308 Q494 311 520 322" />
-                {/* Thumb is diagonal: creases cross it rather than follow it. */}
-                <path d="M135 351 Q146 337 158 327 M142 359 Q153 345 166 334" />
-              </g>
-              {/* Fingertip prints use local coordinates centered on the distal pads.
-                  Rotate the entire print with the finger, never skew individual ridges. */}
-              <g stroke="#ffe4d8" strokeOpacity=".28" strokeWidth=".65">
-                {(
-                  [
-                    { x: 122, y: 326, angle: -56, width: 14 }, // thumb
-                    { x: 204, y: 173, angle: -27, width: 12 }, // index
-                    { x: 309, y: 101, angle: -12, width: 12 }, // middle
-                    { x: 418, y: 77, angle: 0, width: 12 }, // ring
-                    { x: 523, y: 166, angle: 15, width: 10 }, // little
-                  ] as const
-                ).map((tip, finger) => (
-                  <g
-                    key={`tip-${finger}`}
-                    transform={`translate(${tip.x} ${tip.y}) rotate(${tip.angle})`}
-                  >
-                    {Array.from({ length: 6 }, (_, i) => {
-                      const r = tip.width - i * 1.3;
-                      return (
-                        <path
-                          key={i}
-                          d={`M ${-r} ${6 + i * 2} Q 0 ${-8 + i * 2} ${r} ${6 + i * 2}`}
-                        />
-                      );
-                    })}
-                  </g>
-                ))}
+              {/* Fine, low-contrast creases aligned to THIS hand silhouette.
+                  Fade before the close-up so they do not turn into thick stripes. */}
+              <g opacity={1 - smooth(0.22, 0.34, progress)}>
+                <g stroke="#f3c0b6" strokeWidth="1.25" strokeOpacity=".22">
+                  <path d="M 672 528 C 625 517 588 510 548 515 S 474 530 446 525" />
+                  <path d="M 424 580 C 466 577 510 588 555 607" />
+                  <path d="M 365 632 C 393 650 411 676 421 711" />
+                  <path d="M 397 759 Q 441 770 485 759" />
+                </g>
+                {/* Short folds across each finger, not across adjacent fingers. */}
+                <g stroke="#f6c9bf" strokeWidth=".9" strokeOpacity=".19">
+                  <path d="M378 225 Q404 221 432 225 M380 234 Q405 230 432 234 M380 325 Q407 322 433 325" />
+                  <path d="M486 160 Q515 157 545 160 M486 169 Q515 166 545 169 M487 282 Q515 279 545 282" />
+                  <path d="M594 244 Q619 241 649 245 M594 252 Q619 249 649 253 M590 336 Q616 333 644 337" />
+                  <path d="M711 390 Q731 398 749 404 M707 398 Q728 406 745 412" />
+                  <path d="M132 540 Q147 551 159 565 M137 535 Q152 546 164 559" />
+                </g>
+                {/* Nested fingertip ridges: loops and whorls, never horizontal bars.
+                    Each set sits inside the fingertip pad and follows its direction. */}
+                <g stroke="#ffe4d8" strokeOpacity=".22" strokeWidth=".65">
+                  {(
+                    [
+                      { x: 404, y: 161, angle: -2, rx: 26, ry: 38 },
+                      { x: 515, y: 96, angle: 0, rx: 28, ry: 39 },
+                      { x: 624, y: 184, angle: 5, rx: 25, ry: 35 },
+                      { x: 745, y: 372, angle: 24, rx: 18, ry: 27 },
+                      { x: 116, y: 536, angle: -53, rx: 23, ry: 31 },
+                    ] as const
+                  ).map((tip, finger) => (
+                    <g
+                      key={`fingerprint-${finger}`}
+                      transform={`translate(${tip.x} ${tip.y}) rotate(${tip.angle})`}
+                    >
+                      {Array.from({ length: 10 }, (_, i) => {
+                        const scale = 1 - i * 0.085;
+                        const rx = tip.rx * scale;
+                        const ry = tip.ry * scale;
+                        // A gently asymmetric oval loop, opening slightly near its base.
+                        // This traces the contour of the fingertip rather than a row of stripes.
+                        return (
+                          <path
+                            key={i}
+                            d={`M ${svgCoord(-rx * 0.76)} ${svgCoord(ry * 0.76)} C ${svgCoord(-rx * 1.12)} ${svgCoord(ry * 0.28)}, ${svgCoord(-rx * 1.05)} ${svgCoord(-ry * 0.78)}, ${svgCoord(-rx * 0.22)} ${svgCoord(-ry)} C ${svgCoord(rx * 0.5)} ${svgCoord(-ry * 1.13)}, ${svgCoord(rx * 1.1)} ${svgCoord(-ry * 0.48)}, ${svgCoord(rx)} ${svgCoord(ry * 0.18)} C ${svgCoord(rx * 0.98)} ${svgCoord(ry * 0.55)}, ${svgCoord(rx * 0.55)} ${svgCoord(ry * 0.88)}, ${svgCoord(rx * 0.2)} ${svgCoord(ry * 0.92)}`}
+                          />
+                        );
+                      })}
+                    </g>
+                  ))}
+                </g>
               </g>
               {/* Micro skin texture, not a grid. Deterministic placement avoids hydration errors. */}
               {Array.from({ length: 330 }, (_, i) => {
