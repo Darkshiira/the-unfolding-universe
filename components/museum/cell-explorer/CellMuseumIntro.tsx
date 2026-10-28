@@ -156,6 +156,21 @@ export default function CellMuseumIntro({ onEnter }: Props) {
   const [progress, setProgress] = useState(0);
   const [reduced, setReduced] = useState(false);
 
+  // Keep mobile pull-to-overscroll from revealing the page underneath the intro.
+  // Restore the page's original behavior when the visitor enters the museum.
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const previousHtml = html.style.overscrollBehaviorY;
+    const previousBody = body.style.overscrollBehaviorY;
+    html.style.overscrollBehaviorY = "none";
+    body.style.overscrollBehaviorY = "none";
+    return () => {
+      html.style.overscrollBehaviorY = previousHtml;
+      body.style.overscrollBehaviorY = previousBody;
+    };
+  }, []);
+
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setReduced(mq.matches);
@@ -171,24 +186,33 @@ export default function CellMuseumIntro({ onEnter }: Props) {
       raf = requestAnimationFrame(() => {
         const el = track.current;
         if (!el) return;
-        const range = Math.max(1, el.offsetHeight - window.innerHeight);
+        const range = Math.max(
+          1,
+          el.offsetHeight -
+            (window.visualViewport?.height ?? window.innerHeight),
+        );
         setProgress(clamp(-el.getBoundingClientRect().top / range));
       });
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
+    window.visualViewport?.addEventListener("resize", update);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
+      window.visualViewport?.removeEventListener("resize", update);
     };
   }, []);
 
   const advance = useCallback(() => {
     const el = track.current;
     if (!el) return;
-    const range = Math.max(1, el.offsetHeight - window.innerHeight);
+    const range = Math.max(
+      1,
+      el.offsetHeight - (window.visualViewport?.height ?? window.innerHeight),
+    );
     const next =
       progress < 0.25
         ? 0.32
@@ -233,9 +257,9 @@ export default function CellMuseumIntro({ onEnter }: Props) {
   return (
     <div
       ref={track}
-      className="relative h-[540svh] bg-[#030b14] text-[#f5f2ea]"
+      className="relative h-[540vh] supports-[height:100dvh]:h-[540dvh] bg-[#030b14] text-[#f5f2ea]"
     >
-      <div className="sticky top-0 h-svh overflow-hidden">
+      <div className="sticky top-0 h-screen supports-[height:100dvh]:h-dvh overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_52%,#183347_0%,#081622_43%,#030a12_85%)]" />
         <div
           className="pointer-events-none absolute inset-0 opacity-40"
@@ -259,7 +283,7 @@ export default function CellMuseumIntro({ onEnter }: Props) {
         >
           <svg
             viewBox="0 0 800 700"
-            className="h-[88svh] w-[min(98vw,1000px)] overflow-visible"
+            className="h-[88vh] supports-[height:100dvh]:h-[88dvh] w-[min(98vw,1000px)] overflow-visible"
             aria-hidden="true"
           >
             <defs>
