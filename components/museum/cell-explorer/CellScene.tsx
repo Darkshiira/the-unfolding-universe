@@ -1,21 +1,43 @@
 "use client";
 
-import { Suspense, useMemo, useRef, useState, useEffect } from "react";
+import {
+  Suspense,
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+  type KeyboardEvent,
+} from "react";
 import { Canvas, ThreeEvent, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import {
-  RotateCcw,
   X,
   Wind,
   Pause,
   Play,
   ChevronDown,
   ChevronUp,
+  Menu,
+  ArrowLeft,
+  ChevronRight,
+  Sparkles,
+  BookOpen,
+  Compass,
+  Info,
 } from "lucide-react";
-import TimelineBackLink from "@/components/TimelineBackLink";
+import Link from "next/link";
+import {
+  exhibitCategories,
+  museumExhibits,
+} from "@/app/museum/museum-exhibits";
 import * as THREE from "three";
+import SharedNucleus from "./SharedNucleus";
+import {
+  EndoplasmicReticulum,
+  GolgiApparatus,
+} from "./SharedSecretoryOrganelles";
 
-type OrganelleId = "nucleus" | "mitochondria" | "er" | "golgi";
+type OrganelleId = "nucleus" | "mitochondria" | "er" | "golgi" | "ribosomes";
 
 type OrganelleInfo = {
   title: string;
@@ -45,6 +67,13 @@ const organelles: Record<OrganelleId, OrganelleInfo> = {
     description:
       "Det endoplasmatiska nätverket består av sammanhängande membran. Det korniga nätverket hjälper till att tillverka och bearbeta proteiner, medan det släta bland annat bildar lipider.",
     color: "#7DB8CE",
+  },
+  ribosomes: {
+    title: "Ribosomer",
+    subtitle: "Cellens proteinbyggare",
+    description:
+      "Ribosomer bygger proteiner genom att läsa instruktioner från mRNA. Fria ribosomer finns i cytosolen, medan bundna ribosomer sitter på det korniga endoplasmatiska nätverket. De saknar eget membran och är mycket mindre än de flesta andra cellstrukturer. Storleken är överdriven här för att de ska gå att upptäcka.",
+    color: "#C4E4DB",
   },
   golgi: {
     title: "Golgiapparaten",
@@ -135,196 +164,21 @@ function Nucleus({
   selected,
   onSelect,
   motion = true,
+  showInside = false,
 }: {
   selected: boolean;
   onSelect: () => void;
   motion?: boolean;
+  showInside?: boolean;
 }) {
-  const ref = useRef<THREE.Group>(null);
-  const phase = useRef(0);
-  const pores = useMemo(
-    () =>
-      Array.from({ length: 63 }, (_, i) => {
-        // Deterministic jitter breaks the artificial golden-angle dot pattern.
-        const hash = (n: number) => {
-          const v = Math.sin(n * 127.1 + 78.233) * 43758.5453;
-          return v - Math.floor(v);
-        };
-        const y = THREE.MathUtils.clamp(
-          1 - (2 * (i + 0.5)) / 63 + (hash(i * 3 + 1) - 0.5) * 0.115,
-          -0.985,
-          0.985,
-        );
-        const a = i * 2.399963229728653 + (hash(i * 3 + 2) - 0.5) * 0.85;
-        const r = Math.sqrt(1 - y * y);
-        return {
-          position: [
-            0.786 * r * Math.cos(a),
-            0.733 * y,
-            0.748 * r * Math.sin(a),
-          ] as [number, number, number],
-          size: 0.008 + hash(i * 3 + 3) * 0.006,
-        };
-      }),
-    [],
-  );
-  const chromatin = useMemo(
-    () =>
-      Array.from({ length: 64 }, (_, i) => {
-        const golden = i * 2.39996323;
-        const r = 0.15 + 0.46 * Math.pow((i + 0.5) / 64, 0.72);
-        const y = 1 - (2 * (((i * 37) % 64) + 0.5)) / 64;
-        const radial = Math.sqrt(1 - y * y);
-        const center = new THREE.Vector3(
-          r * radial * Math.cos(golden),
-          r * y * 0.92,
-          r * radial * Math.sin(golden) * 0.94,
-        );
-        const points: THREE.Vector3[] = [];
-        for (let j = 0; j <= 16; j++) {
-          const t = j / 16;
-          const a = golden + t * (2.4 + (i % 4) * 0.7);
-          points.push(
-            new THREE.Vector3(
-              center.x + 0.035 * Math.sin(a * 2.1) + (t - 0.5) * 0.07,
-              center.y +
-                0.035 * Math.cos(a * 1.8) +
-                0.018 * Math.sin(t * 14 + i),
-              center.z + 0.038 * Math.sin(a * 1.3) + (t - 0.5) * 0.045,
-            ),
-          );
-        }
-        return new THREE.CatmullRomCurve3(points);
-      }),
-    [],
-  );
-  const chromatinGranules = useMemo(
-    () =>
-      Array.from({ length: 95 }, (_, i) => {
-        const a = i * 2.399963;
-        const r = 0.18 + (i % 9) * 0.037;
-        return [
-          r * Math.cos(a),
-          r * Math.sin(a * 1.31) * 0.84,
-          r * Math.sin(a * 0.79),
-        ] as [number, number, number];
-      }),
-    [],
-  );
-  useFrame((_, delta) => {
-    if (motion) phase.current += Math.min(delta, 0.05);
-    if (!ref.current) return;
-    ref.current.rotation.y = Math.sin(phase.current * 0.17) * 0.045;
-    ref.current.rotation.z = Math.sin(phase.current * 0.11 + 1) * 0.012;
-  });
   return (
-    <group ref={ref} position={[-0.35, 0.2, 0]}>
-      <mesh
-        onClick={(event: ThreeEvent<MouseEvent>) => {
-          event.stopPropagation();
-          onSelect();
-        }}
-        scale={[1, 0.93, 0.95]}
-      >
-        <sphereGeometry args={[0.78, 56, 40]} />
-        <meshPhysicalMaterial
-          color={selected ? "#C9A5F0" : "#9478B5"}
-          roughness={0.57}
-          transparent
-          opacity={0.78}
-          depthWrite={false}
-          emissive={selected ? "#8D60D3" : "#29153D"}
-          emissiveIntensity={selected ? 0.4 : 0.07}
-        />
-      </mesh>
-      {/* The darker inner volume adds depth without obscuring the chromatin. */}
-      <mesh scale={[0.955, 0.885, 0.9]} raycast={() => null}>
-        <sphereGeometry args={[0.78, 40, 32]} />
-        <meshStandardMaterial
-          color="#654987"
-          transparent
-          opacity={0.16}
-          depthWrite={false}
-        />
-      </mesh>
-      {chromatin.map((curve, i) => (
-        <mesh key={`chromatin-${i}`} raycast={() => null}>
-          <tubeGeometry
-            args={[curve, 22, 0.0028 + (i % 4) * 0.0008, 4, false]}
-          />
-          <meshStandardMaterial
-            color={i % 3 === 0 ? "#E0B9EF" : "#A98ACB"}
-            transparent
-            opacity={i % 5 === 0 ? 0.54 : 0.31}
-            depthWrite={false}
-            roughness={0.9}
-          />
-        </mesh>
-      ))}
-      {chromatinGranules.map((position, i) => (
-        <mesh
-          key={`chromatin-granule-${i}`}
-          position={position}
-          raycast={() => null}
-        >
-          <sphereGeometry args={[0.006 + (i % 3) * 0.003, 6, 5]} />
-          <meshBasicMaterial
-            color={i % 4 === 0 ? "#D6B3E8" : "#9D80BE"}
-            transparent
-            opacity={0.38}
-            depthWrite={false}
-          />
-        </mesh>
-      ))}
-      {pores.map((position, i) => (
-        <mesh
-          key={`pore-${i}`}
-          position={position.position}
-          raycast={() => null}
-        >
-          <sphereGeometry args={[position.size, 7, 6]} />
-          <meshStandardMaterial
-            color="#61457F"
-            transparent
-            opacity={0.82}
-            roughness={0.85}
-          />
-        </mesh>
-      ))}
-      {Array.from({ length: 38 }, (_, i) => {
-        const y = 1 - (2 * (i + 0.5)) / 38;
-        const r = Math.sqrt(1 - y * y);
-        const a = i * 2.399963;
-        return (
-          <mesh
-            key={`nucleolus-grain-${i}`}
-            position={[
-              0.14 + 0.204 * r * Math.cos(a),
-              0.05 + 0.204 * y,
-              0.43 + 0.204 * r * Math.sin(a),
-            ]}
-            raycast={() => null}
-          >
-            <sphereGeometry args={[0.009, 6, 5]} />
-            <meshBasicMaterial
-              color="#A879C7"
-              transparent
-              opacity={0.6}
-              depthWrite={false}
-            />
-          </mesh>
-        );
-      })}
-      <mesh position={[0.14, 0.05, 0.43]} raycast={() => null}>
-        <sphereGeometry args={[0.205, 28, 22]} />
-        <meshStandardMaterial
-          color="#C8A1E1"
-          roughness={0.72}
-          transparent
-          opacity={0.85}
-        />
-      </mesh>
-    </group>
+    <SharedNucleus
+      position={[-0.35, 0.2, 0]}
+      selected={selected}
+      onSelect={onSelect}
+      motion={motion}
+      showInside={showInside}
+    />
   );
 }
 
@@ -568,238 +422,7 @@ function Mitochondrion({
 
 // Five distinct-looking regions of one ER network. Each region is a single
 // continuous, serpentine membrane with rounded, irregular hairpin folds.
-type ERPatch = {
-  angle: number;
-  radius: number;
-  phase: number;
-  width: number;
-  halfSpan: number;
-  depth: number;
-  folds: number;
-  drift: number;
-};
-
-// Uneven angular spacing, widths, radial offsets and numbers of turns.
-const ER_PATCHES: ERPatch[] = [
-  // Intentionally uneven: two regions crowd together at upper-left,
-  // one reaches outward at the right, and two differ below the nucleus.
-  {
-    angle: 2.63,
-    radius: 0.76,
-    phase: 0.31,
-    width: 0.43,
-    halfSpan: 0.39,
-    depth: 0.37,
-    folds: 8,
-    drift: -0.075,
-  },
-  {
-    angle: 1.83,
-    radius: 0.81,
-    phase: 2.13,
-    width: 0.29,
-    halfSpan: 0.25,
-    depth: 0.26,
-    folds: 5,
-    drift: 0.055,
-  },
-  {
-    angle: 0.19,
-    radius: 0.88,
-    phase: 3.77,
-    width: 0.46,
-    halfSpan: 0.43,
-    depth: 0.41,
-    folds: 9,
-    drift: -0.035,
-  },
-  {
-    angle: -1.04,
-    radius: 0.79,
-    phase: 5.13,
-    width: 0.33,
-    halfSpan: 0.28,
-    depth: 0.31,
-    folds: 6,
-    drift: 0.082,
-  },
-  {
-    angle: -2.49,
-    radius: 0.85,
-    phase: 6.54,
-    width: 0.38,
-    halfSpan: 0.36,
-    depth: 0.35,
-    folds: 7,
-    drift: -0.055,
-  },
-];
-
-function makeERPath(patch: ERPatch) {
-  const points: THREE.Vector3[] = [];
-  const n = patch.folds;
-  const lanes = Array.from(
-    { length: n + 1 },
-    (_, i) =>
-      0.012 + patch.depth * (i / n) + 0.009 * Math.sin(i * 1.83 + patch.phase),
-  );
-  const lefts = Array.from(
-    { length: n + 1 },
-    (_, i) =>
-      patch.drift -
-      patch.halfSpan *
-        (0.64 + 0.34 * (0.5 + 0.5 * Math.sin(i * 1.71 + patch.phase))),
-  );
-  const rights = Array.from(
-    { length: n + 1 },
-    (_, i) =>
-      patch.drift +
-      patch.halfSpan *
-        (0.6 + 0.39 * (0.5 + 0.5 * Math.sin(i * 1.37 + patch.phase * 0.71))),
-  );
-
-  // Each lane travels tangentially along the nucleus. A smooth U-turn
-  // joins it to the next lane farther from the nucleus.
-  for (let i = 0; i <= n; i++) {
-    const goingRight = i % 2 === 0;
-    const startX = goingRight ? lefts[i] : rights[i];
-    const endX = goingRight ? rights[i] : lefts[i];
-    const y = lanes[i];
-    for (let j = 0; j <= 28; j++) {
-      if (i > 0 && j === 0) continue;
-      const u = j / 28;
-      points.push(
-        new THREE.Vector3(
-          THREE.MathUtils.lerp(startX, endX, u),
-          y +
-            (0.004 + 0.003 * Math.sin(i * 1.29 + patch.phase)) *
-              Math.sin(u * Math.PI * 2 + patch.phase + i * 0.63) *
-              Math.sin(u * Math.PI),
-          0,
-        ),
-      );
-    }
-    if (i === n) break;
-
-    // Rounded hairpin with a gently drifting tip. Unlike the previous
-    // geometry, there is no long, flat bridge at the turn.
-    const nextX = goingRight ? rights[i + 1] : lefts[i + 1];
-    const nextY = lanes[i + 1];
-    const tipX = goingRight ? Math.max(endX, nextX) : Math.min(endX, nextX);
-    const direction = goingRight ? 1 : -1;
-    const bulge = 0.018 + 0.01 * (0.5 + 0.5 * Math.sin(i * 2.17 + patch.phase));
-    const turn = new THREE.CubicBezierCurve3(
-      new THREE.Vector3(endX, y, 0),
-      new THREE.Vector3(tipX + direction * bulge, y + 0.003, 0),
-      new THREE.Vector3(tipX + direction * bulge, nextY - 0.003, 0),
-      new THREE.Vector3(nextX, nextY, 0),
-    );
-    for (let j = 1; j <= 20; j++) points.push(turn.getPoint(j / 20));
-  }
-  return new THREE.CatmullRomCurve3(points, false, "centripetal", 0.3);
-}
-
-function makeERMembrane(patch: ERPatch) {
-  const along = patch.folds * 100;
-  const across = 16;
-  const ring = across + 1;
-  const count = (along + 1) * ring;
-  const centers: THREE.Vector3[] = [];
-  const path = makeERPath(patch);
-  for (let i = 0; i <= along; i++) {
-    const t = i / along;
-    const pt = path.getPoint(t);
-    const theta = patch.angle + pt.x / patch.radius;
-    const radius = patch.radius + pt.y;
-    // An undulating silhouette, with rounded, softly narrowing tips.
-    // Width does not collapse into sharp points or identical straight edges.
-    const endTaper = 1 - 0.4 * Math.pow(Math.abs(t * 2 - 1), 6);
-    const breadth =
-      patch.width *
-      endTaper *
-      (0.8 +
-        0.12 * Math.sin(t * 13 + patch.phase) +
-        0.09 * Math.sin(t * 29 + patch.phase * 1.7) +
-        0.045 * Math.sin(t * 47 + patch.phase * 0.8));
-    for (let j = 0; j <= across; j++) {
-      const v = (j / across) * 2 - 1;
-      // A shallow, inflated cross-section rather than a flat rectangular panel.
-      // Rounded shoulders become especially visible when the cell is rotated.
-      const shoulder = Math.pow(Math.abs(v), 4);
-      const r =
-        radius +
-        0.026 * (1 - v * v) +
-        0.012 * (1 - v * v) * Math.sin(t * 11 + patch.phase) +
-        0.006 * Math.sin(v * 3.2 + t * 17 + patch.phase) -
-        0.009 * shoulder;
-      const softenedEdge = v * (1 - 0.095 * shoulder);
-      centers.push(
-        new THREE.Vector3(
-          Math.cos(theta) * r,
-          Math.sin(theta) * r * 0.96,
-          -0.08 +
-            softenedEdge * breadth * 0.5 +
-            0.016 * Math.sin(t * 9 + patch.phase) * (1 - v * v) +
-            0.008 * Math.sin(t * 21 + v * 2 + patch.phase) * (1 - shoulder),
-        ),
-      );
-    }
-  }
-  const positions: number[] = [];
-  const indices: number[] = [];
-  for (let side = 0; side < 2; side++) {
-    const sign = side === 0 ? 1 : -1;
-    for (let i = 0; i <= along; i++) {
-      for (let j = 0; j <= across; j++) {
-        const k = i * ring + j;
-        const longitudinal = centers[Math.min(along, i + 1) * ring + j]
-          .clone()
-          .sub(centers[Math.max(0, i - 1) * ring + j]);
-        const lateral = centers[i * ring + Math.min(across, j + 1)]
-          .clone()
-          .sub(centers[i * ring + Math.max(0, j - 1)]);
-        const normal = longitudinal.cross(lateral).normalize();
-        const v = (j / across) * 2 - 1;
-        const thickness = 0.01 + 0.006 * Math.pow(Math.abs(v), 6);
-        const point = centers[k]
-          .clone()
-          .addScaledVector(normal, sign * thickness);
-        positions.push(point.x, point.y, point.z);
-      }
-    }
-  }
-  for (let side = 0; side < 2; side++) {
-    const offset = side * count;
-    for (let i = 0; i < along; i++) {
-      for (let j = 0; j < across; j++) {
-        const a = offset + i * ring + j;
-        const b = a + ring;
-        if (side === 0) indices.push(a, b, a + 1, a + 1, b, b + 1);
-        else indices.push(a, a + 1, b, a + 1, b + 1, b);
-      }
-    }
-  }
-  const perimeter: number[] = [];
-  for (let j = 0; j <= across; j++) perimeter.push(j);
-  for (let i = 1; i <= along; i++) perimeter.push(i * ring + across);
-  for (let j = across - 1; j >= 0; j--) perimeter.push(along * ring + j);
-  for (let i = along - 1; i >= 1; i--) perimeter.push(i * ring);
-  for (let i = 0; i < perimeter.length; i++) {
-    const x = perimeter[i],
-      y = perimeter[(i + 1) % perimeter.length];
-    indices.push(x, y, x + count, y, y + count, x + count);
-  }
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(positions, 3),
-  );
-  geometry.setIndex(indices);
-  geometry.computeVertexNormals();
-  return geometry;
-}
-
-function EndoplasmicReticulum({
+function FreeRibosomes({
   selected,
   onSelect,
   motion,
@@ -808,396 +431,68 @@ function EndoplasmicReticulum({
   onSelect: () => void;
   motion: boolean;
 }) {
-  const groupRef = useRef<THREE.Group>(null);
+  const refs = useRef<(THREE.Group | null)[]>([]);
   const phase = useRef(0);
-  useFrame((_, delta) => {
-    if (motion) phase.current += Math.min(delta, 0.05);
-    if (!groupRef.current) return;
-    const t = phase.current;
-    groupRef.current.scale.set(
-      1 + 0.007 * Math.sin(t * 0.38),
-      1 + 0.009 * Math.sin(t * 0.29 + 1),
-      1 + 0.013 * Math.sin(t * 0.33 + 2),
-    );
-    groupRef.current.rotation.z = 0.08 + 0.011 * Math.sin(t * 0.23);
-  });
-  const meshes = useMemo(() => ER_PATCHES.map(makeERMembrane), []);
-  useEffect(() => () => meshes.forEach((mesh) => mesh.dispose()), [meshes]);
-
-  const ribosomes = useMemo(() => {
-    const dots: [number, number, number][] = [];
-    ER_PATCHES.forEach((patch, pi) => {
-      const path = makeERPath(patch);
-      const count = patch.folds * 17;
-      for (let j = 0; j < count; j++) {
-        const t = (j + 0.5) / count;
-        const v = Math.sin(j * 2.399 + pi * 1.8) * 0.83;
-        const pt = path.getPoint(t);
-        const theta = patch.angle + pt.x / patch.radius;
-        const r =
-          patch.radius +
-          pt.y +
-          0.012 +
-          0.026 * (1 - v * v) +
-          0.012 * (1 - v * v) * Math.sin(t * 11 + patch.phase) +
-          0.006 * Math.sin(v * 3.2 + t * 17 + patch.phase) -
-          0.009 * Math.pow(Math.abs(v), 4);
-        const breadth =
-          patch.width *
-          (1 - 0.4 * Math.pow(Math.abs(t * 2 - 1), 6)) *
-          (0.8 +
-            0.12 * Math.sin(t * 13 + patch.phase) +
-            0.09 * Math.sin(t * 29 + patch.phase * 1.7) +
-            0.045 * Math.sin(t * 47 + patch.phase * 0.8));
-        dots.push([
-          Math.cos(theta) * r,
-          Math.sin(theta) * r * 0.96,
-          -0.08 +
-            v * (1 - 0.095 * Math.pow(Math.abs(v), 4)) * breadth * 0.5 +
-            0.016 * Math.sin(t * 9 + patch.phase) * (1 - v * v) +
-            0.008 *
-              Math.sin(t * 21 + v * 2 + patch.phase) *
-              (1 - Math.pow(Math.abs(v), 4)),
-        ]);
-      }
-    });
-    return dots;
-  }, []);
-
-  // A soft membrane neck joins each pair of ER regions. Unlike a thin
-  // tubular ring, these are broad, gently inflated surfaces which narrow
-  // between the folds and flare into their attachment points.
-  // Only two discreet local membrane necks are visible. The other regions
-  // meet the nuclear envelope directly; there is deliberately NO five-sided
-  // perimeter connecting every patch around the nucleus.
-  const bridges = useMemo(
+  const locations = useMemo(
     () =>
-      [0, 3].map((i) => {
-        const patch = ER_PATCHES[i];
-        const next = ER_PATCHES[(i + 1) % ER_PATCHES.length];
-        const pathA = makeERPath(patch);
-        const pathB = makeERPath(next);
-        // Join the nearest inner corners, rather than running a bridge
-        // all the way around the nuclear envelope.
-        const a = pathA.getPoint(0);
-        const b = pathB.getPoint(0);
-        const angleA = patch.angle + a.x / patch.radius;
-        const angleB = next.angle + b.x / next.radius;
-
-        const rA = patch.radius + a.y;
-        const rB = next.radius + b.y;
-        const along = 44;
-        const across = 12;
-        const stride = across + 1;
-        const vertexCount = (along + 1) * stride;
-        const vertices: number[] = [];
-        const indices: number[] = [];
-
-        for (let side = 0; side < 2; side++) {
-          for (let j = 0; j <= along; j++) {
-            const t = j / along;
-            const ease = t * t * (3 - 2 * t);
-            const angle = THREE.MathUtils.lerp(angleA, angleB, ease);
-            // Tuck the middle of the connector behind the nuclear envelope.
-            const radial =
-              THREE.MathUtils.lerp(rA, rB, ease) -
-              0.17 * Math.sin(Math.PI * t) +
-              0.009 *
-                Math.sin(t * Math.PI * 3 + patch.phase) *
-                Math.sin(Math.PI * t);
-            const neck = Math.pow(Math.sin(Math.PI * t), 0.8);
-            const width =
-              THREE.MathUtils.lerp(patch.width, next.width, ease) *
-              (1 - 0.72 * neck) *
-              (0.96 + 0.04 * Math.sin(t * 15 + patch.phase));
-            for (let k = 0; k <= across; k++) {
-              const v = (k / across) * 2 - 1;
-              const swell = Math.sin(Math.PI * t) * (1 - v * v);
-              // The connector swells softly at the shoulders and sits behind
-              // the visible folds, avoiding the appearance of a thin circular ring.
-              const r =
-                radial +
-                0.02 * (1 - v * v) +
-                0.012 * swell * Math.sin(t * 12 + patch.phase) +
-                (side === 0 ? 0.01 : -0.01);
-              const z =
-                -0.08 +
-                v * (1 - 0.09 * Math.pow(Math.abs(v), 4)) * width * 0.5 +
-                0.012 * swell * Math.sin(t * 9 + patch.phase);
-              vertices.push(Math.cos(angle) * r, Math.sin(angle) * r * 0.96, z);
-            }
-          }
-        }
-        for (let side = 0; side < 2; side++) {
-          const offset = side * vertexCount;
-          for (let j = 0; j < along; j++) {
-            for (let k = 0; k < across; k++) {
-              const a = offset + j * stride + k;
-              const b = a + stride;
-              if (side === 0) indices.push(a, b, a + 1, a + 1, b, b + 1);
-              else indices.push(a, a + 1, b, a + 1, b + 1, b);
-            }
-          }
-        }
-        // Seal the exposed side edges to give the neck a membrane thickness.
-        for (let j = 0; j < along; j++) {
-          for (const k of [0, across]) {
-            const a = j * stride + k;
-            const b = (j + 1) * stride + k;
-            indices.push(
-              a,
-              b,
-              a + vertexCount,
-              b,
-              b + vertexCount,
-              a + vertexCount,
-            );
-          }
-        }
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute(
-          "position",
-          new THREE.Float32BufferAttribute(vertices, 3),
-        );
-        geometry.setIndex(indices);
-        geometry.computeVertexNormals();
-        return geometry;
+      Array.from({ length: 24 }, (_, i) => {
+        const a = i * 2.39996323 + 0.37;
+        const r = 1.38 + (i % 5) * 0.085;
+        const z = -0.52 + ((i * 7) % 11) * 0.095;
+        return [Math.cos(a) * r, Math.sin(a) * r * 0.85, z] as [
+          number,
+          number,
+          number,
+        ];
       }),
     [],
   );
-  useEffect(() => () => bridges.forEach((g) => g.dispose()), [bridges]);
-
-  return (
-    <group
-      ref={groupRef}
-      position={[-0.35, 0.12, -0.38]}
-      rotation={[0.1, -0.18, 0.08]}
-    >
-      {bridges.map((geometry, i) => (
-        <mesh key={`bridge-${i}`} geometry={geometry} raycast={() => null}>
-          <meshStandardMaterial
-            color={selected ? "#A9E2EA" : "#68AABE"}
-            side={THREE.DoubleSide}
-            roughness={0.76}
-            transparent
-            opacity={0.43}
-            depthWrite={false}
-            emissive="#163944"
-            emissiveIntensity={0.09}
-          />
-        </mesh>
-      ))}
-      {meshes.map((geometry, i) => (
-        <mesh
-          key={i}
-          geometry={geometry}
-          onClick={(event: ThreeEvent<MouseEvent>) => {
-            event.stopPropagation();
-            onSelect();
-          }}
-        >
-          <meshStandardMaterial
-            color={selected ? "#A9E2EA" : "#68AABE"}
-            side={THREE.DoubleSide}
-            roughness={0.74}
-            emissive={selected ? "#317F96" : "#163944"}
-            emissiveIntensity={selected ? 0.35 : 0.09}
-          />
-        </mesh>
-      ))}
-      {ribosomes.map((position, i) => (
-        <mesh key={i} position={position} raycast={() => null}>
-          <sphereGeometry args={[0.009, 6, 5]} />
-          <meshStandardMaterial color="#D9E8E7" roughness={0.85} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-// A Golgi cisterna is a closed, flattened membrane pouch — not an open ribbon.
-// Seven separate sacs are nested tightly, with softly inflated rims and a
-// shared shallow crescent curvature. The geometry is deterministic and light.
-function makeGolgiCisterna(layer: number, count: number) {
-  // A closed, gently cupped membrane sac with independently curled,
-  // slightly swollen ends. Each cisterna remains a separate compartment.
-  const along = 56;
-  const across = 18;
-  const vertices: number[] = [];
-  const indices: number[] = [];
-  const middle = (count - 1) / 2;
-  const distance = Math.abs(layer - middle) / middle;
-
-  // Non-identical lengths help break the perfectly aligned "pancake" silhouette.
-  const length = 0.49 - distance * 0.045 + 0.022 * Math.sin(layer * 1.83);
-  const breadth = 0.225 - distance * 0.014;
-  const yBase = (layer - middle) * 0.075;
-
-  const smoothstep = (a: number, b: number, x: number) => {
-    const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
-    return t * t * (3 - 2 * t);
-  };
-
-  for (let face = 0; face < 2; face++) {
-    const sign = face === 0 ? 1 : -1;
-    for (let i = 0; i <= along; i++) {
-      const u = i / along;
-      const xNorm = u * 2 - 1;
-      const endness = Math.abs(xNorm);
-      // Round the footprint, without collapsing its tips into sharp triangles.
-      const capRoundness = 0.095 + 0.012 * Math.sin(layer * 1.4);
-      const rounded = 1 - 0.035 * smoothstep(0.76, 1, endness);
-      const curl = smoothstep(0.7, 1, endness);
-      const rim = smoothstep(0.76, 1, endness);
-      for (let j = 0; j <= across; j++) {
-        const v = (j / across) * 2 - 1;
-        const sideRim = smoothstep(0.76, 1, Math.abs(v));
-
-        // A gentle scoop across the broad face, not a flat strip.
-        const cup = 0.035 * v * v;
-        const crescent = 0.065 * xNorm * xNorm;
-        const curlDirection = xNorm < 0 ? 0.84 : 1;
-        const endCurl = 0.052 * curl * curlDirection;
-        const sideCurl = 0.012 * sideRim * (0.5 + 0.5 * curl);
-
-        // A little asymmetry between cisternae and their two tips.
-        const irregular =
-          0.006 * Math.sin(u * 8.2 + layer * 0.69) * (1 - 0.4 * Math.abs(v));
-        // Rounded capsule-like outline: the tips keep their width and
-        // curve around smoothly rather than collapsing into spikes.
-        const roundedCorner =
-          capRoundness * (1 - Math.sqrt(Math.max(0, 1 - v * v)));
-        const x =
-          (length - roundedCorner) * xNorm +
-          0.009 * Math.sin(v * Math.PI + layer * 0.35) * (1 - endness);
-        const z =
-          breadth * rounded * v +
-          0.036 * Math.sin(xNorm * Math.PI * 0.75) +
-          0.008 * curl * Math.sign(xNorm);
-
-        // The rim is thicker than the middle, like a sealed membrane pouch.
-        const thickness =
-          0.012 + 0.012 * sideRim + 0.01 * rim + 0.004 * (1 - v * v);
-
-        const y =
-          yBase +
-          cup +
-          crescent +
-          endCurl +
-          sideCurl +
-          irregular +
-          sign * thickness;
-        vertices.push(x, y, z);
-      }
-    }
-  }
-
-  const faceSize = (along + 1) * (across + 1);
-  for (let face = 0; face < 2; face++) {
-    const offset = face * faceSize;
-    for (let i = 0; i < along; i++) {
-      for (let j = 0; j < across; j++) {
-        const a = offset + i * (across + 1) + j;
-        const b = a + 1;
-        const c = a + across + 1;
-        const d = c + 1;
-        if (face === 0) indices.push(a, c, b, b, c, d);
-        else indices.push(a, b, c, b, d, c);
-      }
-    }
-  }
-
-  // Close the entire perimeter, including the curled tips.
-  const perimeter: number[] = [];
-  for (let j = 0; j <= across; j++) perimeter.push(j);
-  for (let i = 1; i <= along; i++) perimeter.push(i * (across + 1) + across);
-  for (let j = across - 1; j >= 0; j--)
-    perimeter.push(along * (across + 1) + j);
-  for (let i = along - 1; i >= 1; i--) perimeter.push(i * (across + 1));
-  for (let k = 0; k < perimeter.length; k++) {
-    const a = perimeter[k];
-    const b = perimeter[(k + 1) % perimeter.length];
-    indices.push(a, b, a + faceSize, b, b + faceSize, a + faceSize);
-  }
-
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(vertices, 3),
-  );
-  geometry.setIndex(indices);
-  geometry.computeVertexNormals();
-  return geometry;
-}
-
-function GolgiApparatus({
-  selected,
-  onSelect,
-  motion,
-}: {
-  selected: boolean;
-  onSelect: () => void;
-  motion: boolean;
-}) {
-  const groupRef = useRef<THREE.Group>(null);
-  const phase = useRef(0);
   useFrame((_, delta) => {
     if (motion) phase.current += Math.min(delta, 0.05);
-    if (!groupRef.current) return;
-    groupRef.current.position.y =
-      -0.75 + 0.025 * Math.sin(phase.current * 0.32 + 1);
-    groupRef.current.rotation.z =
-      -0.24 + 0.018 * Math.sin(phase.current * 0.27);
+    refs.current.forEach((g, i) => {
+      if (!g) return;
+      const p = locations[i];
+      g.position.set(
+        p[0] + 0.022 * Math.sin(phase.current * 0.26 + i),
+        p[1] + 0.019 * Math.cos(phase.current * 0.23 + i * 1.3),
+        p[2] + 0.018 * Math.sin(phase.current * 0.21 + i * 0.9),
+      );
+    });
   });
-  const layers = useMemo(
-    () => Array.from({ length: 7 }, (_, i) => makeGolgiCisterna(i, 7)),
-    [],
-  );
-  useEffect(() => () => layers.forEach((g) => g.dispose()), [layers]);
   return (
-    <group
-      ref={groupRef}
-      position={[0.92, -0.75, 0.5]}
-      rotation={[0.25, -0.35, -0.24]}
-    >
-      {layers.map((geometry, i) => (
-        <mesh
+    <group>
+      {locations.map((p, i) => (
+        <group
           key={i}
-          geometry={geometry}
-          onClick={(event: ThreeEvent<MouseEvent>) => {
-            event.stopPropagation();
-            onSelect();
+          position={p}
+          ref={(node) => {
+            refs.current[i] = node;
           }}
         >
-          <meshStandardMaterial
-            color={selected ? "#F5C7DD" : i % 2 ? "#CE96B4" : "#BE85A8"}
-            side={THREE.DoubleSide}
-            roughness={0.66}
-            metalness={0.02}
-            emissive={selected ? "#8D426D" : "#351D30"}
-            emissiveIntensity={selected ? 0.32 : 0.07}
-          />
-        </mesh>
-      ))}
-      {/* Vesicles cluster near the outer rims of the stack. */}
-      {Array.from({ length: 16 }, (_, i) => {
-        const angle = i * 2.39996;
-        const side = i % 2 ? 1 : -1;
-        const x = side * (0.49 + (i % 3) * 0.045);
-        const y = ((i % 7) - 3) * 0.074 + 0.1 + Math.sin(angle) * 0.045;
-        const z = Math.sin(angle * 1.4) * 0.24;
-        return (
-          <mesh key={`vesicle-${i}`} position={[x, y, z]} raycast={() => null}>
-            <sphereGeometry args={[0.027 + (i % 3) * 0.008, 10, 8]} />
-            <meshStandardMaterial color="#D8A6C2" roughness={0.7} />
+          <mesh raycast={() => null}>
+            <sphereGeometry args={[0.019, 9, 7]} />
+            <meshStandardMaterial
+              color={selected ? "#F0FFF5" : "#B9D8CF"}
+              emissive={selected ? "#7DDCC5" : "#315B58"}
+              emissiveIntensity={selected ? 0.55 : 0.12}
+              roughness={0.8}
+            />
           </mesh>
-        );
-      })}
+          <mesh
+            onClick={(event: ThreeEvent<MouseEvent>) => {
+              event.stopPropagation();
+              onSelect();
+            }}
+          >
+            <sphereGeometry args={[0.068, 8, 6]} />
+            <meshBasicMaterial visible={false} />
+          </mesh>
+        </group>
+      ))}
     </group>
   );
 }
 
-// Cytoskeletal strands (stylized actin / microtubules) and gently drifting cytoplasmic vesicles.
 function CellInterior({ motion }: { motion: boolean }) {
   const phase = useRef(0);
   const particleRefs = useRef<(THREE.Group | null)[]>([]);
@@ -1679,7 +974,7 @@ function RespirationCloseupContent({
               electrons.current[i] = node;
             }}
           >
-            <sphereGeometry args={[0.047, 12, 10]} />
+            <sphereGeometry args={[0.061, 12, 10]} />
             <meshBasicMaterial color="#FFE48A" toneMapped={false} />
           </mesh>
         ))}
@@ -1720,7 +1015,7 @@ function RespirationCloseupContent({
               protons.current[i] = node;
             }}
           >
-            <sphereGeometry args={[0.044, 12, 10]} />
+            <sphereGeometry args={[0.058, 12, 10]} />
             <meshBasicMaterial color="#85ECFF" toneMapped={false} />
           </mesh>
         ))}
@@ -1788,7 +1083,7 @@ function RespirationCloseup({
 }) {
   return (
     <Canvas
-      camera={{ position: [0, 0, landscape ? 6.2 : 4.15], fov: 38 }}
+      camera={{ position: [0, 0, landscape ? 4.85 : 4.15], fov: 38 }}
       dpr={[1, 1.5]}
       gl={{ alpha: true, antialias: true }}
       style={{ background: "transparent" }}
@@ -1809,6 +1104,7 @@ function AnimalCell({
   oxygen,
   oxygenStageChange,
   xray,
+  nucleusXray,
 }: {
   selected: OrganelleId | null;
   onSelect: (id: OrganelleId) => void;
@@ -1816,6 +1112,7 @@ function AnimalCell({
   oxygen: boolean;
   oxygenStageChange: (stage: OxygenStage) => void;
   xray: boolean;
+  nucleusXray: boolean;
 }) {
   const cellRef = useRef<THREE.Group>(null);
 
@@ -1832,17 +1129,22 @@ function AnimalCell({
     <group ref={cellRef}>
       <CellMembrane motion={motion} />
       <CellInterior motion={motion} />
-      {oxygen && (
-        <OxygenMolecules
-          enabled={oxygen}
-          motion={motion}
-          onStage={oxygenStageChange}
-        />
-      )}
+      <FreeRibosomes
+        motion={motion}
+        selected={selected === "ribosomes"}
+        onSelect={() => onSelect("ribosomes")}
+      />
+      <OxygenMolecules
+        key={oxygen ? "oxygen-active" : "oxygen-idle"}
+        enabled={oxygen}
+        motion={motion}
+        onStage={oxygenStageChange}
+      />
 
       <Nucleus
         motion={motion}
         selected={selected === "nucleus"}
+        showInside={nucleusXray}
         onSelect={() => onSelect("nucleus")}
       />
 
@@ -1850,6 +1152,7 @@ function AnimalCell({
         motion={motion}
         selected={selected === "er"}
         onSelect={() => onSelect("er")}
+        onRibosomeSelect={() => onSelect("ribosomes")}
       />
 
       <GolgiApparatus
@@ -1896,7 +1199,7 @@ function CellWorld({
   oxygen,
   oxygenStageChange,
   xray,
-  landscape,
+  nucleusXray,
 }: {
   selected: OrganelleId | null;
   onSelect: (id: OrganelleId | null) => void;
@@ -1905,11 +1208,11 @@ function CellWorld({
   oxygen: boolean;
   oxygenStageChange: (stage: OxygenStage) => void;
   xray: boolean;
-  landscape: boolean;
+  nucleusXray: boolean;
 }) {
   return (
     <Canvas
-      camera={{ position: landscape ? [0, 0, 7.7] : [0, 0.2, 5.9], fov: 48 }}
+      camera={{ position: [0, 0.2, 5.9], fov: 48 }}
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: false }}
       onPointerMissed={() => onSelect(null)}
@@ -1954,7 +1257,7 @@ function CellWorld({
           oxygen={oxygen}
           oxygenStageChange={oxygenStageChange}
           xray={xray}
-          key={landscape ? "landscape" : "portrait"}
+          nucleusXray={nucleusXray}
         />
       </Suspense>
 
@@ -1977,31 +1280,78 @@ function CellWorld({
 export default function CellScene() {
   const [selected, setSelected] = useState<OrganelleId | null>(null);
   const [infoCollapsed, setInfoCollapsed] = useState(false);
-  const [oxygenCollapsed, setOxygenCollapsed] = useState(false);
-  const [respirationCollapsed, setRespirationCollapsed] = useState(false);
-  const [landscape, setLandscape] = useState(false);
-  useEffect(() => {
-    const media = window.matchMedia(
-      "(orientation: landscape) and (max-height: 500px)",
+  const [mobileHeaderVisible, setMobileHeaderVisible] = useState(true);
+  const [headerRevealCount, setHeaderRevealCount] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [museumSubmenu, setMuseumSubmenu] = useState(false);
+  const [experimentSubmenu, setExperimentSubmenu] = useState(false);
+  const sceneRef = useRef<HTMLElement>(null);
+  const tabOrder: OrganelleId[] = [
+    "nucleus",
+    "mitochondria",
+    "er",
+    "ribosomes",
+    "golgi",
+  ];
+
+  const selectOrganelle = (part: OrganelleId | null) => {
+    setSelected(part);
+    setInfoCollapsed(false);
+    sceneRef.current?.focus({ preventScroll: true });
+  };
+
+  const handleSceneKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key === "Escape" && selected) {
+      event.preventDefault();
+      setSelected(null);
+      sceneRef.current?.focus({ preventScroll: true });
+      return;
+    }
+    if (event.key !== "Tab" || !selected) return;
+    // Only cycle while the 3D scene itself has focus. Buttons and links
+    // must retain native Tab navigation for accessibility.
+    if (event.target !== sceneRef.current) return;
+    event.preventDefault();
+    const index = tabOrder.indexOf(selected);
+    const direction = event.shiftKey ? -1 : 1;
+    setSelected(
+      tabOrder[(index + direction + tabOrder.length) % tabOrder.length],
     );
-    const update = () => setLandscape(media.matches);
-    update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
+  };
 
   const [resetKey, setResetKey] = useState(0);
   const [oxygen, setOxygen] = useState(false);
   const [oxygenStage, setOxygenStage] = useState<OxygenStage>("entry");
   const [respirationPhase, setRespirationPhase] = useState<RespirationPhase>(0);
   const [respirationPhaseKey, setRespirationPhaseKey] = useState(0);
+  const [respirationCollapsed, setRespirationCollapsed] = useState(false);
+  // On touch-sized screens the museum introduction fades away to free the scene.
+  useEffect(() => {
+    const timeout = window.setTimeout(
+      () => setMobileHeaderVisible(false),
+      4800,
+    );
+    return () => window.clearTimeout(timeout);
+  }, [headerRevealCount]);
+  const [landscape, setLandscape] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia(
+      "(orientation: landscape) and (max-height: 500px)",
+    );
+    const update = () => setLandscape(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
   const nextRespirationPhase = () =>
     setRespirationPhase((current) => ((current + 1) % 4) as RespirationPhase);
   function chooseRespirationPhase(next: RespirationPhase) {
     setRespirationPhase(next);
-    setRespirationPhaseKey((v) => v + 1);
+    setRespirationPhaseKey((previous) => previous + 1);
   }
+
   const [xray, setXray] = useState(false);
+  const [nucleusXray, setNucleusXray] = useState(false);
   const [motion, setMotion] = useState(true);
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -2012,181 +1362,220 @@ export default function CellScene() {
   }, []);
 
   function resetView() {
-    setSelected(null);
     setInfoCollapsed(false);
+    setSelected(null);
     setXray(false);
+    setNucleusXray(false);
     setResetKey((previous) => previous + 1);
   }
 
   const info = selected ? organelles[selected] : null;
 
   return (
-    <div className="cell-mobile-scene relative h-full min-h-0 w-full overflow-hidden bg-[#081522] text-[#F5F2EA]">
+    <section
+      ref={sceneRef}
+      tabIndex={0}
+      onKeyDown={handleSceneKeyDown}
+      aria-label="Utforska djurcellen. Klicka på en organell, använd Tab och Skift plus Tab för att bläddra mellan organeller. Tryck Escape för att stänga informationen."
+      className="relative h-full w-full overflow-hidden bg-[#081522] text-[#F5F2EA]"
+    >
       <style>{`
-        .cell-mobile-scene .cell-mobile-info { max-height: min(65dvh, 420px); }
-        .cell-mobile-scene .cell-panel-collapsed { max-height: none !important; overflow: visible !important; }
-        .cell-mobile-scene .cell-mobile-respiration { max-height: min(88dvh, 680px); scrollbar-width: none; }
-        .cell-mobile-scene .cell-mobile-respiration::-webkit-scrollbar { display: none; }
-        .cell-mobile-scene .cell-mobile-oxygen { max-height: min(55dvh, 300px); }
-        .cell-mobile-scene canvas { touch-action: none; }
-        @media (min-width: 768px) and (min-height: 501px) {
-          .cell-mobile-scene .cell-collapse-toggle { display: none; }
+        .oxygen-respiration-scroll { scrollbar-width: thin; overscroll-behavior: contain; }
+        .cell-organelle-card { box-sizing: border-box; }
+        @media (max-width: 767px), (orientation: landscape) and (max-height: 520px) {
+          .cell-organelle-card:not(.cell-organelle-collapsed) {
+            max-height: calc(100% - 76px); overflow-y: auto; overscroll-behavior: contain;
+          }
+          .cell-organelle-card.cell-organelle-collapsed { max-height: 80px; overflow: hidden; }
+          .cell-organelle-collapsed .cell-collapsed-details { display: none; }
+          .cell-collapse-mobile { display: inline-flex !important; }
+          .cell-desktop-keyboard-help { display: none !important; }
+          .oxygen-respiration-scroll:not(.oxygen-panel-collapsed) {
+            max-height: calc(100% - 76px); overflow-y: auto;
+          }
+          .cell-mobile-header { transition: opacity 650ms ease, transform 650ms ease; }
+          .cell-mobile-header.is-hidden { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+          .cell-mobile-header.is-hidden * { pointer-events: none !important; }
+          .cell-activity-controls { top: 20px !important; }
         }
-        @media (max-width: 767px) {
-          .cell-mobile-scene .cell-mobile-header { padding-top: max(10px, env(safe-area-inset-top)); }
-          .cell-mobile-scene .cell-mobile-header h1 { font-size: 1.3rem; line-height: 1.15; }
-          .cell-mobile-scene .cell-mobile-header > div > p:last-child { display: none; }
-          .cell-mobile-scene .cell-mobile-header > div > p:nth-of-type(1) { margin-bottom: 5px; }
-          .cell-mobile-scene .cell-mobile-controls { top: 110px; right: max(12px, env(safe-area-inset-right)); }
-          .cell-mobile-scene .cell-mobile-info { bottom: max(10px, env(safe-area-inset-bottom)); }
-          .cell-mobile-scene .cell-mobile-respiration { bottom: max(8px, env(safe-area-inset-bottom)); overflow-y: visible; }
-          .cell-mobile-scene .cell-mobile-respiration:not(.cell-panel-collapsed) > div:first-child { padding-top: 10px; }
-          .cell-mobile-scene .cell-mobile-respiration:not(.cell-panel-collapsed) > div:nth-child(2) { height: clamp(120px, 20dvh, 170px); }
-          .cell-mobile-scene .cell-mobile-respiration:not(.cell-panel-collapsed) > div:nth-child(3) button { padding-top: 5px; padding-bottom: 5px; }
-          .cell-mobile-scene .cell-mobile-respiration:not(.cell-panel-collapsed) > div:nth-child(4) { min-height: 0; padding-top: 7px; padding-bottom: 8px; }
-          .cell-mobile-scene .cell-mobile-respiration:not(.cell-panel-collapsed) > div:nth-child(5) { padding-top: 6px; padding-bottom: 6px; }
-          .cell-mobile-scene .cell-mobile-respiration:not(.cell-panel-collapsed) > div:nth-child(5) span { max-width: 55%; }
-          @media (max-height: 700px) and (orientation: portrait) {
-            .cell-mobile-scene .cell-mobile-respiration:not(.cell-panel-collapsed) { max-height: calc(100dvh - 75px); overflow-y: auto; }
+        @media (orientation: landscape) and (max-height: 520px) {
+          .cell-organelle-card {
+            bottom: 58px !important; left: 10px !important; right: auto !important;
+            width: min(340px, 49vw) !important; padding: 12px 14px !important;
+            max-height: calc(100% - 70px) !important; overflow-y: auto !important;
           }
+          .cell-organelle-card.cell-organelle-collapsed {
+            max-height: 74px !important; overflow: hidden !important;
+          }
+          .cell-organelle-card h2 { font-size: 19px; line-height: 1.15; }
+          .cell-organelle-heading { position: sticky; top: -12px; z-index: 3; background: #0B1D2D; padding-top: 3px; padding-bottom: 3px; border-radius: 8px; }
+          .cell-organelle-card p { line-height: 1.45; }
+          .oxygen-respiration-scroll {
+            bottom: 57px !important; top: auto !important;
+            left: 10px !important; right: auto !important;
+            width: min(385px, 53vw) !important;
+            max-height: calc(100% - 66px) !important;
+            overflow-y: auto !important;
+          }
+          .oxygen-respiration-scroll .respiration-visual { height: 90px !important; }
+          .oxygen-respiration-scroll .respiration-detail { padding-top: 6px !important; padding-bottom: 6px !important; }
+          .oxygen-respiration-scroll .respiration-footer { padding-top: 6px !important; padding-bottom: 6px !important; }
+          .oxygen-journey-caption {
+            bottom: 66px !important; left: 10px !important; right: auto !important;
+            width: min(230px, 34vw) !important; margin: 0 !important;
+            padding: 7px 9px !important; font-size: 10px !important; line-height: 1.3 !important;
+          }
+          .cell-activity-controls { right: 12px !important; top: 68px !important; }
+          .cell-mobile-menu { left: 12px !important; right: auto !important; top: 10px !important; }
+          .cell-mobile-menu nav { max-height: calc(100dvh - 65px) !important; }
         }
-        @media (orientation: landscape) and (max-height: 500px) {
-          /* The parent page may be taller than the visual viewport. Anchor
-             the scene itself to the phone's real viewport before docking cards. */
-          .cell-mobile-scene {
-            height: 100dvh !important;
-            min-height: 0 !important;
-            max-height: 100dvh !important;
-            overflow: hidden !important;
+        @media (min-width: 768px) and (min-height: 521px) {
+          .cell-mobile-header.is-hidden { opacity: 1; transform: none; pointer-events: auto; }
+        }
+        @media (max-width: 767px), (orientation: landscape) and (max-height: 520px) {
+          .cell-mobile-menu { display: block; }
+        }
+        @media (min-width: 768px) and (min-height: 521px) {
+          .cell-mobile-menu { display: none; }
+        }
+        /* Portrait phones: keep navigation away from the oxygen controls. */
+        @media (orientation: portrait) and (max-width: 767px) {
+          .cell-mobile-menu {
+            left: 12px !important;
+            right: auto !important;
+            top: 12px !important;
           }
-          .cell-mobile-scene .cell-mobile-header { padding-top: max(6px, env(safe-area-inset-top)); padding-left: max(12px, env(safe-area-inset-left)); }
-          .cell-mobile-scene .cell-mobile-header > div > p { display: none; }
-          .cell-mobile-scene .cell-mobile-header h1 { font-size: 1rem; line-height: 1.1; }
-          .cell-mobile-scene .cell-mobile-header a { margin-bottom: 3px; }
-          .cell-mobile-scene .cell-mobile-controls { top: 48px; right: max(10px, env(safe-area-inset-right)); gap: 4px; }
-          .cell-mobile-scene .cell-mobile-controls button { padding: 5px 10px; }
-          /* Landscape phone: bottom-docked panels, never a left sidebar. */
-          .cell-mobile-scene .cell-mobile-info,
-          .cell-mobile-scene .cell-mobile-oxygen,
-          .cell-mobile-scene .cell-mobile-respiration {
-            position: absolute;
-            top: auto;
-            bottom: max(8px, env(safe-area-inset-bottom));
-            left: max(10px, env(safe-area-inset-left));
-            right: auto;
-            margin: 0;
-            max-height: min(56dvh, 218px) !important;
-            overflow-x: hidden;
-            overflow-y: auto;
-            border-radius: 14px;
-            scrollbar-width: thin;
+          .cell-mobile-menu > button { margin-left: 0 !important; }
+          .cell-mobile-menu nav { max-width: calc(100vw - 24px); }
+        }
+        @media (orientation: landscape) and (max-height: 520px) {
+          .cell-organelle-card {
+            top: auto !important; bottom: 48px !important;
+            max-height: calc(100% - 54px) !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            overscroll-behavior: contain;
           }
-          .cell-mobile-scene .cell-mobile-info {
-            width: min(390px, 62vw);
-            padding: 10px 13px;
+          .cell-organelle-card.cell-organelle-collapsed { overflow: hidden !important; }
+          .oxygen-respiration-scroll {
+            width: min(650px, calc(100vw - 105px)) !important;
+            max-width: none !important;
+            left: 10px !important; right: auto !important;
+            bottom: 48px !important; top: auto !important;
+            max-height: calc(100% - 54px) !important;
+            overflow-y: auto !important;
+            overscroll-behavior: contain;
+            margin: 0 !important;
           }
-          .cell-mobile-scene .cell-mobile-info h2 { font-size: 1rem; line-height: 1.15; }
-          .cell-mobile-scene .cell-mobile-info p { font-size: 11px; line-height: 1.4; margin-bottom: 5px; }
-          .cell-mobile-scene .cell-mobile-info button { padding: 5px 8px; }
-          .cell-mobile-scene .cell-mobile-oxygen {
-            width: min(480px, 73vw);
-            padding: 10px 13px;
+          /* Use the free space above the navigation instead of clipping card footers. */
+          .cell-organelle-card:not(.cell-organelle-collapsed) {
+            padding: 11px 14px 12px !important;
+            max-height: calc(100% - 54px) !important;
+            overflow-y: auto !important;
           }
-          .cell-mobile-scene .cell-mobile-oxygen > div { margin-bottom: 6px; }
-          .cell-mobile-scene .cell-mobile-oxygen > div[aria-label="Resans tre steg"] { gap: 3px; }
-          .cell-mobile-scene .cell-mobile-oxygen > div[aria-label="Resans tre steg"] > div { padding: 4px; font-size: 10px; }
-          .cell-mobile-scene .cell-mobile-oxygen p { font-size: 11px; line-height: 1.4; }
-          .cell-mobile-scene .cell-mobile-respiration {
-            width: min(690px, 84vw);
-            height: min(56dvh, 218px);
-            padding: 10px;
-            display: grid;
-            grid-template-columns: minmax(0, 42%) minmax(0, 58%);
-            grid-template-rows: auto auto minmax(0, 1fr) auto;
-            gap: 5px 9px;
-            align-content: stretch;
-            overflow: hidden;
+          .cell-organelle-card:not(.cell-organelle-collapsed) > :last-child { margin-bottom: 0 !important; }
+          .oxygen-respiration-scroll:not(.oxygen-panel-collapsed) {
+            max-height: calc(100% - 54px) !important;
           }
-          .cell-mobile-scene .cell-mobile-respiration > div:first-child {
-            grid-column: 1; grid-row: 1; padding: 0 3px;
+          .oxygen-respiration-scroll .respiration-visual { height: 136px !important; }
+          .respiration-content {
+            display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+            align-items: start; column-gap: 12px; padding: 0 12px 6px;
           }
-          .cell-mobile-scene .cell-mobile-respiration > div:first-child h3 { font-size: 13px; margin-top: 1px; }
-          .cell-mobile-scene .cell-mobile-respiration > div:first-child p { font-size: 9px; }
-          .cell-mobile-scene .cell-mobile-respiration > div:nth-child(2) {
-            grid-column: 2; grid-row: 1 / 5;
-            height: 100%; min-height: 0; width: 100%; overflow: hidden;
+          .respiration-content > .respiration-visual {
+            grid-column: 2; grid-row: 1 / span 2;
+            height: 136px !important; min-width: 0;
           }
-          .cell-mobile-scene .cell-mobile-respiration > div:nth-child(2) > div { font-size: 9px; }
-          .cell-mobile-scene .cell-mobile-respiration > div:nth-child(3) {
-            grid-column: 1; grid-row: 2; padding: 0; gap: 3px;
+          .respiration-content > [aria-label="Cellandningens fyra delar"] {
+            grid-column: 1; grid-row: 1; padding: 0;
+            grid-template-columns: repeat(2,minmax(0,1fr));
           }
-          .cell-mobile-scene .cell-mobile-respiration > div:nth-child(3) button {
-            padding: 3px 1px; font-size: 9px; line-height: 1.15;
+          .respiration-content > .respiration-detail {
+            grid-column: 1; grid-row: 2; padding: 8px 0 0 !important;
           }
-          .cell-mobile-scene .cell-mobile-respiration > div:nth-child(4) {
-            grid-column: 1; grid-row: 3; min-height: 0;
-            padding: 0 3px; overflow-y: auto; scrollbar-width: thin;
+          .respiration-content > .respiration-footer {
+            grid-column: 1 / -1; grid-row: 3;
+            padding: 6px 0 0 !important;
           }
-          .cell-mobile-scene .cell-mobile-respiration > div:nth-child(4) p {
-            font-size: 10px; line-height: 1.3;
+          .respiration-content .respiration-detail p { font-size: 11px; line-height: 1.4; }
+          .respiration-content [aria-label="Cellandningens fyra delar"] button { padding: 5px 3px; }
+          .oxygen-respiration-scroll .respiration-visual { height: 136px !important; }
+        }
+        /* Compact landscape oxygen panel: fit the complete experiment above navigation. */
+        @media (orientation: landscape) and (max-height: 520px) {
+          .oxygen-respiration-scroll:not(.oxygen-panel-collapsed) {
+            top: 7px !important;
+            bottom: auto !important;
+            max-height: calc(100% - 60px) !important;
+            width: min(660px, calc(100vw - 90px)) !important;
+            overflow-y: auto !important; /* only for unusually small screens */
           }
-          .cell-mobile-scene .cell-mobile-respiration > div:nth-child(5) {
-            grid-column: 1; grid-row: 4;
-            display: flex; padding: 3px 0 0; gap: 5px;
-            align-items: center;
+          .oxygen-respiration-scroll > .sticky {
+            position: relative !important;
+            padding: 7px 12px 3px !important;
+            min-height: 39px;
           }
-          .cell-mobile-scene .cell-mobile-respiration > div:nth-child(5) span { display: none; }
-          .cell-mobile-scene .cell-mobile-respiration > div:nth-child(5) button {
-            margin-left: auto; padding: 5px 12px;
+          .oxygen-respiration-scroll > .sticky p { font-size: 9px !important; line-height: 1.1 !important; }
+          .oxygen-respiration-scroll > .sticky h3 { margin-top: 2px !important; font-size: 13px !important; line-height: 1.15 !important; }
+          .oxygen-respiration-scroll > .sticky button { padding: 5px 8px !important; }
+          .oxygen-respiration-scroll .respiration-content {
+            column-gap: 10px !important;
+            padding: 0 10px 4px !important;
+            grid-template-rows: auto auto auto;
           }
-          .cell-mobile-scene .cell-mobile-respiration.cell-panel-collapsed {
-            display: block; height: auto; width: min(300px, 58vw);
-            max-height: none !important; overflow: visible;
+          .oxygen-respiration-scroll .respiration-content > [aria-label="Cellandningens fyra delar"] {
+            gap: 4px !important;
           }
-          .cell-mobile-scene .cell-mobile-info.cell-panel-collapsed,
-          .cell-mobile-scene .cell-mobile-oxygen.cell-panel-collapsed {
-            height: auto; max-height: none !important; overflow: visible;
+          .oxygen-respiration-scroll [aria-label="Cellandningens fyra delar"] button {
+            padding: 3px 2px !important;
+            font-size: 9px !important;
+            line-height: 1.2 !important;
+            min-height: 32px !important;
           }
-          /* Collapsed cards must remain visible, too. */
-          .cell-mobile-scene .cell-panel-collapsed {
-            bottom: max(8px, env(safe-area-inset-bottom)) !important;
+          .oxygen-respiration-scroll .respiration-content > .respiration-visual {
+            height: 139px !important;
           }
-          .cell-mobile-scene .cell-mobile-hint { bottom: 6px; right: 10px; left: auto; max-width: 42vw; }
-          .cell-mobile-scene .cell-mobile-hint p { font-size: 10px; }
+          .oxygen-respiration-scroll .respiration-detail { padding: 4px 0 0 !important; }
+          .oxygen-respiration-scroll .respiration-detail p:first-child {
+            font-size: 10px !important; margin-bottom: 2px !important;
+          }
+          .oxygen-respiration-scroll .respiration-detail p:last-child {
+            font-size: 10px !important; line-height: 1.27 !important;
+          }
+          .oxygen-respiration-scroll .respiration-footer {
+            margin-top: 4px !important;
+            padding: 4px 2px 2px !important;
+            min-height: 28px;
+          }
+          .oxygen-respiration-scroll .respiration-footer span { font-size: 9px !important; }
+          .oxygen-respiration-scroll .respiration-footer button { padding: 4px 10px !important; font-size: 10px !important; }
+        }
+        @media (orientation: landscape) and (max-height: 520px) {
+          .cell-mobile-menu { left: 12px !important; right: auto !important; }
         }
       `}</style>
       {/* 3D environment */}
       <div className="absolute inset-0">
         <CellWorld
           selected={selected}
-          onSelect={(id) => {
-            setSelected(id);
-            if (id) setInfoCollapsed(false);
-          }}
+          onSelect={selectOrganelle}
           resetKey={resetKey}
           motion={motion}
           oxygen={oxygen}
           oxygenStageChange={setOxygenStage}
           xray={xray}
-          landscape={landscape}
+          nucleusXray={nucleusXray}
         />
       </div>
 
       {/* Atmospheric vignette */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(2,8,16,0.6)_100%)]" />
 
-      {oxygen && oxygenStage === "respiration" && (
-        <div className="pointer-events-none absolute inset-0 z-[5] bg-[#020914]/45 transition-opacity duration-700" />
-      )}
-
       {/* Header */}
-      <header className="cell-mobile-header pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-3 px-4 pt-5 sm:px-8 sm:pt-8">
+      <header
+        className={`cell-mobile-header ${mobileHeaderVisible ? "" : "is-hidden"} pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-3 px-4 pt-5 sm:px-8 sm:pt-8`}
+      >
         <div className="pointer-events-auto max-w-[75%]">
-          <TimelineBackLink
-            compact={false}
-            className="mb-4 inline-flex items-center gap-2 text-xs text-[#B6CBD0] transition hover:text-white"
-          ></TimelineBackLink>
-
           <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#D8C18D] sm:text-xs">
             The Unfolding Universe · Museum
           </p>
@@ -2199,31 +1588,247 @@ export default function CellScene() {
             Utforska cellen och upptäck världen som finns inuti.
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={resetView}
-          aria-label="Återställ vyn"
-          className="pointer-events-auto rounded-full border border-white/15 bg-[#102638]/75 p-3 text-[#D5E5EA] backdrop-blur-md transition hover:bg-white/15"
-        >
-          <RotateCcw size={18} />
-        </button>
       </header>
 
+      {/* Compact two-level menu, matching the Water Cycle Explorer. */}
+      <div className="cell-mobile-menu absolute left-3 top-3 z-50 sm:left-5 sm:top-4">
+        {!mobileMenuOpen && (
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen(true);
+              setMuseumSubmenu(false);
+              setExperimentSubmenu(false);
+            }}
+            aria-label="Öppna museimenyn"
+            aria-expanded={false}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-teal-200/25 bg-[#102638]/95 text-teal-100 shadow-lg backdrop-blur-xl transition hover:bg-[#19384a]"
+          >
+            <Menu size={19} />
+          </button>
+        )}
+        {mobileMenuOpen && (
+          <div className="flex flex-col items-start gap-2">
+            <nav
+              aria-label="Museimenyn"
+              className="flex w-[min(248px,calc(100vw-24px))] flex-col overflow-hidden rounded-2xl border border-teal-200/20 bg-[#0b1d2d]/97 p-3 text-white shadow-[0_20px_60px_rgba(0,0,0,.5)] backdrop-blur-xl"
+            >
+              {experimentSubmenu ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setExperimentSubmenu(false)}
+                    className="flex min-h-10 items-center gap-2 rounded-xl px-2 py-2 text-left text-xs font-semibold text-teal-100 hover:bg-white/10"
+                  >
+                    <ArrowLeft size={16} /> Tillbaka till menyn
+                  </button>
+                  <div className="my-1 border-t border-white/10" />
+                  <p className="px-2 pt-1 text-[10px] font-bold uppercase tracking-[.12em] text-amber-200">
+                    Interaktiva experiment
+                  </p>
+                  <div className="max-h-[min(55dvh,390px)] min-h-0 space-y-1 overflow-y-auto overscroll-contain">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setExperimentSubmenu(false);
+                        setSelected(null);
+                        setOxygen(true);
+                        setOxygenStage("entry");
+                        setRespirationCollapsed(false);
+                        setMotion(true);
+                      }}
+                      className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
+                    >
+                      <Wind size={16} className="shrink-0 text-amber-200" />
+                      <span className="min-w-0">
+                        <span className="block">Följ syret</span>
+                        <span className="block pt-0.5 text-[10px] font-normal text-slate-300/75">
+                          Följ syrets väg till mitokondrien
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                </>
+              ) : museumSubmenu ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setMuseumSubmenu(false)}
+                    className="flex min-h-10 shrink-0 items-center gap-2 rounded-xl px-2 py-2 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
+                  >
+                    <ArrowLeft size={16} /> Tillbaka till menyn
+                  </button>
+                  <div className="my-1 border-t border-white/10" />
+                  <div className="max-h-[min(55dvh,390px)] min-h-0 space-y-3 overflow-y-auto overscroll-contain px-1 py-1">
+                    {exhibitCategories.map((category) => {
+                      const exhibits = museumExhibits.filter(
+                        (exhibit) => exhibit.category === category.id,
+                      );
+                      if (exhibits.length === 0) return null;
+                      return (
+                        <section key={category.id}>
+                          <h3 className="px-2 pb-2 pt-2 text-[10px] font-bold uppercase tracking-[.1em] text-teal-300">
+                            {category.title}
+                          </h3>
+                          <div className="space-y-1">
+                            {exhibits.map((exhibit) => {
+                              const current =
+                                exhibit.id === "cell-explorer" ||
+                                exhibit.href === "/museum/cell-explorer";
+                              const available =
+                                Boolean(exhibit.href) &&
+                                exhibit.status !== "planned";
+                              const content = (
+                                <>
+                                  <span
+                                    aria-hidden="true"
+                                    className="shrink-0 text-base"
+                                  >
+                                    {exhibit.emoji}
+                                  </span>
+                                  <span className="min-w-0 flex-1">
+                                    <span className="block break-words text-xs font-semibold leading-5">
+                                      {exhibit.title}
+                                    </span>
+                                    <span className="mt-0.5 block text-[10px] leading-4 text-slate-300/70">
+                                      {current
+                                        ? "Du är här"
+                                        : exhibit.status === "planned"
+                                          ? "Planerad"
+                                          : exhibit.status === "development"
+                                            ? "Under utveckling"
+                                            : "Utforska"}
+                                    </span>
+                                  </span>
+                                </>
+                              );
+                              const classes =
+                                "flex min-w-0 items-start gap-2 rounded-xl px-2 py-2.5 text-left text-white";
+                              return current ? (
+                                <div
+                                  key={exhibit.id}
+                                  aria-current="page"
+                                  className={`${classes} bg-teal-300/10`}
+                                >
+                                  {content}
+                                </div>
+                              ) : available && exhibit.href ? (
+                                <Link
+                                  key={exhibit.id}
+                                  href={exhibit.href}
+                                  className={`${classes} transition hover:bg-white/10`}
+                                >
+                                  {content}
+                                </Link>
+                              ) : (
+                                <div
+                                  key={exhibit.id}
+                                  className={`${classes} opacity-60`}
+                                >
+                                  {content}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </section>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-1">
+                  <p className="px-2 pb-2 pt-1 text-[10px] font-extrabold uppercase tracking-[.12em] text-teal-300">
+                    The Unfolding Universe
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setSelected(null);
+                      setOxygen(false);
+                    }}
+                    className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
+                  >
+                    <Sparkles size={15} /> Utforska
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setMuseumSubmenu(false);
+                      setMobileHeaderVisible(true);
+                      setHeaderRevealCount((n) => n + 1);
+                    }}
+                    className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
+                  >
+                    <Info size={15} /> Om utställningen
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setSelected("nucleus");
+                      setInfoCollapsed(false);
+                    }}
+                    className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
+                  >
+                    <BookOpen size={15} /> Cellens delar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setExperimentSubmenu(true);
+                      setMuseumSubmenu(false);
+                    }}
+                    className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10 text-[#f2e2b2]"
+                  >
+                    <Sparkles size={15} />{" "}
+                    <span className="flex-1">Experimentera</span>{" "}
+                    <ChevronRight size={15} />
+                  </button>
+                  <div className="my-2 border-t border-white/10" />
+                  <button
+                    type="button"
+                    onClick={() => setMuseumSubmenu(true)}
+                    className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
+                  >
+                    <Compass size={15} />{" "}
+                    <span className="flex-1">Museets utställningar</span>{" "}
+                    <ChevronRight size={15} />
+                  </button>
+                  <Link
+                    href="/timeline"
+                    className="flex min-h-10 items-center gap-2 rounded-xl px-2 py-2.5 text-xs font-semibold text-teal-100 transition hover:bg-white/10"
+                  >
+                    <ArrowLeft size={15} /> Tidslinjen
+                  </Link>
+                </div>
+              )}
+            </nav>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setMuseumSubmenu(false);
+                setExperimentSubmenu(false);
+              }}
+              className="rounded-full border border-[#b49b60]/40 bg-[#0b1d2d]/95 px-4 py-2 text-xs font-bold text-[#f3e0a3] shadow-lg transition hover:bg-[#19384a]"
+            >
+              <X size={13} className="mr-1 inline" /> Stäng
+            </button>
+          </div>
+        )}
+      </div>
       {/* Activity controls */}
-      <div className="cell-mobile-controls absolute right-4 top-24 z-20 flex flex-col gap-2 sm:right-8 sm:top-28">
+      <div className="cell-activity-controls absolute right-4 top-24 z-20 flex flex-col gap-2 sm:right-8 sm:top-28">
         <button
           type="button"
           onClick={() => {
-            // Keep the oxygen journey and organelle information mutually exclusive.
-            if (!oxygen) {
-              setSelected(null);
-              setInfoCollapsed(false);
-              setOxygenCollapsed(false);
-              setRespirationCollapsed(false);
-            }
+            if (!oxygen) setMotion(true);
             setOxygen((v) => !v);
             setOxygenStage("entry");
+            setRespirationCollapsed(false);
             chooseRespirationPhase(0);
           }}
           aria-pressed={oxygen}
@@ -2241,12 +1846,32 @@ export default function CellScene() {
           {motion ? "Pausa" : "Starta"}
         </button>
       </div>
+      {oxygen && oxygenStage !== "respiration" && (
+        <div
+          className="oxygen-journey-caption pointer-events-none absolute inset-x-4 bottom-24 z-20 mx-auto max-w-sm rounded-xl border border-sky-300/25 bg-[#0B1D2D]/90 px-4 py-3 text-center text-xs leading-relaxed text-sky-100 backdrop-blur-md sm:bottom-24"
+          aria-live="polite"
+        >
+          <p className="mb-1 font-semibold text-sky-200">
+            {oxygenStage === "entry"
+              ? "1 · Syret kommer in"
+              : oxygenStage === "diffusion"
+                ? "2 · Syret sprids"
+                : "3 · Syret används"}
+          </p>
+          {oxygenStage === "entry"
+            ? "Följ den ljusblå O₂-molekylen in i cellen."
+            : oxygenStage === "diffusion"
+              ? "Syre sprids genom diffusion. Den markerade vägen är en pedagogisk förenkling."
+              : "I mitokondrien förbrukas syre vid cellandningen. Molekylen försvinner och en ny resa börjar."}
+        </div>
+      )}
+
       {oxygen && oxygenStage === "respiration" && (
         <section
-          className={`${respirationCollapsed ? "cell-panel-collapsed" : ""} cell-mobile-respiration pointer-events-auto absolute inset-x-3 bottom-4 z-20 mx-auto max-w-[620px] overflow-x-hidden overflow-y-auto rounded-2xl border border-rose-300/30 bg-[#0B1726]/95 shadow-[0_0_50px_rgba(225,115,169,0.16)] backdrop-blur-xl sm:bottom-7`}
+          className={`${respirationCollapsed ? "oxygen-panel-collapsed max-h-none" : "max-h-[min(79dvh,680px)]"} oxygen-respiration-scroll pointer-events-auto absolute inset-x-3 bottom-3 z-20 mx-auto max-w-[620px] overflow-x-hidden overflow-y-auto rounded-2xl border border-rose-300/30 bg-[#0B1726]/95 shadow-[0_0_50px_rgba(225,115,169,0.16)] backdrop-blur-xl sm:bottom-7`}
           aria-label="Cellandning inuti mitokondrien"
         >
-          <div className="flex items-center justify-between gap-2 px-4 pt-4">
+          <div className="sticky top-0 z-10 flex items-center justify-between gap-2 bg-[#0B1726]/95 px-4 pb-2 pt-3">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-rose-200">
                 Steg 3 · Syret används
@@ -2274,8 +1899,8 @@ export default function CellScene() {
             </button>
           </div>
           {!respirationCollapsed && (
-            <>
-              <div className="relative h-[185px] w-full sm:h-[230px]">
+            <div className="respiration-content">
+              <div className="respiration-visual relative h-[145px] w-full sm:h-[215px]">
                 <RespirationCloseup
                   key={respirationPhaseKey}
                   motion={motion}
@@ -2303,7 +1928,7 @@ export default function CellScene() {
                 )}
               </div>
               <div
-                className="grid grid-cols-4 gap-1.5 px-3 sm:gap-2"
+                className="grid grid-cols-2 gap-1.5 px-3 sm:gap-2"
                 aria-label="Cellandningens fyra delar"
               >
                 {RESPIRATION_PHASES.map((item, i) => (
@@ -2321,7 +1946,10 @@ export default function CellScene() {
                   </button>
                 ))}
               </div>
-              <div className="min-h-[116px] px-4 pb-3 pt-3" aria-live="polite">
+              <div
+                className="respiration-detail px-4 pb-3 pt-3"
+                aria-live="polite"
+              >
                 <p
                   className="mb-1 text-sm font-semibold"
                   style={{ color: RESPIRATION_PHASES[respirationPhase].color }}
@@ -2332,7 +1960,7 @@ export default function CellScene() {
                   {RESPIRATION_PHASES[respirationPhase].text}
                 </p>
               </div>
-              <div className="flex flex-wrap items-center justify-end gap-2 border-t border-white/10 px-4 py-3">
+              <div className="respiration-footer flex flex-wrap items-center justify-end gap-2 border-t border-white/10 px-4 py-3">
                 <span className="text-[10px] text-slate-400">
                   Förenklad illustration ·{" "}
                   {motion
@@ -2344,6 +1972,7 @@ export default function CellScene() {
                   onClick={() => {
                     setOxygen(false);
                     setOxygenStage("entry");
+                    setRespirationCollapsed(false);
                     chooseRespirationPhase(0);
                   }}
                   className="ml-auto shrink-0 rounded-full border border-white/20 px-3 py-2 text-xs text-slate-200 transition hover:bg-white/10"
@@ -2351,109 +1980,22 @@ export default function CellScene() {
                   Avsluta
                 </button>
               </div>
-            </>
-          )}
-        </section>
-      )}
-      {oxygen && oxygenStage !== "respiration" && (
-        <section
-          className={`${oxygenCollapsed ? "cell-panel-collapsed" : ""} cell-mobile-oxygen pointer-events-auto absolute inset-x-3 bottom-5 z-20 mx-auto max-w-[440px] overflow-hidden rounded-2xl border border-sky-300/30 bg-[#0B1D2D]/95 px-4 py-4 text-sky-100 shadow-[0_0_32px_rgba(56,189,248,0.12)] backdrop-blur-xl sm:bottom-8`}
-          aria-label="Följ syremolekylen"
-        >
-          <div
-            className={`flex items-center justify-between gap-3 ${oxygenCollapsed ? "" : "mb-3"}`}
-          >
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-300">
-              Följ syrets resa
-            </span>
-            <button
-              type="button"
-              onClick={() => setOxygenCollapsed((v) => !v)}
-              aria-expanded={!oxygenCollapsed}
-              aria-label={
-                oxygenCollapsed ? "Visa syrets resa" : "Minimera syrets resa"
-              }
-              className="cell-collapse-toggle flex items-center gap-1 rounded-full border border-sky-300/30 px-3 py-2 text-xs text-sky-100"
-            >
-              {oxygenCollapsed ? (
-                <ChevronUp size={17} />
-              ) : (
-                <ChevronDown size={17} />
-              )}
-            </button>
-          </div>
-          {!oxygenCollapsed && (
-            <>
-              <div
-                className="mb-3 flex items-center gap-2"
-                aria-label="Resans tre steg"
-              >
-                {OXYGEN_PHASES.map((stage, index) => {
-                  const active = oxygenStage === stage;
-                  const labels = ["Kommer in", "Sprids", "Används"];
-                  return (
-                    <div
-                      key={stage}
-                      className={`flex min-w-0 flex-1 items-center gap-1.5 rounded-lg px-2 py-2 text-[10px] sm:text-xs ${active ? "bg-sky-400/15 text-white" : "text-slate-400"}`}
-                    >
-                      <span
-                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${active ? "border-sky-200 bg-sky-300 text-slate-950" : "border-white/20"}`}
-                      >
-                        {index + 1}
-                      </span>
-                      <span className="truncate">{labels[index]}</span>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="flex items-start gap-3">
-                <div
-                  className="relative mt-1 flex h-11 w-14 shrink-0 items-center justify-center"
-                  aria-hidden="true"
-                >
-                  <div className="absolute h-10 w-12 rounded-full bg-sky-400/25 blur-md" />
-                  <span className="relative flex items-center text-3xl font-bold tracking-[-0.28em] text-sky-100 drop-shadow-[0_0_10px_#67e8f9]">
-                    ●●
-                  </span>
-                </div>
-                <div className="min-w-0 text-xs leading-relaxed sm:text-[13px]">
-                  <p className="mb-1 font-semibold text-white">
-                    {oxygenStage === "entry"
-                      ? "1. Syret kommer in"
-                      : oxygenStage === "diffusion"
-                        ? "2. Syret sprids i cellen"
-                        : "3. Syret används i mitokondrien"}
-                  </p>
-                  <p className="text-sky-100/85">
-                    {oxygenStage === "entry"
-                      ? "Följ den lysande, förstorade syremolekylen (O₂). Den består av två syreatomer och visas större än i verkligheten för att du lätt ska se den."
-                      : oxygenStage === "diffusion"
-                        ? "Syre sprids genom diffusion. Det betyder att molekyler rör sig slumpmässigt och sprids från områden med mer syre till områden med mindre syre. Den lysande molekylens resa är förenklad."
-                        : "I mitokondrien används syre i slutet av cellandningen. Syret tar emot elektroner och vätejoner och bildar vatten. Samtidigt hjälper processen cellen att tillverka ATP – energi som cellen behöver för att fungera."}
-                  </p>
-                </div>
-              </div>
-              <p className="mt-3 text-center text-[10px] text-sky-200/65">
-                {motion
-                  ? "Resan upprepas automatiskt · Pausa när du vill"
-                  : "Resan är pausad"}
-              </p>
-            </>
+            </div>
           )}
         </section>
       )}
 
       {/* Organelle information */}
-      {info && (
+      {info && !(oxygen && oxygenStage === "respiration") && (
         <aside
-          className={`${infoCollapsed ? "cell-panel-collapsed" : ""} cell-mobile-info absolute inset-x-3 bottom-4 z-30 overflow-hidden rounded-2xl border border-white/15 bg-[#0B1D2D]/95 p-5 shadow-2xl backdrop-blur-xl sm:inset-x-auto sm:bottom-8 sm:left-8 sm:w-[350px] sm:p-6`}
+          className={`cell-organelle-card ${infoCollapsed ? "cell-organelle-collapsed" : ""} absolute inset-x-3 bottom-4 z-30 rounded-2xl border border-white/15 bg-[#0B1D2D]/95 ${infoCollapsed ? "px-5 py-3" : "p-5"} shadow-2xl backdrop-blur-xl sm:inset-x-auto sm:bottom-8 sm:left-8 sm:w-[350px] sm:max-h-none sm:overflow-visible sm:p-6`}
         >
           <div
-            className={`flex items-start justify-between gap-3 ${infoCollapsed ? "" : "mb-3"}`}
+            className={`cell-organelle-heading flex items-center justify-between gap-3 ${infoCollapsed ? "sm:mb-3" : "mb-3"}`}
           >
             <div>
               <p
-                className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em]"
+                className={`${infoCollapsed ? "mb-1" : "mb-2"} text-[10px] font-semibold uppercase tracking-[0.2em]`}
                 style={{ color: info.color }}
               >
                 Cellens delar
@@ -2462,20 +2004,22 @@ export default function CellScene() {
               <h2 className="font-serif text-2xl text-white">{info.title}</h2>
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="flex shrink-0 items-center gap-1">
               <button
                 type="button"
                 onClick={() => setInfoCollapsed((v) => !v)}
                 aria-expanded={!infoCollapsed}
                 aria-label={
-                  infoCollapsed ? "Visa information" : "Minimera information"
+                  infoCollapsed
+                    ? "Visa information om organellen"
+                    : "Fäll ned informationen"
                 }
-                className="cell-collapse-toggle rounded-full p-2 text-[#B6CBD0] hover:bg-white/10 hover:text-white"
+                className="cell-collapse-mobile hidden rounded-full border border-white/20 p-2 text-[#D5E5EA] transition hover:bg-white/10"
               >
                 {infoCollapsed ? (
-                  <ChevronUp size={19} />
+                  <ChevronUp size={22} />
                 ) : (
-                  <ChevronDown size={19} />
+                  <ChevronDown size={22} />
                 )}
               </button>
               <button
@@ -2489,44 +2033,45 @@ export default function CellScene() {
             </div>
           </div>
 
-          {!infoCollapsed && (
-            <>
-              <p
-                className="mb-3 text-sm font-medium"
-                style={{ color: info.color }}
-              >
-                {info.subtitle}
-              </p>
+          <div className={infoCollapsed ? "cell-collapsed-details" : ""}>
+            <p
+              className="mb-3 text-sm font-medium"
+              style={{ color: info.color }}
+            >
+              {info.subtitle}
+            </p>
 
-              <p className="text-sm leading-7 text-[#C2D3DD]">
-                {info.description}
-              </p>
-              {selected === "mitochondria" && (
-                <button
-                  type="button"
-                  aria-pressed={xray}
-                  onClick={() => setXray((value) => !value)}
-                  className="mt-4 inline-flex items-center rounded-full border border-[#D8A18F]/45 bg-[#5A343A]/60 px-4 py-2 text-xs font-semibold text-[#FFE0D0] transition hover:bg-[#76474B]/80"
-                >
-                  {xray ? "Visa ytan" : "Visa insidan · Röntgenvy"}
-                </button>
-              )}
-            </>
-          )}
+            <p className="cell-desktop-keyboard-help mb-3 text-[11px] text-[#9CB8C5]">
+              Tab: nästa del · Skift+Tab: föregående · Esc: stäng
+            </p>
+            <p className="text-sm leading-7 text-[#C2D3DD]">
+              {info.description}
+            </p>
+            {selected === "nucleus" && (
+              <button
+                type="button"
+                aria-pressed={nucleusXray}
+                onClick={() => setNucleusXray((v) => !v)}
+                className="mt-4 inline-flex items-center rounded-full border border-violet-300/40 bg-violet-800/40 px-4 py-2 text-xs font-semibold text-violet-100 transition hover:bg-violet-700/50"
+              >
+                {nucleusXray
+                  ? "Visa ytan"
+                  : "Visa insidan · Kromatin & nukleol"}
+              </button>
+            )}
+            {selected === "mitochondria" && (
+              <button
+                type="button"
+                aria-pressed={xray}
+                onClick={() => setXray((value) => !value)}
+                className="mt-4 inline-flex items-center rounded-full border border-[#D8A18F]/45 bg-[#5A343A]/60 px-4 py-2 text-xs font-semibold text-[#FFE0D0] transition hover:bg-[#76474B]/80"
+              >
+                {xray ? "Visa ytan" : "Visa insidan · Röntgenvy"}
+              </button>
+            )}
+          </div>
         </aside>
       )}
-
-      {/* Instructions */}
-      {!selected && (
-        <div className="cell-mobile-hint pointer-events-none absolute inset-x-4 bottom-8 z-10 text-center">
-          <p className="text-xs tracking-wide text-[#B6CBD0] sm:text-sm">
-            Dra för att rotera · Zooma för att utforska
-          </p>
-          <p className="mt-2 text-xs text-[#D8C18D]">
-            Tryck på en del av cellen för att lära dig mer
-          </p>
-        </div>
-      )}
-    </div>
+    </section>
   );
 }
