@@ -1211,12 +1211,35 @@ export default function ProteinJourneyExplorer({ cellType, onClose }: Props) {
   const [restartCount, setRestartCount] = useState(0);
   const [paused, setPaused] = useState(false);
   const [expanded, setExpanded] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(false);
+  // Desktop always displays the explanation. Mobile/tablet may collapse it.
+  // Landscape phones start collapsed to preserve room for the animation.
+  useEffect(() => {
+    const mobile = window.matchMedia("(max-width: 1023px)");
+    const landscape = window.matchMedia(
+      "(orientation: landscape) and (max-height: 520px)",
+    );
+    const sync = () => {
+      setIsDesktop(!mobile.matches);
+      if (!mobile.matches) setExpanded(true);
+      else if (landscape.matches) setExpanded(false);
+    };
+    sync();
+    mobile.addEventListener("change", sync);
+    landscape.addEventListener("change", sync);
+    return () => {
+      mobile.removeEventListener("change", sync);
+      landscape.removeEventListener("change", sync);
+    };
+  }, []);
   const [advanced, setAdvanced] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
   const [transitionTarget, setTransitionTarget] = useState<number | null>(null);
   const transitionTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const changeStage = (next: number) => {
     if (transitioning || (next === stage && next !== 0)) return;
+    // Tuck away the explanation whenever an animation starts or changes stage.
+    if (window.matchMedia("(max-width: 1023px)").matches) setExpanded(false);
     transitionTimers.current.forEach(clearTimeout);
     // Keep the Canvas and RNA molecule alive between the DNA and pore stages.
     // A normal stage switch would reset the molecule and hide the journey.
@@ -1403,12 +1426,12 @@ export default function ProteinJourneyExplorer({ cellType, onClose }: Props) {
               onClick={() => setExpanded((v) => !v)}
               aria-expanded={expanded}
               aria-label={expanded ? "Dölj förklaring" : "Visa förklaring"}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 hover:bg-white/10"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 hover:bg-white/10 lg:hidden"
             >
               {expanded ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
             </button>
           </div>
-          {expanded && (
+          {(expanded || isDesktop) && (
             <div className="protein-aside-body min-h-0 overflow-y-auto overscroll-contain px-4 pb-3 text-sm leading-relaxed">
               <p className="text-slate-200">{current.simple}</p>
               <button
@@ -1451,14 +1474,20 @@ export default function ProteinJourneyExplorer({ cellType, onClose }: Props) {
             type="button"
             onClick={() => changeStage(Math.max(0, stage - 1))}
             disabled={stage === 0 || transitioning}
+            aria-label="Föregående steg"
             className="protein-prev inline-flex min-h-10 items-center gap-1 rounded-xl border border-white/20 px-3 text-xs disabled:opacity-35"
           >
-            <ArrowLeft size={15} /> Föregående
+            <ArrowLeft size={15} />{" "}
+            <span className="protein-prev-label">Föregående</span>
           </button>
           <div className="flex items-center gap-1">
             <button
               type="button"
-              onClick={() => setPaused((v) => !v)}
+              onClick={() => {
+                if (paused && window.matchMedia("(max-width: 1023px)").matches)
+                  setExpanded(false);
+                setPaused((v) => !v);
+              }}
               aria-label={paused ? "Fortsätt animation" : "Pausa animation"}
               className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20"
             >
@@ -1479,9 +1508,14 @@ export default function ProteinJourneyExplorer({ cellType, onClose }: Props) {
               changeStage(stage === STEPS.length - 1 ? 0 : stage + 1)
             }
             disabled={transitioning}
+            aria-label={
+              stage === STEPS.length - 1 ? "Börja om från DNA" : "Nästa steg"
+            }
             className="protein-next inline-flex min-h-10 items-center gap-1 rounded-xl bg-teal-300 px-3 text-xs font-bold text-[#09242b]"
           >
-            {stage === STEPS.length - 1 ? "Börja om" : "Nästa steg"}
+            <span className="protein-next-label">
+              {stage === STEPS.length - 1 ? "Börja om" : "Nästa steg"}
+            </span>
             <ArrowRight size={15} />
           </button>
         </div>
@@ -1646,14 +1680,18 @@ export default function ProteinJourneyExplorer({ cellType, onClose }: Props) {
           .protein-footer-controls button {
             min-height: 34px;
           }
-          .protein-footer-controls button[aria-label] {
+          .protein-footer-controls > div > button[aria-label] {
             width: 34px;
             height: 34px;
+            flex-shrink: 0;
           }
           .protein-prev,
           .protein-next {
             padding-left: 8px;
             padding-right: 8px;
+            width: auto;
+            white-space: nowrap;
+            flex-shrink: 0;
           }
         }
         /* Landscape phones: make the 3D scene the full main area.
@@ -1713,7 +1751,7 @@ export default function ProteinJourneyExplorer({ cellType, onClose }: Props) {
             top: 7px;
             right: 8px;
             width: min(38vw, 265px);
-            max-height: min(56dvh, 165px);
+            max-height: calc(100% - 14px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
             background: rgba(28, 33, 52, 0.88);
@@ -1747,32 +1785,71 @@ export default function ProteinJourneyExplorer({ cellType, onClose }: Props) {
           .protein-aside-body p:last-child {
             margin-top: 3px;
           }
+          /* Single compact footer row: navigation no longer steals a second
+             full row from the animation on a real landscape phone. */
           .protein-footer {
-            padding: 3px 9px 4px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 9px;
           }
           .protein-stage-tabs {
-            gap: 4px;
-            padding-bottom: 0;
+            display: flex;
+            flex: 1 1 auto;
+            min-width: 0;
+            max-width: none;
+            gap: 3px;
+            padding: 0;
+            margin: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+          }
+          .protein-stage-tabs::-webkit-scrollbar {
+            display: none;
           }
           .protein-stage-tabs button {
-            padding: 4px 5px;
+            flex: 1 0 auto;
+            padding: 6px 5px;
             font-size: 9px;
+            min-height: 30px;
           }
           .protein-footer-controls {
-            margin-top: 3px;
+            display: flex;
+            flex: 0 0 auto;
+            width: auto;
+            margin: 0;
+            gap: 5px;
+          }
+          .protein-footer-controls > div {
+            gap: 4px;
           }
           .protein-footer-controls button {
-            min-height: 28px;
+            height: 30px;
+            min-height: 30px;
             font-size: 10px;
+            border-radius: 9px;
           }
-          .protein-footer-controls button[aria-label] {
-            width: 28px;
-            height: 28px;
+          .protein-footer-controls > div > button[aria-label] {
+            width: 30px;
+            height: 30px;
+            flex-shrink: 0;
           }
           .protein-prev,
           .protein-next {
-            padding-left: 8px;
-            padding-right: 8px;
+            padding-left: 7px;
+            padding-right: 7px;
+            width: auto;
+            white-space: nowrap;
+          }
+          .protein-prev-label,
+          .protein-next-label {
+            display: none;
+          }
+          .protein-aside-body {
+            overflow-y: auto;
+          }
+          .protein-aside:not(:has(.protein-aside-body)) {
+            max-height: 54px;
           }
         }
       `}</style>
