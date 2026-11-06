@@ -1,5 +1,6 @@
 "use client";
 
+import CellEnergyExplorer from "./CellEnergyExplorer";
 import {
   Suspense,
   useMemo,
@@ -1321,6 +1322,7 @@ export default function CellScene() {
 
   const [resetKey, setResetKey] = useState(0);
   const [oxygen, setOxygen] = useState(false);
+  const [cellEnergyOpen, setCellEnergyOpen] = useState(false);
   const [oxygenStage, setOxygenStage] = useState<OxygenStage>("entry");
   const [respirationPhase, setRespirationPhase] = useState<RespirationPhase>(0);
   const [respirationPhaseKey, setRespirationPhaseKey] = useState(0);
@@ -1377,68 +1379,55 @@ export default function CellScene() {
       tabIndex={0}
       onKeyDown={handleSceneKeyDown}
       aria-label="Utforska djurcellen. Klicka på en organell, använd Tab och Skift plus Tab för att bläddra mellan organeller. Tryck Escape för att stänga informationen."
-      className="relative h-full w-full overflow-hidden bg-[#081522] text-[#F5F2EA]"
+      className={`relative h-full w-full overflow-hidden bg-[#081522] text-[#F5F2EA] ${info ? "cell-scene-has-info" : ""}`}
     >
       <style>{`
-        .oxygen-respiration-scroll { scrollbar-width: thin; overscroll-behavior: contain; }
+        /* Shared scrolling and card sizing. */
+        .oxygen-respiration-scroll {
+          scrollbar-width: thin;
+          overscroll-behavior: contain;
+        }
         .cell-organelle-card { box-sizing: border-box; }
+
+        /* Phone portrait and short landscape: collapsible panels and controls. */
         @media (max-width: 767px), (orientation: landscape) and (max-height: 520px) {
           .cell-organelle-card:not(.cell-organelle-collapsed) {
-            max-height: calc(100% - 76px); overflow-y: auto; overscroll-behavior: contain;
+            max-height: calc(100% - 76px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
           }
-          .cell-organelle-card.cell-organelle-collapsed { max-height: 80px; overflow: hidden; }
+          .cell-organelle-card.cell-organelle-collapsed {
+            max-height: 80px;
+            overflow: hidden;
+          }
           .cell-organelle-collapsed .cell-collapsed-details { display: none; }
           .cell-collapse-mobile { display: inline-flex !important; }
           .cell-desktop-keyboard-help { display: none !important; }
           .oxygen-respiration-scroll:not(.oxygen-panel-collapsed) {
-            max-height: calc(100% - 76px); overflow-y: auto;
+            max-height: calc(100% - 76px);
+            overflow-y: auto;
           }
           .cell-mobile-header { transition: opacity 650ms ease, transform 650ms ease; }
-          .cell-mobile-header.is-hidden { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+          .cell-mobile-header.is-hidden {
+            opacity: 0;
+            transform: translateY(-12px);
+            pointer-events: none;
+          }
           .cell-mobile-header.is-hidden * { pointer-events: none !important; }
           .cell-activity-controls { top: 20px !important; }
-        }
-        @media (orientation: landscape) and (max-height: 520px) {
-          .cell-organelle-card {
-            bottom: 58px !important; left: 10px !important; right: auto !important;
-            width: min(340px, 49vw) !important; padding: 12px 14px !important;
-            max-height: calc(100% - 70px) !important; overflow-y: auto !important;
-          }
-          .cell-organelle-card.cell-organelle-collapsed {
-            max-height: 74px !important; overflow: hidden !important;
-          }
-          .cell-organelle-card h2 { font-size: 19px; line-height: 1.15; }
-          .cell-organelle-heading { position: sticky; top: -12px; z-index: 3; background: #0B1D2D; padding-top: 3px; padding-bottom: 3px; border-radius: 8px; }
-          .cell-organelle-card p { line-height: 1.45; }
-          .oxygen-respiration-scroll {
-            bottom: 57px !important; top: auto !important;
-            left: 10px !important; right: auto !important;
-            width: min(385px, 53vw) !important;
-            max-height: calc(100% - 66px) !important;
-            overflow-y: auto !important;
-          }
-          .oxygen-respiration-scroll .respiration-visual { height: 90px !important; }
-          .oxygen-respiration-scroll .respiration-detail { padding-top: 6px !important; padding-bottom: 6px !important; }
-          .oxygen-respiration-scroll .respiration-footer { padding-top: 6px !important; padding-bottom: 6px !important; }
-          .oxygen-journey-caption {
-            bottom: 66px !important; left: 10px !important; right: auto !important;
-            width: min(230px, 34vw) !important; margin: 0 !important;
-            padding: 7px 9px !important; font-size: 10px !important; line-height: 1.3 !important;
-          }
-          .cell-activity-controls { right: 12px !important; top: 68px !important; }
-          .cell-mobile-menu { left: 12px !important; right: auto !important; top: 10px !important; }
-          .cell-mobile-menu nav { max-height: calc(100dvh - 65px) !important; }
-        }
-        @media (min-width: 768px) and (min-height: 521px) {
-          .cell-mobile-header.is-hidden { opacity: 1; transform: none; pointer-events: auto; }
-        }
-        @media (max-width: 767px), (orientation: landscape) and (max-height: 520px) {
           .cell-mobile-menu { display: block; }
         }
+
+        /* Larger screens: keep the introductory header and hide mobile menu. */
         @media (min-width: 768px) and (min-height: 521px) {
+          .cell-mobile-header.is-hidden {
+            opacity: 1;
+            transform: none;
+            pointer-events: auto;
+          }
           .cell-mobile-menu { display: none; }
         }
-        /* Portrait phones: keep navigation away from the oxygen controls. */
+
         @media (orientation: portrait) and (max-width: 767px) {
           .cell-mobile-menu {
             left: 12px !important;
@@ -1448,67 +1437,80 @@ export default function CellScene() {
           .cell-mobile-menu > button { margin-left: 0 !important; }
           .cell-mobile-menu nav { max-width: calc(100vw - 24px); }
         }
+
+        /* Short landscape: one authoritative rule for each card property. */
         @media (orientation: landscape) and (max-height: 520px) {
           .cell-organelle-card {
-            top: auto !important; bottom: 48px !important;
-            max-height: calc(100% - 54px) !important;
+            display: block !important;
+            top: auto !important;
+            bottom: 35px !important;
+            left: auto !important;
+            right: 10px !important;
+            width: min(330px, 48vw) !important;
+            height: max-content !important;
+            max-height: calc(100% - 43px) !important;
+            min-height: 0 !important;
+            padding: 9px 12px !important;
             overflow-x: hidden !important;
             overflow-y: auto !important;
             overscroll-behavior: contain;
+            scrollbar-width: thin;
           }
-          .cell-organelle-card.cell-organelle-collapsed { overflow: hidden !important; }
+          .cell-organelle-card:not(.cell-organelle-collapsed) > :last-child {
+            margin-bottom: 0 !important;
+          }
+          .cell-organelle-card h2 { font-size: 18px !important; line-height: 1.15; }
+          .cell-organelle-card p { line-height: 1.45; }
+          .cell-organelle-heading {
+            position: sticky !important;
+            top: -9px !important;
+            z-index: 3;
+            background: #0B1D2D;
+            margin-bottom: 5px !important;
+            padding: 0 0 5px !important;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+            border-radius: 8px;
+          }
+          .cell-organelle-heading button { padding: 6px !important; }
+          .cell-organelle-details {
+            min-height: 0;
+            overflow: visible !important;
+            padding-right: 3px;
+          }
+          .cell-organelle-details > p:first-child { margin-bottom: 7px !important; }
+          .cell-organelle-details > p:not(:first-child) { line-height: 1.5 !important; }
+          .cell-organelle-details > button { margin-top: 9px !important; }
+
+          .cell-organelle-card.cell-organelle-collapsed {
+            height: auto !important;
+            max-height: 68px !important;
+            overflow: hidden !important;
+          }
+          .cell-organelle-card.cell-organelle-collapsed .cell-organelle-heading {
+            margin-bottom: 0 !important;
+            border-bottom: 0;
+            padding-bottom: 0 !important;
+          }
+          .cell-organelle-card.cell-organelle-collapsed .cell-organelle-details {
+            display: none !important;
+          }
+
           .oxygen-respiration-scroll {
+            top: auto !important;
+            bottom: 48px !important;
+            left: 10px !important;
+            right: auto !important;
             width: min(650px, calc(100vw - 105px)) !important;
             max-width: none !important;
-            left: 10px !important; right: auto !important;
-            bottom: 48px !important; top: auto !important;
             max-height: calc(100% - 54px) !important;
             overflow-y: auto !important;
-            overscroll-behavior: contain;
             margin: 0 !important;
           }
-          /* Use the free space above the navigation instead of clipping card footers. */
-          .cell-organelle-card:not(.cell-organelle-collapsed) {
-            padding: 11px 14px 12px !important;
-            max-height: calc(100% - 54px) !important;
-            overflow-y: auto !important;
-          }
-          .cell-organelle-card:not(.cell-organelle-collapsed) > :last-child { margin-bottom: 0 !important; }
-          .oxygen-respiration-scroll:not(.oxygen-panel-collapsed) {
-            max-height: calc(100% - 54px) !important;
-          }
-          .oxygen-respiration-scroll .respiration-visual { height: 136px !important; }
-          .respiration-content {
-            display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr);
-            align-items: start; column-gap: 12px; padding: 0 12px 6px;
-          }
-          .respiration-content > .respiration-visual {
-            grid-column: 2; grid-row: 1 / span 2;
-            height: 136px !important; min-width: 0;
-          }
-          .respiration-content > [aria-label="Cellandningens fyra delar"] {
-            grid-column: 1; grid-row: 1; padding: 0;
-            grid-template-columns: repeat(2,minmax(0,1fr));
-          }
-          .respiration-content > .respiration-detail {
-            grid-column: 1; grid-row: 2; padding: 8px 0 0 !important;
-          }
-          .respiration-content > .respiration-footer {
-            grid-column: 1 / -1; grid-row: 3;
-            padding: 6px 0 0 !important;
-          }
-          .respiration-content .respiration-detail p { font-size: 11px; line-height: 1.4; }
-          .respiration-content [aria-label="Cellandningens fyra delar"] button { padding: 5px 3px; }
-          .oxygen-respiration-scroll .respiration-visual { height: 136px !important; }
-        }
-        /* Compact landscape oxygen panel: fit the complete experiment above navigation. */
-        @media (orientation: landscape) and (max-height: 520px) {
           .oxygen-respiration-scroll:not(.oxygen-panel-collapsed) {
             top: 7px !important;
             bottom: auto !important;
-            max-height: calc(100% - 60px) !important;
             width: min(660px, calc(100vw - 90px)) !important;
-            overflow-y: auto !important; /* only for unusually small screens */
+            max-height: calc(100% - 60px) !important;
           }
           .oxygen-respiration-scroll > .sticky {
             position: relative !important;
@@ -1518,40 +1520,78 @@ export default function CellScene() {
           .oxygen-respiration-scroll > .sticky p { font-size: 9px !important; line-height: 1.1 !important; }
           .oxygen-respiration-scroll > .sticky h3 { margin-top: 2px !important; font-size: 13px !important; line-height: 1.15 !important; }
           .oxygen-respiration-scroll > .sticky button { padding: 5px 8px !important; }
-          .oxygen-respiration-scroll .respiration-content {
-            column-gap: 10px !important;
-            padding: 0 10px 4px !important;
+          .respiration-content {
+            display: grid;
+            grid-template-columns: minmax(0,1fr) minmax(0,1fr);
             grid-template-rows: auto auto auto;
+            align-items: start;
+            column-gap: 10px;
+            padding: 0 10px 4px;
           }
-          .oxygen-respiration-scroll .respiration-content > [aria-label="Cellandningens fyra delar"] {
+          .respiration-content > .respiration-visual {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            height: 139px !important;
+            min-width: 0;
+          }
+          .respiration-content > [aria-label="Cellandningens fyra delar"] {
+            grid-column: 1;
+            grid-row: 1;
+            padding: 0;
             gap: 4px !important;
+            grid-template-columns: repeat(2,minmax(0,1fr));
           }
+          .respiration-content > .respiration-detail {
+            grid-column: 1;
+            grid-row: 2;
+            padding: 4px 0 0 !important;
+          }
+          .respiration-content > .respiration-footer {
+            grid-column: 1 / -1;
+            grid-row: 3;
+            margin-top: 4px !important;
+            padding: 4px 2px 2px !important;
+            min-height: 28px;
+          }
+          .respiration-content .respiration-detail p { font-size: 11px; line-height: 1.4; }
           .oxygen-respiration-scroll [aria-label="Cellandningens fyra delar"] button {
             padding: 3px 2px !important;
             font-size: 9px !important;
             line-height: 1.2 !important;
             min-height: 32px !important;
           }
-          .oxygen-respiration-scroll .respiration-content > .respiration-visual {
-            height: 139px !important;
-          }
-          .oxygen-respiration-scroll .respiration-detail { padding: 4px 0 0 !important; }
           .oxygen-respiration-scroll .respiration-detail p:first-child {
-            font-size: 10px !important; margin-bottom: 2px !important;
+            font-size: 10px !important;
+            margin-bottom: 2px !important;
           }
           .oxygen-respiration-scroll .respiration-detail p:last-child {
-            font-size: 10px !important; line-height: 1.27 !important;
-          }
-          .oxygen-respiration-scroll .respiration-footer {
-            margin-top: 4px !important;
-            padding: 4px 2px 2px !important;
-            min-height: 28px;
+            font-size: 10px !important;
+            line-height: 1.27 !important;
           }
           .oxygen-respiration-scroll .respiration-footer span { font-size: 9px !important; }
           .oxygen-respiration-scroll .respiration-footer button { padding: 4px 10px !important; font-size: 10px !important; }
-        }
-        @media (orientation: landscape) and (max-height: 520px) {
-          .cell-mobile-menu { left: 12px !important; right: auto !important; }
+
+          .oxygen-journey-caption {
+            bottom: 66px !important;
+            left: 10px !important;
+            right: auto !important;
+            width: min(230px, 34vw) !important;
+            margin: 0 !important;
+            padding: 7px 9px !important;
+            font-size: 10px !important;
+            line-height: 1.3 !important;
+          }
+          .cell-activity-controls { right: 12px !important; top: 68px !important; }
+          .cell-scene-has-info .cell-activity-controls {
+            left: 12px !important;
+            right: auto !important;
+          }
+          .cell-mobile-menu {
+            left: 12px !important;
+            right: auto !important;
+            top: 10px !important;
+          }
+          .cell-mobile-menu nav { max-height: calc(100dvh - 65px) !important; }
         }
       `}</style>
       {/* 3D environment */}
@@ -1645,6 +1685,25 @@ export default function CellScene() {
                         <span className="block">Följ syret</span>
                         <span className="block pt-0.5 text-[10px] font-normal text-slate-300/75">
                           Följ syrets väg till mitokondrien
+                        </span>
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCellEnergyOpen(true);
+                        setExperimentSubmenu(false);
+                        setMobileMenuOpen(false);
+                        setOxygen(false);
+                        setSelected(null);
+                      }}
+                      className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
+                    >
+                      <Sparkles size={16} className="shrink-0 text-amber-200" />
+                      <span className="min-w-0">
+                        <span className="block">Cellens energilabb</span>
+                        <span className="block pt-0.5 text-[10px] font-normal text-slate-300/75">
+                          Experimentera med syre, bränsle och ATP
                         </span>
                       </span>
                     </button>
@@ -2033,7 +2092,9 @@ export default function CellScene() {
             </div>
           </div>
 
-          <div className={infoCollapsed ? "cell-collapsed-details" : ""}>
+          <div
+            className={`cell-organelle-details ${infoCollapsed ? "cell-collapsed-details" : ""}`}
+          >
             <p
               className="mb-3 text-sm font-medium"
               style={{ color: info.color }}
@@ -2069,8 +2130,25 @@ export default function CellScene() {
                 {xray ? "Visa ytan" : "Visa insidan · Röntgenvy"}
               </button>
             )}
+            {selected === "mitochondria" && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelected(null);
+                  setOxygen(false);
+                  setCellEnergyOpen(true);
+                }}
+                className="mt-3 flex items-center gap-2 rounded-full border border-amber-200/40 bg-amber-300/15 px-4 py-2 text-xs font-semibold text-amber-100 transition hover:bg-amber-300/25"
+              >
+                <Sparkles size={16} /> Starta energilabbet
+                <ChevronRight size={15} />
+              </button>
+            )}
           </div>
         </aside>
+      )}
+      {cellEnergyOpen && (
+        <CellEnergyExplorer onClose={() => setCellEnergyOpen(false)} />
       )}
     </section>
   );

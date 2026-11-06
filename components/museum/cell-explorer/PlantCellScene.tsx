@@ -1,5 +1,6 @@
 "use client";
 
+import CellEnergyExplorer from "./CellEnergyExplorer";
 import {
   useEffect,
   useMemo,
@@ -967,6 +968,7 @@ export default function PlantCellScene({
   const [hydration, setHydration] = useState(100);
   const [chloroplastXray, setChloroplastXray] = useState(false);
   const [photosynthesisOpen, setPhotosynthesisOpen] = useState(false);
+  const [cellEnergyOpen, setCellEnergyOpen] = useState(false);
   const [nucleusXray, setNucleusXray] = useState(false);
   const [welcomeVisible, setWelcomeVisible] = useState(showWelcome);
   useEffect(() => {
@@ -1128,6 +1130,26 @@ export default function PlantCellScene({
                         <span className="block">Följ solljuset</span>
                         <span className="block pt-0.5 text-[10px] font-normal text-slate-300/75">
                           Utforska fotosyntesen i kloroplasten
+                        </span>
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCellEnergyOpen(true);
+                        setExperimentSubmenu(false);
+                        setMenuOpen(false);
+                        setPhotosynthesisOpen(false);
+                        setTurgorOpen(false);
+                        setSelected(null);
+                      }}
+                      className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
+                    >
+                      <Sparkles size={16} className="shrink-0 text-amber-200" />
+                      <span className="min-w-0">
+                        <span className="block">Cellens energilabb</span>
+                        <span className="block pt-0.5 text-[10px] font-normal text-slate-300/75">
+                          Experimentera med syre, bränsle och ATP
                         </span>
                       </span>
                     </button>
@@ -1890,6 +1912,21 @@ export default function PlantCellScene({
                   <Sparkles size={16} /> Följ solljuset · Starta resan
                 </button>
               )}
+              {selected === "mitochondrion" && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelected(null);
+                    setMenuOpen(false);
+                    setTurgorOpen(false);
+                    setCellEnergyOpen(true);
+                  }}
+                  className="mt-4 flex items-center gap-2 rounded-full border border-amber-200/40 bg-amber-300/15 px-4 py-2 text-xs font-semibold text-amber-100 transition hover:bg-amber-300/25"
+                >
+                  <Sparkles size={16} /> Starta energilabbet
+                  <ChevronRight size={15} />
+                </button>
+              )}
               {selected === "vacuole" && (
                 <button
                   type="button"
@@ -2075,6 +2112,9 @@ export default function PlantCellScene({
       <div className="pointer-events-none absolute bottom-[95px] left-4 hidden items-center gap-2 text-xs text-[#9bbdb1] lg:flex">
         <Leaf size={14} /> Växtcell · 002
       </div>
+      {cellEnergyOpen && (
+        <CellEnergyExplorer onClose={() => setCellEnergyOpen(false)} />
+      )}
     </section>
   );
 }
