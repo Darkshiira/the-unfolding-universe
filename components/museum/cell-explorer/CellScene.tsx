@@ -37,6 +37,8 @@ import {
   EndoplasmicReticulum,
   GolgiApparatus,
 } from "./SharedSecretoryOrganelles";
+import ProteinJourneyExplorer from "./ProteinJourneyExplorer";
+import ProteinNucleusApproach from "./ProteinNucleusApproach";
 
 type OrganelleId = "nucleus" | "mitochondria" | "er" | "golgi" | "ribosomes";
 
@@ -1201,6 +1203,8 @@ function CellWorld({
   oxygenStageChange,
   xray,
   nucleusXray,
+  proteinApproach,
+  onProteinArrive,
 }: {
   selected: OrganelleId | null;
   onSelect: (id: OrganelleId | null) => void;
@@ -1210,6 +1214,8 @@ function CellWorld({
   oxygenStageChange: (stage: OxygenStage) => void;
   xray: boolean;
   nucleusXray: boolean;
+  proteinApproach: boolean;
+  onProteinArrive: () => void;
 }) {
   return (
     <Canvas
@@ -1261,8 +1267,14 @@ function CellWorld({
           nucleusXray={nucleusXray}
         />
       </Suspense>
-
+      {proteinApproach && (
+        <ProteinNucleusApproach
+          target={[-0.35, 0.2, 0]}
+          onArrive={onProteinArrive}
+        />
+      )}
       <OrbitControls
+        makeDefault
         key={resetKey}
         enablePan={false}
         enableDamping
@@ -1286,6 +1298,8 @@ export default function CellScene() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [museumSubmenu, setMuseumSubmenu] = useState(false);
   const [experimentSubmenu, setExperimentSubmenu] = useState(false);
+  const [proteinJourneyOpen, setProteinJourneyOpen] = useState(false);
+  const [proteinApproach, setProteinApproach] = useState(false);
   const sceneRef = useRef<HTMLElement>(null);
   const tabOrder: OrganelleId[] = [
     "nucleus",
@@ -1605,7 +1619,30 @@ export default function CellScene() {
           oxygenStageChange={setOxygenStage}
           xray={xray}
           nucleusXray={nucleusXray}
+          proteinApproach={proteinApproach}
+          onProteinArrive={() => {
+            setProteinApproach(false);
+            setProteinJourneyOpen(true);
+          }}
         />
+
+        {proteinApproach && !proteinJourneyOpen && (
+          <div className="pointer-events-none absolute inset-0 z-40 flex items-end justify-center bg-[radial-gradient(ellipse_at_center,transparent_28%,rgba(5,3,20,.75)_100%)] pb-[max(12vh,64px)]">
+            <div className="animate-pulse rounded-2xl border border-violet-300/30 bg-[#120d27]/65 px-6 py-4 text-center shadow-[0_0_65px_rgba(171,100,255,.28)] backdrop-blur-sm">
+              <p className="text-[10px] font-bold uppercase tracking-[.32em] text-violet-200">
+                Proteinets resa · Ankomst
+              </p>
+
+              <p className="mt-2 font-serif text-[clamp(23px,5vw,46px)] text-white">
+                CELLKÄRNAN
+              </p>
+
+              <p className="mt-1 text-xs text-violet-100/85">
+                Vi närmar oss cellens DNA …
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Atmospheric vignette */}
@@ -2109,16 +2146,28 @@ export default function CellScene() {
               {info.description}
             </p>
             {selected === "nucleus" && (
-              <button
-                type="button"
-                aria-pressed={nucleusXray}
-                onClick={() => setNucleusXray((v) => !v)}
-                className="mt-4 inline-flex items-center rounded-full border border-violet-300/40 bg-violet-800/40 px-4 py-2 text-xs font-semibold text-violet-100 transition hover:bg-violet-700/50"
-              >
-                {nucleusXray
-                  ? "Visa ytan"
-                  : "Visa insidan · Kromatin & nukleol"}
-              </button>
+              <>
+                <button
+                  type="button"
+                  aria-pressed={nucleusXray}
+                  onClick={() => setNucleusXray((v) => !v)}
+                  className="mt-4 inline-flex items-center rounded-full border border-violet-300/40 bg-violet-800/40 px-4 py-2 text-xs font-semibold text-violet-100 transition hover:bg-violet-700/50"
+                >
+                  {nucleusXray
+                    ? "Visa ytan"
+                    : "Visa insidan · Kromatin & nukleol"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelected(null);
+                    setProteinApproach(true);
+                  }}
+                  className="mt-4 inline-flex items-center rounded-full border border-violet-300/40 bg-red-800/40 px-4 py-2 text-xs font-semibold text-violet-100 transition hover:bg-red-700/50"
+                >
+                  🧬 Starta proteinets resa
+                </button>
+              </>
             )}
             {selected === "mitochondria" && (
               <button
@@ -2149,6 +2198,15 @@ export default function CellScene() {
       )}
       {cellEnergyOpen && (
         <CellEnergyExplorer onClose={() => setCellEnergyOpen(false)} />
+      )}
+      {proteinJourneyOpen && (
+        <ProteinJourneyExplorer
+          cellType="animal"
+          onClose={() => {
+            setProteinJourneyOpen(false);
+            setProteinApproach(false);
+          }}
+        />
       )}
     </section>
   );

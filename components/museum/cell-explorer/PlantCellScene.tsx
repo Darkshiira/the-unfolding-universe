@@ -37,6 +37,9 @@ import {
   exhibitCategories,
   museumExhibits,
 } from "@/app/museum/museum-exhibits";
+import ProteinJourneyExplorer from "./ProteinJourneyExplorer";
+import ProteinNucleusApproach from "./ProteinNucleusApproach";
+import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
 type Part =
   | "wall"
@@ -938,6 +941,9 @@ export default function PlantCellScene({
   const [experimentSubmenu, setExperimentSubmenu] = useState(false);
   const [introVisible, setIntroVisible] = useState(true);
   const [introReplay, setIntroReplay] = useState(0);
+  const [proteinJourneyOpen, setProteinJourneyOpen] = useState(false);
+  const [proteinApproach, setProteinApproach] = useState(false);
+  const proteinControls = useRef<OrbitControlsImpl>(null);
   const sceneRef = useRef<HTMLElement>(null);
   const selectPart = (part: Part | null) => {
     setSelected(part);
@@ -1031,6 +1037,12 @@ export default function PlantCellScene({
             nucleusXray={nucleusXray}
             hydration={turgorOpen ? hydration : 100}
           />
+          {proteinApproach && (
+            <ProteinNucleusApproach
+              target={[-1.45, 0.25, 0.68]}
+              onArrive={() => setProteinJourneyOpen(true)}
+            />
+          )}
           <OrbitControls
             makeDefault
             enablePan={false}
@@ -1042,6 +1054,24 @@ export default function PlantCellScene({
             dampingFactor={0.075}
           />
         </Canvas>
+
+        {proteinApproach && !proteinJourneyOpen && (
+          <div className="pointer-events-none absolute inset-0 z-40 flex items-end justify-center bg-[radial-gradient(ellipse_at_center,transparent_28%,rgba(5,3,20,.75)_100%)] pb-[max(12vh,64px)]">
+            <div className="animate-pulse rounded-2xl border border-violet-300/30 bg-[#120d27]/65 px-6 py-4 text-center shadow-[0_0_65px_rgba(171,100,255,.28)] backdrop-blur-sm">
+              <p className="text-[10px] font-bold uppercase tracking-[.32em] text-violet-200">
+                Proteinets resa · Ankomst
+              </p>
+
+              <p className="mt-2 font-serif text-[clamp(23px,5vw,46px)] text-white">
+                CELLKÄRNAN
+              </p>
+
+              <p className="mt-1 text-xs text-violet-100/85">
+                Vi närmar oss cellens DNA …
+              </p>
+            </div>
+          </div>
+        )}
       </div>
       <header
         className={`pointer-events-none absolute left-5 top-7 z-10 max-w-[min(72vw,430px)] sm:left-7 sm:top-16 max-[900px]:landscape:top-2 transition-opacity duration-700 ${introVisible ? "opacity-100" : "max-[900px]:opacity-0"}`}
@@ -1875,16 +1905,28 @@ export default function PlantCellScene({
                 {details[selected].description}
               </p>
               {selected === "nucleus" && (
-                <button
-                  type="button"
-                  onClick={() => setNucleusXray((v) => !v)}
-                  aria-pressed={nucleusXray}
-                  className="mt-4 inline-flex items-center rounded-full border border-violet-300/35 bg-violet-800/35 px-4 py-2 text-xs font-semibold text-violet-100 transition hover:bg-violet-700/45"
-                >
-                  {nucleusXray
-                    ? "Visa ytan"
-                    : "Visa insidan · Kromatin & nukleol"}
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setNucleusXray((v) => !v)}
+                    aria-pressed={nucleusXray}
+                    className="mt-4 inline-flex items-center rounded-full border border-violet-300/35 bg-violet-800/35 px-4 py-2 text-xs font-semibold text-violet-100 transition hover:bg-violet-700/45"
+                  >
+                    {nucleusXray
+                      ? "Visa ytan"
+                      : "Visa insidan · Kromatin & nukleol"}
+                  </button>{" "}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelected(null);
+                      setProteinApproach(true);
+                    }}
+                    className="mt-4 inline-flex items-center rounded-full border border-violet-300/40 bg-red-800/40 px-4 py-2 text-xs font-semibold text-violet-100 transition hover:bg-red-700/50"
+                  >
+                    🧬 Starta proteinets resa
+                  </button>{" "}
+                </>
               )}
               {selected === "chloroplast" && (
                 <button
@@ -2114,6 +2156,15 @@ export default function PlantCellScene({
       </div>
       {cellEnergyOpen && (
         <CellEnergyExplorer onClose={() => setCellEnergyOpen(false)} />
+      )}
+      {proteinJourneyOpen && (
+        <ProteinJourneyExplorer
+          cellType="plant"
+          onClose={() => {
+            setProteinJourneyOpen(false);
+            setProteinApproach(false);
+          }}
+        />
       )}
     </section>
   );
