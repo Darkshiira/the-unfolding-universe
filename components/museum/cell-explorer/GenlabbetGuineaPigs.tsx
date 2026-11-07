@@ -22,6 +22,7 @@ type Baby = {
 type Props = { onClose?: () => void };
 type Species = "guinea" | "rabbit" | "mouse";
 type Trait = "coat" | "texture";
+type LandscapeStage = "parents" | "hypothesis" | "inheritance";
 
 const PARENTS: Parent[] = [
   { id: "mossa", name: "Mossa", genes: { coat: "Bb", texture: "Ss" } },
@@ -586,6 +587,8 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
   const [baby, setBaby] = useState<Baby | null>(null);
   const [showWhy, setShowWhy] = useState(false);
   const [round, setRound] = useState(0);
+  const [landscapeStage, setLandscapeStage] =
+    useState<LandscapeStage>("parents");
   const [trait, setTrait] = useState<"coat" | "texture">("coat");
   const animals = SPECIES.find((s) => s.id === species)!.animals;
   const p1 = animals.find((p) => p.id === first) ?? animals[0];
@@ -606,6 +609,7 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
     setSecond(group.animals[1].id);
 
     reset();
+    setLandscapeStage("parents");
   };
   const reveal = () => {
     setBaby(makeBaby(p1.genes, p2.genes));
@@ -619,20 +623,48 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
       className="relative isolate min-h-[100dvh] overflow-x-hidden bg-[#edf5f9] text-[#17374d]"
       lang="sv"
     >
+      <style>{`
+        /* Dedicated phone-landscape stations; portrait and desktop are unchanged. */
+        @media (orientation: landscape) and (max-width: 900px) {
+          .genlabbet-header-inner { padding-top: 7px; padding-bottom: 7px; }
+          .genlabbet-header-title { font-size: 1.05rem; line-height: 1.15; }
+          .genlabbet-header-eyebrow { display: none; }
+          .genlabbet-main { padding-top: 10px; padding-bottom: 16px; }
+          .genlabbet-experiment-badge { margin-bottom: 9px; }
+          .genlabbet-desktop-progress { display: none; }
+          .genlabbet-landscape-nav { display: grid; }
+          .genlabbet-stations { gap: 0; }
+          .genlabbet-station { display: none; }
+          .genlabbet-station[data-landscape-active="true"] { display: block; }
+          .genlabbet-station[data-landscape-active="true"] { padding: 12px 14px; }
+          .genlabbet-station-parents[data-landscape-active="true"] { margin-top: 39px; }
+          .genlabbet-station-parents .genlabbet-parent-grid { max-width: 650px; }
+          .genlabbet-station-parents .genlabbet-parent-picture { max-width: 125px; }
+          .genlabbet-station-parents .genlabbet-parent-card { padding: 7px; }
+          .genlabbet-station-parents .genlabbet-parent-name { font-size: 1rem; }
+          .genlabbet-station-parents .genlabbet-parent-description { margin-bottom: 5px; min-height: 0; }
+          .genlabbet-station-parents .genlabbet-parent-select { padding-top: 6px; padding-bottom: 6px; }
+          .genlabbet-station-hypothesis .genlabbet-section-heading,
+          .genlabbet-station-inheritance .genlabbet-section-heading { margin-bottom: 10px; }
+          .genlabbet-station-hypothesis .genlabbet-hypothesis-fieldset { margin-bottom: 10px; }
+          .genlabbet-station-hypothesis .genlabbet-hypothesis-action { padding-top: 10px; padding-bottom: 10px; }
+          .genlabbet-science-note { margin-top: 10px; }
+        }
+      `}</style>
       <style>{`@keyframes baby-pop{0%{transform:scale(.35) translateY(45px);opacity:0}65%{transform:scale(1.07) translateY(-5px);opacity:1}100%{transform:scale(1);opacity:1}}.baby-reveal{animation:baby-pop .65s cubic-bezier(.2,1.5,.4,1) both}@media(prefers-reduced-motion:reduce){.baby-reveal{animation:none}}`}</style>
       <div className="pointer-events-none absolute -left-24 top-16 h-80 w-80 rounded-full bg-[#d6eaf5] blur-3xl" />
       <div className="pointer-events-none absolute -right-16 bottom-12 h-96 w-96 rounded-full bg-[#dcebf7] blur-3xl" />
       <header className="relative z-50 border-b border-[#d1e2eb] bg-[#f8fcff]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-8 sm:py-5">
+        <div className="genlabbet-header-inner mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-8 sm:py-5">
           <div className="flex min-w-0 items-center gap-2 sm:gap-4">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#bddae9] bg-[#e5f3fb] text-[#277ca5] sm:h-11 sm:w-11 sm:rounded-2xl">
               <Microscope size={20} className="sm:h-6 sm:w-6" />
             </div>
             <div className="min-w-0">
-              <p className="text-[8px] font-extrabold uppercase leading-tight tracking-[.1em] text-[#648ba2] sm:text-[10px] sm:tracking-[.18em]">
+              <p className="genlabbet-header-eyebrow text-[8px] font-extrabold uppercase leading-tight tracking-[.1em] text-[#648ba2] sm:text-[10px] sm:tracking-[.18em]">
                 The Unfolding Universe · Forskningsstation 01
               </p>
-              <h1 className="font-sans text-[clamp(1.12rem,5vw,1.5rem)] font-bold leading-tight sm:text-3xl">
+              <h1 className="genlabbet-header-title font-sans text-[clamp(1.12rem,5vw,1.5rem)] font-bold leading-tight sm:text-3xl">
                 Genlabbet <span className="text-[#62a9cc]">·</span> Vem blir
                 ungen?
               </h1>
@@ -654,16 +686,16 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
       </header>
       <main
         id="genlabbet-intro"
-        className="relative z-0 mx-auto max-w-6xl px-3 pb-10 pt-4 sm:px-8 sm:pb-12 sm:pt-6"
+        className="genlabbet-main relative z-0 mx-auto max-w-6xl px-3 pb-10 pt-4 sm:px-8 sm:pb-12 sm:pt-6"
       >
         {/* The experiment label replaces the redundant welcome paragraph. */}
-        <div className="mb-4 flex justify-start">
+        <div className="genlabbet-experiment-badge mb-4 flex justify-start">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-[#c9dfea] bg-white/90 px-3 py-1.5 text-xs font-bold text-[#477f9d]">
             <FlaskConical size={13} /> Experiment 01 ·{" "}
             {SPECIES.find((s) => s.id === species)!.name}
           </span>
         </div>
-        <div className="hidden sm:grid mb-5 grid grid-cols-3 gap-1 rounded-lg border border-[#d5e5ef] bg-white/80 p-1 text-center text-[10px] font-bold text-[#547c93] sm:mb-6 sm:gap-2 sm:p-1.5 sm:text-xs">
+        <div className="genlabbet-desktop-progress hidden sm:grid mb-5 grid grid-cols-3 gap-1 rounded-lg border border-[#d5e5ef] bg-white/80 p-1 text-center text-[10px] font-bold text-[#547c93] sm:mb-6 sm:gap-2 sm:p-1.5 sm:text-xs">
           <div className="flex min-h-9 items-center justify-center rounded-lg bg-[#e8f4fa] px-1 py-1.5 sm:px-2 sm:py-2">
             <span className="sm:hidden">01</span>
             <span className="hidden sm:inline">01 · Välj föräldrar</span>
@@ -677,10 +709,36 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
             <span className="hidden sm:inline">03 · Undersök arvet</span>
           </div>
         </div>
-        <div className="flex flex-col gap-5 sm:gap-6">
-          <section className="order-3 rounded-xl border border-[#d8e5ed] bg-white/95 p-3 shadow-[0_12px_30px_rgba(34,92,125,.055)] sm:p-6">
+        {/* On phone landscape, switch between stations instead of stacking them. */}
+        <nav
+          aria-label="Forskningsstationer"
+          className="genlabbet-landscape-nav mb-3 hidden grid-cols-3 gap-1.5 rounded-xl border border-[#c9dfec] bg-white/90 p-1.5"
+        >
+          {(
+            [
+              ["parents", "01 · Föräldrar"],
+              ["hypothesis", baby ? "02 · Resultat" : "02 · Hypotes"],
+              ["inheritance", "03 · Arvet"],
+            ] as const
+          ).map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              aria-current={landscapeStage === id ? "step" : undefined}
+              onClick={() => setLandscapeStage(id)}
+              className={`min-w-0 rounded-lg px-1.5 py-2 text-[11px] font-extrabold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#308dbb] ${landscapeStage === id ? "bg-[#dceffa] text-[#175b7f] shadow-sm" : "text-[#63869a] hover:bg-[#edf6fa]"}`}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
+        <div className="genlabbet-stations flex flex-col gap-5 sm:gap-6">
+          <section
+            data-landscape-active={landscapeStage === "inheritance"}
+            className="genlabbet-station genlabbet-station-inheritance order-3 rounded-xl border border-[#d8e5ed] bg-white/95 p-3 shadow-[0_12px_30px_rgba(34,92,125,.055)] sm:p-6"
+          >
             <div className="">
-              <div className="mb-5 flex items-start gap-3">
+              <div className="genlabbet-section-heading mb-5 flex items-start gap-3">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#e8f4fb] text-[#277da7]">
                   <Dna size={19} />
                 </span>
@@ -736,7 +794,10 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
               </p>
             </div>
           </section>
-          <section className="order-1 relative mt-10 rounded-b-xl rounded-tl-none rounded-tr-xl border border-[#c9dfec] bg-white p-3 shadow-[0_12px_30px_rgba(34,92,125,.055)] sm:mt-11 sm:p-6">
+          <section
+            data-landscape-active={landscapeStage === "parents"}
+            className="genlabbet-station genlabbet-station-parents order-1 relative mt-10 rounded-b-xl rounded-tl-none rounded-tr-xl border border-[#c9dfec] bg-white p-3 shadow-[0_12px_30px_rgba(34,92,125,.055)] sm:mt-11 sm:p-6"
+          >
             {/* Research folder tabs: attached to the upper edge of this animal file. */}
             <div
               role="group"
@@ -763,7 +824,7 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
                 );
               })}
             </div>
-            <div className="mb-5 flex items-start gap-3">
+            <div className="genlabbet-section-heading mb-5 flex items-start gap-3">
               <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#e8f4fb]">
                 <Heart size={19} className="text-[#d88b91]" />
               </span>
@@ -776,7 +837,7 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 sm:gap-4 mx-auto w-full max-w-3xl">
+            <div className="genlabbet-parent-grid grid grid-cols-2 gap-2 sm:gap-4 mx-auto w-full max-w-3xl">
               {[
                 {
                   parent: p1,
@@ -799,18 +860,18 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
               ].map(({ parent, selected, change, label }) => (
                 <div
                   key={label}
-                  className="flex min-w-0 flex-col rounded-lg bg-[#edf6fa] p-2 sm:p-3"
+                  className="genlabbet-parent-card flex min-w-0 flex-col rounded-lg bg-[#edf6fa] p-2 sm:p-3"
                 >
                   <p className="text-center text-[11px] font-extrabold uppercase tracking-widest text-[#7294a7]">
                     {label}
                   </p>
-                  <div className="mx-auto aspect-[6/5] w-full max-w-[190px]">
+                  <div className="genlabbet-parent-picture mx-auto aspect-[6/5] w-full max-w-[190px]">
                     <AnimalPicture species={species} genes={parent.genes} />
                   </div>
-                  <p className="text-center font-sans text-xl font-bold">
+                  <p className="genlabbet-parent-name text-center font-sans text-xl font-bold">
                     {parent.name}
                   </p>
-                  <p className="mb-3 min-h-8 text-center text-[11px] leading-4 text-[#5d7789] sm:text-xs">
+                  <p className="genlabbet-parent-description mb-3 min-h-8 text-center text-[11px] leading-4 text-[#5d7789] sm:text-xs">
                     {traitDescription(species, parent.genes)}
                   </p>
                   <label className="mt-auto block">
@@ -818,7 +879,7 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
                     <select
                       value={selected}
                       onChange={(e) => change(e.target.value)}
-                      className="w-full rounded-xl border border-[#cfded0] bg-white px-2 py-2.5 text-sm font-semibold outline-offset-2 focus-visible:outline-teal-500"
+                      className="genlabbet-parent-select w-full rounded-xl border border-[#cfded0] bg-white px-2 py-2.5 text-sm font-semibold outline-offset-2 focus-visible:outline-teal-500"
                     >
                       {animals.map((p) => (
                         <option key={p.id} value={p.id}>
@@ -831,10 +892,13 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
               ))}
             </div>
           </section>
-          <section className="order-2 rounded-xl border border-[#d8e5ed] bg-white/95 p-3 shadow-[0_12px_30px_rgba(34,92,125,.055)] sm:p-6">
+          <section
+            data-landscape-active={landscapeStage === "hypothesis"}
+            className="genlabbet-station genlabbet-station-hypothesis order-2 rounded-xl border border-[#d8e5ed] bg-white/95 p-3 shadow-[0_12px_30px_rgba(34,92,125,.055)] sm:p-6"
+          >
             {!baby ? (
               <>
-                <div className="mb-5 flex items-start gap-3">
+                <div className="genlabbet-section-heading mb-5 flex items-start gap-3">
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#e8f4fb]">
                     <Sparkles size={19} className="text-[#397fa5]" />
                   </span>
@@ -848,7 +912,7 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
                     </p>
                   </div>
                 </div>
-                <fieldset className="mb-5 mx-auto max-w-xl">
+                <fieldset className="genlabbet-hypothesis-fieldset mb-5 mx-auto max-w-xl">
                   <legend className="mb-2 text-sm font-bold">
                     {traitName(species, "coat")}
                   </legend>
@@ -872,7 +936,7 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
                     ))}
                   </div>
                 </fieldset>
-                <fieldset className="mb-6 mx-auto max-w-xl">
+                <fieldset className="genlabbet-hypothesis-fieldset mb-6 mx-auto max-w-xl">
                   <legend className="mb-2 text-sm font-bold">
                     {traitName(species, "texture")}
                   </legend>
@@ -897,7 +961,7 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
                 <button
                   onClick={reveal}
                   disabled={!guessCoat || !guessTexture}
-                  className="mx-auto flex w-full max-w-xl items-center justify-center gap-2 rounded-lg bg-[#45b7e9] px-4 py-4 font-extrabold text-[#103c58] shadow-md transition hover:bg-[#70d2fa] disabled:cursor-not-allowed disabled:opacity-45"
+                  className="genlabbet-hypothesis-action mx-auto flex w-full max-w-xl items-center justify-center gap-2 rounded-lg bg-[#45b7e9] px-4 py-4 font-extrabold text-[#103c58] shadow-md transition hover:bg-[#70d2fa] disabled:cursor-not-allowed disabled:opacity-45"
                 >
                   Testa hypotesen! <ArrowRight size={19} />
                 </button>
@@ -989,7 +1053,7 @@ export default function GenlabbetGuineaPigs({ onClose }: Props) {
             )}
           </section>
         </div>
-        <div className="mt-6 rounded-xl border border-[#d7e6ee] bg-white/70 p-4 text-xs leading-relaxed text-[#607f90]">
+        <div className="genlabbet-science-note mt-6 rounded-xl border border-[#d7e6ee] bg-white/70 p-4 text-xs leading-relaxed text-[#607f90]">
           <strong>Vetenskaplig notering:</strong> Det här är en förenklad modell
           med två oberoende gener och fullständig dominans, skapad för att visa
           grundprincipen för nedärvning. Verklig nedärvning av pälsfärg,
