@@ -1,6 +1,9 @@
 "use client";
 
 import CellEnergyExplorer from "./CellEnergyExplorer";
+import Link from "next/link";
+import { ArrowLeft, Microscope } from "lucide-react";
+import MuseumSceneMenu from "../../MuseumSceneMenu";
 import {
   Suspense,
   useMemo,
@@ -18,19 +21,10 @@ import {
   Play,
   ChevronDown,
   ChevronUp,
-  Menu,
-  ArrowLeft,
   ChevronRight,
   Sparkles,
-  BookOpen,
-  Compass,
-  Info,
+  Dna,
 } from "lucide-react";
-import Link from "next/link";
-import {
-  exhibitCategories,
-  museumExhibits,
-} from "@/app/museum/museum-exhibits";
 import * as THREE from "three";
 import SharedNucleus from "./SharedNucleus";
 import {
@@ -1295,9 +1289,6 @@ export default function CellScene() {
   const [infoCollapsed, setInfoCollapsed] = useState(false);
   const [mobileHeaderVisible, setMobileHeaderVisible] = useState(true);
   const [headerRevealCount, setHeaderRevealCount] = useState(0);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [museumSubmenu, setMuseumSubmenu] = useState(false);
-  const [experimentSubmenu, setExperimentSubmenu] = useState(false);
   const [proteinJourneyOpen, setProteinJourneyOpen] = useState(false);
   const [proteinApproach, setProteinApproach] = useState(false);
   const sceneRef = useRef<HTMLElement>(null);
@@ -1667,255 +1658,80 @@ export default function CellScene() {
         </div>
       </header>
 
-      {/* Compact two-level menu, matching the Water Cycle Explorer. */}
-      <div className="cell-mobile-menu absolute left-3 top-3 z-50 sm:left-5 sm:top-4">
-        {!mobileMenuOpen && (
-          <button
-            type="button"
-            onClick={() => {
-              setMobileMenuOpen(true);
-              setMuseumSubmenu(false);
-              setExperimentSubmenu(false);
-            }}
-            aria-label="Öppna museimenyn"
-            aria-expanded={false}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-teal-200/25 bg-[#102638]/95 text-teal-100 shadow-lg backdrop-blur-xl transition hover:bg-[#19384a]"
-          >
-            <Menu size={19} />
-          </button>
-        )}
-        {mobileMenuOpen && (
-          <div className="flex flex-col items-start gap-2">
-            <nav
-              aria-label="Museimenyn"
-              className="flex w-[min(248px,calc(100vw-24px))] flex-col overflow-hidden rounded-2xl border border-teal-200/20 bg-[#0b1d2d]/97 p-3 text-white shadow-[0_20px_60px_rgba(0,0,0,.5)] backdrop-blur-xl"
-            >
-              {experimentSubmenu ? (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setExperimentSubmenu(false)}
-                    className="flex min-h-10 items-center gap-2 rounded-xl px-2 py-2 text-left text-xs font-semibold text-teal-100 hover:bg-white/10"
-                  >
-                    <ArrowLeft size={16} /> Tillbaka till menyn
-                  </button>
-                  <div className="my-1 border-t border-white/10" />
-                  <p className="px-2 pt-1 text-[10px] font-bold uppercase tracking-[.12em] text-amber-200">
-                    Interaktiva experiment
-                  </p>
-                  <div className="max-h-[min(55dvh,390px)] min-h-0 space-y-1 overflow-y-auto overscroll-contain">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        setExperimentSubmenu(false);
-                        setSelected(null);
-                        setOxygen(true);
-                        setOxygenStage("entry");
-                        setRespirationCollapsed(false);
-                        setMotion(true);
-                      }}
-                      className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
-                    >
-                      <Wind size={16} className="shrink-0 text-amber-200" />
-                      <span className="min-w-0">
-                        <span className="block">Följ syret</span>
-                        <span className="block pt-0.5 text-[10px] font-normal text-slate-300/75">
-                          Följ syrets väg till mitokondrien
-                        </span>
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCellEnergyOpen(true);
-                        setExperimentSubmenu(false);
-                        setMobileMenuOpen(false);
-                        setOxygen(false);
-                        setSelected(null);
-                      }}
-                      className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
-                    >
-                      <Sparkles size={16} className="shrink-0 text-amber-200" />
-                      <span className="min-w-0">
-                        <span className="block">Cellens energilabb</span>
-                        <span className="block pt-0.5 text-[10px] font-normal text-slate-300/75">
-                          Experimentera med syre, bränsle och ATP
-                        </span>
-                      </span>
-                    </button>
-                  </div>
-                </>
-              ) : museumSubmenu ? (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setMuseumSubmenu(false)}
-                    className="flex min-h-10 shrink-0 items-center gap-2 rounded-xl px-2 py-2 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
-                  >
-                    <ArrowLeft size={16} /> Tillbaka till menyn
-                  </button>
-                  <div className="my-1 border-t border-white/10" />
-                  <div className="max-h-[min(55dvh,390px)] min-h-0 space-y-3 overflow-y-auto overscroll-contain px-1 py-1">
-                    {exhibitCategories.map((category) => {
-                      const exhibits = museumExhibits.filter(
-                        (exhibit) => exhibit.category === category.id,
-                      );
-                      if (exhibits.length === 0) return null;
-                      return (
-                        <section key={category.id}>
-                          <h3 className="px-2 pb-2 pt-2 text-[10px] font-bold uppercase tracking-[.1em] text-teal-300">
-                            {category.title}
-                          </h3>
-                          <div className="space-y-1">
-                            {exhibits.map((exhibit) => {
-                              const current =
-                                exhibit.id === "cell-explorer" ||
-                                exhibit.href === "/museum/cell-explorer";
-                              const available =
-                                Boolean(exhibit.href) &&
-                                exhibit.status !== "planned";
-                              const content = (
-                                <>
-                                  <span
-                                    aria-hidden="true"
-                                    className="shrink-0 text-base"
-                                  >
-                                    {exhibit.emoji}
-                                  </span>
-                                  <span className="min-w-0 flex-1">
-                                    <span className="block break-words text-xs font-semibold leading-5">
-                                      {exhibit.title}
-                                    </span>
-                                    <span className="mt-0.5 block text-[10px] leading-4 text-slate-300/70">
-                                      {current
-                                        ? "Du är här"
-                                        : exhibit.status === "planned"
-                                          ? "Planerad"
-                                          : exhibit.status === "development"
-                                            ? "Under utveckling"
-                                            : "Utforska"}
-                                    </span>
-                                  </span>
-                                </>
-                              );
-                              const classes =
-                                "flex min-w-0 items-start gap-2 rounded-xl px-2 py-2.5 text-left text-white";
-                              return current ? (
-                                <div
-                                  key={exhibit.id}
-                                  aria-current="page"
-                                  className={`${classes} bg-teal-300/10`}
-                                >
-                                  {content}
-                                </div>
-                              ) : available && exhibit.href ? (
-                                <Link
-                                  key={exhibit.id}
-                                  href={exhibit.href}
-                                  className={`${classes} transition hover:bg-white/10`}
-                                >
-                                  {content}
-                                </Link>
-                              ) : (
-                                <div
-                                  key={exhibit.id}
-                                  className={`${classes} opacity-60`}
-                                >
-                                  {content}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </section>
-                      );
-                    })}
-                  </div>
-                </>
-              ) : (
-                <div className="space-y-1">
-                  <p className="px-2 pb-2 pt-1 text-[10px] font-extrabold uppercase tracking-[.12em] text-teal-300">
-                    The Unfolding Universe
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setSelected(null);
-                      setOxygen(false);
-                    }}
-                    className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
-                  >
-                    <Sparkles size={15} /> Utforska
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setMuseumSubmenu(false);
-                      setMobileHeaderVisible(true);
-                      setHeaderRevealCount((n) => n + 1);
-                    }}
-                    className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
-                  >
-                    <Info size={15} /> Om utställningen
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setSelected("nucleus");
-                      setInfoCollapsed(false);
-                    }}
-                    className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
-                  >
-                    <BookOpen size={15} /> Cellens delar
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setExperimentSubmenu(true);
-                      setMuseumSubmenu(false);
-                    }}
-                    className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10 text-[#f2e2b2]"
-                  >
-                    <Sparkles size={15} />{" "}
-                    <span className="flex-1">Experimentera</span>{" "}
-                    <ChevronRight size={15} />
-                  </button>
-                  <div className="my-2 border-t border-white/10" />
-                  <button
-                    type="button"
-                    onClick={() => setMuseumSubmenu(true)}
-                    className="flex min-h-10 w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-xs font-semibold text-teal-100 transition hover:bg-white/10"
-                  >
-                    <Compass size={15} />{" "}
-                    <span className="flex-1">Museets utställningar</span>{" "}
-                    <ChevronRight size={15} />
-                  </button>
-                  <Link
-                    href="/timeline"
-                    className="flex min-h-10 items-center gap-2 rounded-xl px-2 py-2.5 text-xs font-semibold text-teal-100 transition hover:bg-white/10"
-                  >
-                    <ArrowLeft size={15} /> Tidslinjen
-                  </Link>
-                </div>
-              )}
-            </nav>
-            <button
-              type="button"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setMuseumSubmenu(false);
-                setExperimentSubmenu(false);
-              }}
-              className="rounded-full border border-[#b49b60]/40 bg-[#0b1d2d]/95 px-4 py-2 text-xs font-bold text-[#f3e0a3] shadow-lg transition hover:bg-[#19384a]"
-            >
-              <X size={13} className="mr-1 inline" /> Stäng
-            </button>
-          </div>
-        )}
+      {/* Shared museum navigation. */}
+      {/* Always-visible exits: museum timeline and research station. */}
+      <div className="pointer-events-auto absolute right-3 top-3 z-30 hidden items-center gap-2 lg:flex sm:right-7 sm:top-4 max-[900px]:landscape:right-3 max-[900px]:landscape:top-2">
+        <Link
+          href="/timeline"
+          aria-label="Tillbaka till tidslinjen"
+          title="Tillbaka till tidslinjen"
+          className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-teal-200/25 bg-[#102638]/95 px-3 text-xs font-semibold text-teal-100 shadow-lg backdrop-blur-xl transition hover:bg-[#19384a] focus-visible:outline-2 focus-visible:outline-teal-300"
+        >
+          <ArrowLeft size={15} aria-hidden="true" />
+          <span className="hidden sm:inline">Tidslinjen</span>
+        </Link>
+        <Link
+          href="/museum/cell-explorer/forskningsstation"
+          aria-label="Besök forskningsstationen"
+          title="Besök forskningsstationen"
+          className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-cyan-300/35 bg-[#16445a]/95 px-3 text-xs font-semibold text-cyan-100 shadow-lg backdrop-blur-xl transition hover:bg-[#205b70] focus-visible:outline-2 focus-visible:outline-cyan-300"
+        >
+          <Microscope size={16} aria-hidden="true" />
+          <span className="hidden lg:inline">Forskningsstationen</span>
+          <span className="hidden sm:inline lg:hidden">Genlabbet</span>
+        </Link>
       </div>
+      <MuseumSceneMenu
+        currentExhibitId="cell-explorer"
+        onExplore={() => {
+          setSelected(null);
+          setOxygen(false);
+        }}
+        onAbout={() => {
+          setMobileHeaderVisible(true);
+          setHeaderRevealCount((n) => n + 1);
+        }}
+        onParts={() => {
+          setSelected("nucleus");
+          setInfoCollapsed(false);
+        }}
+        experiments={[
+          {
+            id: "oxygen",
+            title: "Följ syret",
+            description: "Följ syrets väg till mitokondrien",
+            icon: Wind,
+            onClick: () => {
+              setSelected(null);
+              setOxygen(true);
+              setOxygenStage("entry");
+              setRespirationCollapsed(false);
+              setMotion(true);
+            },
+          },
+          {
+            id: "energy",
+            title: "Cellens energilabb",
+            description: "Experimentera med syre, bränsle och ATP",
+            icon: Sparkles,
+            onClick: () => {
+              setCellEnergyOpen(true);
+              setOxygen(false);
+              setSelected(null);
+            },
+          },
+          {
+            id: "protein-journey",
+            title: "Proteinets resa",
+            description: "Följ ett protein från cellkärnan till cellmembranet.",
+            icon: Dna,
+            onClick: () => {
+              setProteinJourneyOpen(false);
+              setProteinApproach(true);
+            },
+          },
+        ]}
+      />
       {/* Activity controls */}
       <div className="cell-activity-controls absolute right-4 top-24 z-20 flex flex-col gap-2 sm:right-8 sm:top-28">
         <button
