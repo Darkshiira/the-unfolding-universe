@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import CellMuseumIntro from "./CellMuseumIntro";
 import CellScene from "./CellScene";
 import PlantCellScene from "./PlantCellScene";
+import EColiCellScene from "./EColiCellScene";
 import CellSlideSelector, {
   CELL_SPECIMENS,
   type CellKind,
@@ -44,6 +45,10 @@ export default function CellMuseumExperience() {
       ) : selectedCell === "plant" ? (
         <div className="h-full w-full pb-[76px] sm:pb-[88px] max-[900px]:landscape:pb-[58px]">
           <PlantCellScene showWelcome={welcomeOnPlant} />
+        </div>
+      ) : selectedCell === "bacteria" ? (
+        <div className="h-full w-full pb-[76px] sm:pb-[88px] max-[900px]:landscape:pb-[58px]">
+          <EColiCellScene />
         </div>
       ) : (
         <div className="flex h-full flex-col items-center justify-center px-6 pb-24 text-center">

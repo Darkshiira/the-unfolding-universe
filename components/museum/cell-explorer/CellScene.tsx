@@ -1649,11 +1649,14 @@ export default function CellScene() {
           </p>
 
           <h1 className="font-serif text-2xl tracking-tight text-[#F5F2EA] sm:text-4xl">
-            Livets osynliga värld
+            Djurcellens osynliga värld
           </h1>
 
           <p className="mt-2 max-w-sm text-xs leading-relaxed text-[#B6CBD0] sm:text-sm">
             Utforska cellen och upptäck världen som finns inuti.
+          </p>
+          <p className="mt-2 text-[11px] text-teal-200/80">
+            Djurcell · preparat 001
           </p>
         </div>
       </header>
@@ -2024,6 +2027,9 @@ export default function CellScene() {
           }}
         />
       )}
+      <div className="pointer-events-none absolute bottom-20 left-4 hidden text-xs text-teal-100/65 sm:block">
+        Djurcell · 001
+      </div>
     </section>
   );
 }

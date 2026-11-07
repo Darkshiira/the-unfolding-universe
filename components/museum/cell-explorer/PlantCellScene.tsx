@@ -1066,14 +1066,17 @@ export default function PlantCellScene({
       <header
         className={`pointer-events-none absolute left-5 top-7 z-10 max-w-[min(72vw,430px)] sm:left-7 sm:top-16 max-[900px]:landscape:top-2 transition-opacity duration-700 ${introVisible ? "opacity-100" : "max-[900px]:opacity-0"}`}
       >
-        <p className="text-[10px] font-semibold uppercase tracking-[.24em] text-[#d6bd83]">
-          The Unfolding Universe · Museum
-        </p>
+        <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#D8C18D] sm:text-xs">
+            The Unfolding Universe · Museum
+          </p>
         <h1 className="mt-2 font-serif text-[clamp(25px,3vw,38px)] leading-tight">
           Växtcellens värld
         </h1>
         <p className="mt-2 text-xs leading-5 text-[#abc4c8] sm:text-sm">
           Upptäck livet bakom cellväggen.
+        </p>
+        <p className="mt-2 text-[11px] text-teal-200/80">
+          Växtcell · preparat 002
         </p>
       </header>
       {/* Always-visible exits: museum timeline and research station. */}
