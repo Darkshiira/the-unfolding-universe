@@ -1071,20 +1071,20 @@ export default function EColiCellScene({ onBack }: Props) {
 
       {/* Same visual hierarchy as the animal and plant cell exhibits. */}
       <header
-        className={`pointer-events-none absolute left-4 right-4 top-4 z-10 flex items-start justify-between gap-3 transition-opacity duration-700 max-lg:left-[70px] max-lg:top-4 landscape:max-lg:top-2 lg:left-6 lg:right-6 lg:top-5 ${showIntro ? "opacity-100" : "opacity-0 max-lg:pointer-events-none"} lg:opacity-100`}
+        className={`pointer-events-none absolute z-20 left-[76px] right-3 top-5 lg:left-7 lg:right-7 lg:top-8 max-lg:landscape:top-3 flex items-start justify-between gap-3 transition-opacity duration-700 ${showIntro ? "opacity-100" : "opacity-0"} lg:opacity-100`}
       >
-        <div className="max-w-[min(72vw,540px)] max-lg:max-w-[calc(100vw-90px)] landscape:max-lg:max-w-[42vw]">
-          <p className="text-[10px] font-bold uppercase tracking-[.19em] text-amber-200/85">
+        <div className="w-full max-w-[min(540px,calc(100vw-96px))] lg:max-w-[540px] max-lg:landscape:max-w-[min(440px,calc(100vw-165px))]">
+          <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.19em] text-[#D8C18D] lg:mb-2">
             THE UNFOLDING UNIVERSE · MUSEUM
           </p>
-          <h1 className="mt-1 font-serif text-[clamp(23px,3vw,38px)] leading-tight landscape:max-lg:text-[23px] lg:mt-2">
+          <h1 className="font-serif text-[clamp(23px,2.5vw,38px)] leading-tight tracking-tight text-[#F5F2EA] max-lg:landscape:text-[23px]">
             Bakteriens värld
           </h1>
-          <p className="mt-1 text-[11px] text-slate-300 landscape:max-lg:hidden lg:mt-2 lg:text-sm">
+          <p className="mt-1 text-[11px] leading-[1.4] text-[#B6CBD0] lg:mt-2 lg:text-sm">
             Upptäck <i>Escherichia coli</i> (E. coli) – en bakterie utan
             cellkärna.
           </p>
-          <p className="mt-1 text-[10px] text-teal-200/80 landscape:max-lg:hidden lg:mt-2 lg:text-[11px]">
+          <p className="mt-1 text-[10px] text-teal-200/80 lg:mt-2 lg:text-[11px]">
             Bakteriecell · <i>Escherichia coli</i> · preparat 003
           </p>
         </div>
@@ -1137,6 +1137,19 @@ export default function EColiCellScene({ onBack }: Props) {
         experiments={[]}
       />
 
+      <style>{`
+        /* Museum HUD anchors: one authoritative rule set per scene. */
+        .museum-scene-hint { position:absolute; left:50%; bottom:90px; transform:translateX(-50%); z-index:10; width:max-content; max-width:calc(100% - 32px); pointer-events:none; }
+        .museum-scene-specimen { position:absolute; left:16px; bottom:94px; z-index:10; pointer-events:none; }
+        @media (max-width:1023px) and (orientation:portrait) {
+          .museum-scene-hint { bottom:190px; }
+          .museum-scene-specimen { bottom:164px; }
+        }
+        @media (max-width:1023px) and (orientation:landscape) {
+          .museum-scene-hint { bottom:112px; max-width:min(240px, calc(100% - 32px)); }
+          .museum-scene-specimen { bottom:125px; }
+        }
+      `}</style>
       {/* Top-right controls, matching the other specimens. */}
       <div className="absolute right-3 top-[140px] z-30 flex flex-col items-end gap-1.5 landscape:max-lg:top-3 lg:right-7 lg:top-[94px] lg:gap-2">
         <button
@@ -1150,10 +1163,10 @@ export default function EColiCellScene({ onBack }: Props) {
           aria-label={
             showMagnifier ? "Dölj förstoringsglas" : "Visa förstoringsglas"
           }
-          className={`flex h-9 items-center gap-2 rounded-full border px-2.5 text-xs backdrop-blur-xl transition lg:px-3 ${showMagnifier ? "border-teal-300/60 bg-teal-300/20 text-teal-50" : "border-white/20 bg-[#102a3b]/80 hover:bg-white/10"}`}
+          className={`flex h-9 w-9 items-center justify-center gap-2 rounded-full border xl:w-auto px-2.5 text-xs backdrop-blur-xl transition xl:px-3 ${showMagnifier ? "border-teal-300/60 bg-teal-300/20 text-teal-50" : "border-white/20 bg-[#102a3b]/80 hover:bg-white/10"}`}
         >
           <Search size={15} aria-hidden="true" />
-          <span className="hidden lg:inline">
+          <span className="hidden xl:inline">
             {showMagnifier ? "Dölj förstoringsglas" : "Visa förstoringsglas"}
           </span>
         </button>
@@ -1161,10 +1174,10 @@ export default function EColiCellScene({ onBack }: Props) {
           onClick={() => setXray((v) => !v)}
           title={xray ? "Visa cellhöljet" : "Genomlysning"}
           aria-label={xray ? "Visa cellhöljet" : "Genomlysning"}
-          className={`flex h-9 items-center gap-2 rounded-full border px-2.5 text-xs backdrop-blur-xl transition lg:px-3 ${xray ? "border-teal-300/60 bg-teal-300/20" : "border-white/20 bg-[#102a3b]/80 hover:bg-white/10"}`}
+          className={`flex h-9 w-9 items-center justify-center gap-2 rounded-full border xl:w-auto px-2.5 text-xs backdrop-blur-xl transition xl:px-3 ${xray ? "border-teal-300/60 bg-teal-300/20" : "border-white/20 bg-[#102a3b]/80 hover:bg-white/10"}`}
         >
           {xray ? <EyeOff size={15} /> : <Eye size={15} />}
-          <span className="hidden lg:inline">
+          <span className="hidden xl:inline">
             {xray ? "Visa cellhöljet" : "Genomlysning"}
           </span>
         </button>
@@ -1172,10 +1185,10 @@ export default function EColiCellScene({ onBack }: Props) {
           title={paused ? "Fortsätt" : "Pausa"}
           aria-label={paused ? "Fortsätt" : "Pausa"}
           onClick={() => setPaused((v) => !v)}
-          className="flex h-9 items-center gap-2 rounded-full border border-white/20 bg-[#102a3b]/80 px-2.5 text-xs backdrop-blur-xl hover:bg-white/10 lg:px-3"
+          className="flex h-9 w-9 items-center justify-center gap-2 rounded-full border xl:w-auto border-white/20 bg-[#102a3b]/80 px-2.5 text-xs backdrop-blur-xl hover:bg-white/10 xl:px-3"
         >
           {paused ? <Play size={14} /> : <Pause size={14} />}
-          <span className="hidden lg:inline">
+          <span className="hidden xl:inline">
             {paused ? "Fortsätt" : "Pausa"}
           </span>
         </button>
@@ -1183,15 +1196,15 @@ export default function EColiCellScene({ onBack }: Props) {
           title="Återställ vy"
           aria-label="Återställ vy"
           onClick={() => controls.current?.reset()}
-          className="flex h-9 items-center gap-2 rounded-full border border-white/20 bg-[#102a3b]/80 px-2.5 text-xs backdrop-blur-xl hover:bg-white/10 lg:px-3"
+          className="flex h-9 w-9 items-center justify-center gap-2 rounded-full border xl:w-auto border-white/20 bg-[#102a3b]/80 px-2.5 text-xs backdrop-blur-xl hover:bg-white/10 xl:px-3"
         >
           <RotateCcw size={14} />{" "}
-          <span className="hidden lg:inline">Återställ vy</span>
+          <span className="hidden xl:inline">Återställ vy</span>
         </button>
       </div>
 
       {showHint && !selected && (
-        <div className="pointer-events-none absolute bottom-[76px] left-1/2 z-10 w-max max-w-[calc(100vw-28px)] -translate-x-1/2 rounded-xl border border-white/10 bg-[#102a3b]/90 px-3 py-2 text-center text-[11px] text-slate-200 shadow-lg backdrop-blur-md landscape:max-lg:bottom-[62px] lg:bottom-24 lg:px-4 lg:py-3 lg:text-xs">
+        <div className="museum-scene-hint rounded-xl border border-white/10 bg-[#102a3b]/90 px-3 py-2 text-center text-[11px] text-slate-200 shadow-lg backdrop-blur-md lg:px-4 lg:py-3 lg:text-xs">
           Dra för att rotera · Zooma för att utforska
           <span className="mt-1 block text-[11px] text-amber-200/85">
             Tryck på en del av bakterien · undersök cellhöljets lager i
@@ -1278,7 +1291,7 @@ export default function EColiCellScene({ onBack }: Props) {
         </aside>
       )}
 
-      <div className="pointer-events-none absolute bottom-20 left-4 hidden text-xs text-teal-100/65 sm:block">
+      <div className="museum-scene-specimen text-[11px] text-teal-100/65">
         <i>E. coli</i> · 003
       </div>
     </main>

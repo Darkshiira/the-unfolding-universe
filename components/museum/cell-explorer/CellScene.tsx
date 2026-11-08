@@ -1419,7 +1419,7 @@ export default function CellScene() {
             pointer-events: none;
           }
           .cell-mobile-header.is-hidden * { pointer-events: none !important; }
-          .cell-activity-controls { top: 20px !important; }
+          
           .cell-mobile-menu { display: block; }
         }
 
@@ -1586,11 +1586,6 @@ export default function CellScene() {
             font-size: 10px !important;
             line-height: 1.3 !important;
           }
-          .cell-activity-controls { right: 12px !important; top: 68px !important; }
-          .cell-scene-has-info .cell-activity-controls {
-            left: 12px !important;
-            right: auto !important;
-          }
           .cell-mobile-menu {
             left: 12px !important;
             right: auto !important;
@@ -1641,21 +1636,21 @@ export default function CellScene() {
 
       {/* Header */}
       <header
-        className={`cell-mobile-header ${mobileHeaderVisible ? "" : "is-hidden"} pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-3 px-4 pt-5 sm:px-8 sm:pt-8`}
+        className={`cell-mobile-header ${mobileHeaderVisible ? "" : "is-hidden"} pointer-events-none absolute z-20 left-[76px] right-3 top-5 lg:left-7 lg:right-7 lg:top-8 max-lg:landscape:top-3 flex items-start justify-between gap-3`}
       >
-        <div className="pointer-events-auto max-w-[75%]">
-          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#D8C18D] sm:text-xs">
+        <div className="w-full max-w-[calc(100vw-166px)] lg:max-w-[540px] max-lg:landscape:max-w-[min(440px,calc(100vw-165px))]">
+          <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.19em] text-[#D8C18D] lg:mb-2">
             The Unfolding Universe · Museum
           </p>
 
-          <h1 className="font-serif text-2xl tracking-tight text-[#F5F2EA] sm:text-4xl">
+          <h1 className="font-serif text-[clamp(23px,2.5vw,38px)] leading-tight tracking-tight text-[#F5F2EA] max-lg:landscape:text-[23px]">
             Djurcellens osynliga värld
           </h1>
 
-          <p className="mt-2 max-w-sm text-xs leading-relaxed text-[#B6CBD0] sm:text-sm">
+          <p className="mt-1 text-[11px] leading-[1.4] text-[#B6CBD0] lg:mt-2 lg:text-sm">
             Utforska cellen och upptäck världen som finns inuti.
           </p>
-          <p className="mt-2 text-[11px] text-teal-200/80">
+          <p className="mt-1 text-[10px] text-teal-200/80 lg:mt-2 lg:text-[11px]">
             Djurcell · preparat 001
           </p>
         </div>
@@ -1736,7 +1731,7 @@ export default function CellScene() {
         ]}
       />
       {/* Activity controls */}
-      <div className="cell-activity-controls absolute right-4 top-24 z-20 flex flex-col gap-2 sm:right-8 sm:top-28">
+      <div className="cell-activity-controls absolute right-3 top-[140px] z-30 flex flex-col items-end gap-1.5 landscape:max-lg:top-3 lg:right-7 lg:top-[94px] lg:gap-2">
         <button
           type="button"
           onClick={() => {
@@ -1747,18 +1742,25 @@ export default function CellScene() {
             chooseRespirationPhase(0);
           }}
           aria-pressed={oxygen}
-          className={`inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs backdrop-blur-md transition ${oxygen ? "border-sky-300/50 bg-sky-700/65 text-white" : "border-white/15 bg-[#102638]/80 text-[#D5E5EA] hover:bg-white/15"}`}
+          aria-label={oxygen ? "Dölj syret" : "Följ syret"}
+          title={oxygen ? "Dölj syret" : "Följ syret"}
+          className={`flex h-9 w-9 items-center justify-center gap-2 rounded-full border px-0 text-xs lg:w-auto lg:px-3 border-white/20 bg-[#102a3b]/80 text-[#D5E5EA] backdrop-blur-xl transition hover:bg-white/10 ${oxygen ? "border-sky-300/50 bg-sky-700/65 text-white" : "border-white/15 bg-[#102638]/80 text-[#D5E5EA] hover:bg-white/15"}`}
         >
-          <Wind size={15} /> {oxygen ? "Dölj syret" : "Följ syret"}
+          <Wind size={15} aria-hidden="true" />
+          <span className="hidden lg:inline">
+            {oxygen ? "Dölj syret" : "Följ syret"}
+          </span>
         </button>
         <button
           type="button"
           onClick={() => setMotion((v) => !v)}
           aria-label={motion ? "Pausa rörelsen" : "Starta rörelsen"}
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-[#102638]/80 px-3 py-2 text-xs text-[#D5E5EA] backdrop-blur-md transition hover:bg-white/15"
+          className="flex h-9 w-9 items-center justify-center gap-2 rounded-full border px-0 text-xs lg:w-auto lg:px-3 border-white/20 bg-[#102a3b]/80 text-[#D5E5EA] backdrop-blur-xl transition hover:bg-white/10"
         >
           {motion ? <Pause size={14} /> : <Play size={14} />}
-          {motion ? "Pausa" : "Starta"}
+          <span className="hidden lg:inline">
+            {motion ? "Pausa" : "Starta"}
+          </span>
         </button>
       </div>
       {oxygen && oxygenStage !== "respiration" && (
@@ -2027,7 +2029,20 @@ export default function CellScene() {
           }}
         />
       )}
-      <div className="pointer-events-none absolute bottom-20 left-4 hidden text-xs text-teal-100/65 sm:block">
+      <style>{`
+        /* Museum HUD anchors: one authoritative rule set per scene. */
+        .museum-scene-hint { position:absolute; left:50%; bottom:90px; transform:translateX(-50%); z-index:10; width:max-content; max-width:calc(100% - 32px); pointer-events:none; }
+        .museum-scene-specimen { position:absolute; left:16px; bottom:94px; z-index:10; pointer-events:none; }
+        @media (max-width:1023px) and (orientation:portrait) {
+          .museum-scene-hint { bottom:112px; }
+          .museum-scene-specimen { bottom:84px; }
+        }
+        @media (max-width:1023px) and (orientation:landscape) {
+          .museum-scene-hint { bottom:78px; }
+          .museum-scene-specimen { bottom:18px; }
+        }
+      `}</style>
+      <div className="museum-scene-specimen text-[11px] text-teal-100/65">
         Djurcell · 001
       </div>
     </section>

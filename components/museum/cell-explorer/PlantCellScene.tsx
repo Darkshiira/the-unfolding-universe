@@ -2,7 +2,7 @@
 
 import CellEnergyExplorer from "./CellEnergyExplorer";
 import Link from "next/link";
-import { ArrowLeft, Microscope } from "lucide-react";
+import { ArrowLeft, Microscope, Pause, Play } from "lucide-react";
 import {
   useEffect,
   useMemo,
@@ -1064,18 +1064,18 @@ export default function PlantCellScene({
         </div>
       )}
       <header
-        className={`pointer-events-none absolute left-5 top-7 z-10 max-w-[min(72vw,430px)] sm:left-7 sm:top-16 max-[900px]:landscape:top-2 transition-opacity duration-700 ${introVisible ? "opacity-100" : "max-[900px]:opacity-0"}`}
+        className={`pointer-events-none absolute z-20 left-[76px] right-3 top-5 lg:left-7 lg:right-7 lg:top-8 max-lg:landscape:top-3 w-full max-w-[min(540px,calc(100vw-96px))] lg:max-w-[540px] max-lg:landscape:max-w-[min(440px,calc(100vw-165px))] transition-opacity duration-700 ${introVisible ? "opacity-100" : "max-[900px]:opacity-0"}`}
       >
-        <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#D8C18D] sm:text-xs">
-            The Unfolding Universe · Museum
-          </p>
-        <h1 className="mt-2 font-serif text-[clamp(25px,3vw,38px)] leading-tight">
+        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.19em] text-[#D8C18D] lg:mb-2">
+          The Unfolding Universe · Museum
+        </p>
+        <h1 className="font-serif text-[clamp(23px,2.5vw,38px)] leading-tight tracking-tight text-[#F5F2EA] max-lg:landscape:text-[23px]">
           Växtcellens värld
         </h1>
-        <p className="mt-2 text-xs leading-5 text-[#abc4c8] sm:text-sm">
+        <p className="mt-1 text-[11px] leading-[1.4] text-[#B6CBD0] lg:mt-2 lg:text-sm">
           Upptäck livet bakom cellväggen.
         </p>
-        <p className="mt-2 text-[11px] text-teal-200/80">
+        <p className="mt-1 text-[10px] text-teal-200/80 lg:mt-2 lg:text-[11px]">
           Växtcell · preparat 002
         </p>
       </header>
@@ -1169,13 +1169,18 @@ export default function PlantCellScene({
           },
         ]}
       />
-      <div className="absolute right-4 top-[62px] z-20 flex flex-col gap-2 sm:right-7">
+      <div className="absolute right-3 top-[140px] z-30 flex flex-col items-end gap-1.5 landscape:max-lg:top-3 lg:right-7 lg:top-[94px] lg:gap-2">
         <button
           type="button"
           onClick={() => setPaused((p) => !p)}
-          className="rounded-full border border-[#547181]/60 bg-[#102735]/90 px-3 py-2 text-xs text-[#dce8e9] backdrop-blur-md hover:bg-[#1d3a48]"
+          aria-label={paused ? "Fortsätt" : "Pausa"}
+          title={paused ? "Fortsätt" : "Pausa"}
+          className="flex h-9 w-9 items-center justify-center gap-2 rounded-full border px-0 text-xs lg:w-auto lg:px-3 border-white/20 bg-[#102a3b]/80 text-[#D5E5EA] backdrop-blur-xl transition hover:bg-white/10"
         >
-          {paused ? "Fortsätt" : "Pausa"}
+          {paused ? <Play size={14} /> : <Pause size={14} />}
+          <span className="hidden lg:inline">
+            {paused ? "Fortsätt" : "Pausa"}
+          </span>
         </button>
       </div>
       {turgorOpen && (
@@ -1813,9 +1818,22 @@ export default function PlantCellScene({
           )}
         </aside>
       )}
+      <style>{`
+        /* Museum HUD anchors: one authoritative rule set per scene. */
+        .museum-scene-hint { position:absolute; left:50%; bottom:90px; transform:translateX(-50%); z-index:10; width:max-content; max-width:calc(100% - 32px); pointer-events:none; }
+        .museum-scene-specimen { position:absolute; left:16px; bottom:94px; z-index:10; pointer-events:none; }
+        @media (max-width:1023px) and (orientation:portrait) {
+          .museum-scene-hint { bottom:112px; }
+          .museum-scene-specimen { bottom:84px; }
+        }
+        @media (max-width:1023px) and (orientation:landscape) {
+          .museum-scene-hint { bottom:78px; }
+          .museum-scene-specimen { bottom:18px; }
+        }
+      `}</style>
       {welcomeVisible && !selected && (
         <div
-          className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-5"
+          className="museum-scene-hint flex justify-center px-5"
           aria-live="polite"
         >
           <div className="plant-welcome max-w-[310px] rounded-2xl border border-[#b7d6c2]/25 bg-[#0b2530]/80 px-5 py-4 text-center shadow-[0_12px_55px_rgba(0,0,0,.24)] backdrop-blur-md max-[900px]:landscape:max-w-[245px] max-[900px]:landscape:px-3 max-[900px]:landscape:py-2">
@@ -1973,7 +1991,7 @@ export default function PlantCellScene({
           }
         }
       `}</style>
-      <div className="pointer-events-none absolute bottom-[95px] left-4 hidden items-center gap-2 text-xs text-[#9bbdb1] lg:flex">
+      <div className="museum-scene-specimen flex items-center gap-2 text-[11px] text-teal-100/65">
         <Leaf size={14} /> Växtcell · 002
       </div>
       {cellEnergyOpen && (
