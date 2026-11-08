@@ -1,27 +1,74 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import DetectiveFieldNotebook from "./DetectiveFieldNotebook";
 import CellMuseumIntro from "./CellMuseumIntro";
 import CellScene from "./CellScene";
 import PlantCellScene from "./PlantCellScene";
 import EColiCellScene from "./EColiCellScene";
 import ArchaeaCellScene from "./ArchaeaCellScene";
-
 import CellSlideSelector, {
   CELL_SPECIMENS,
   type CellKind,
 } from "./CellSlideSelector";
+
+const DETECTIVES_ROUTE = "/museum/cell-explorer/celldetektiverna";
+const isCellKind = (value: string | null): value is CellKind =>
+  CELL_SPECIMENS.some((cell) => cell.id === value);
 
 export default function CellMuseumExperience() {
   const [entered, setEntered] = useState(false);
   const [welcomeOnPlant, setWelcomeOnPlant] = useState(false);
   const [showIntroHint, setShowIntroHint] = useState(false);
   const [selectedCell, setSelectedCell] = useState<CellKind>("animal");
+  const [detectiveReturn, setDetectiveReturn] = useState<string | null>(null);
+  const [detectiveCase, setDetectiveCase] = useState("nucleus");
+  const [detectiveMode, setDetectiveMode] = useState<"guided" | "free">(
+    "guided",
+  );
+
+  useEffect(() => {
+    // Query parameters are read on the client; no Suspense boundary is needed.
+    let cancelled = false;
+    Promise.resolve().then(() => {
+      if (cancelled) return;
+      const params = new URLSearchParams(window.location.search);
+      const specimen = params.get("specimen");
+      if (isCellKind(specimen)) {
+        setSelectedCell(specimen);
+        setEntered(true);
+        setShowIntroHint(false);
+      }
+      if (params.get("from") === "detectives") {
+        const back = new URLSearchParams();
+        const caseId = params.get("case");
+        const mode = params.get("mode");
+        if (caseId) {
+          back.set("case", caseId);
+          setDetectiveCase(caseId);
+        }
+        if (mode === "free") {
+          back.set("mode", "free");
+          setDetectiveMode("free");
+        }
+        setDetectiveReturn(
+          `${DETECTIVES_ROUTE}${back.size ? `?${back.toString()}` : ""}`,
+        );
+        setEntered(true);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   useEffect(() => {
     if (!showIntroHint) return;
     const t = window.setTimeout(() => setShowIntroHint(false), 4400);
     return () => window.clearTimeout(t);
   }, [showIntroHint]);
+
   const selected = CELL_SPECIMENS.find((cell) => cell.id === selectedCell)!;
 
   if (!entered) {
@@ -39,7 +86,6 @@ export default function CellMuseumExperience() {
 
   return (
     <div className="relative h-svh min-h-0 w-full overflow-hidden bg-[#081522]">
-      {/* Preserve the existing animal cell without modifying its complex animations. */}
       {selectedCell === "animal" ? (
         <div className="h-full w-full pb-[76px] sm:pb-[88px] max-[900px]:landscape:pb-[58px]">
           <CellScene />
@@ -64,11 +110,16 @@ export default function CellMuseumExperience() {
           <h2 className="text-3xl font-semibold text-[#edf3f5]">
             {selected.label}
           </h2>
-          <p className="mt-3 max-w-sm text-sm leading-6 text-[#a8bdc8]">
-            Den interaktiva 3D-modellen för den här cellen kommer snart. Välj
-            Djurcell för att utforska den färdiga modellen.
-          </p>
         </div>
+      )}
+
+      {detectiveReturn && (
+        <DetectiveFieldNotebook
+          caseId={detectiveCase}
+          mode={detectiveMode}
+          selectedCell={selectedCell}
+          returnHref={detectiveReturn}
+        />
       )}
 
       {selectedCell === "animal" && showIntroHint && (
@@ -111,7 +162,6 @@ export default function CellMuseumExperience() {
           }
         }
       `}</style>
-      {/* Floating navigation; intentionally no large background panel. */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[60] px-2 pb-[max(8px,env(safe-area-inset-bottom))] sm:px-5 sm:pb-4 max-[900px]:landscape:pb-1">
         <CellSlideSelector value={selectedCell} onChange={setSelectedCell} />
       </div>

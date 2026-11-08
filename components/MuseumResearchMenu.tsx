@@ -7,15 +7,19 @@ import {
   ChevronRight,
   Compass,
   Dna,
+  Fingerprint,
   Info,
   Menu,
+  Microscope,
   X,
+  FlaskConical,
+  Lightbulb,
   type LucideIcon,
 } from "lucide-react";
 import MuseumExhibitMenuSection from "./MuseumExhibitMenuSection";
 
 type Species = "guinea" | "rabbit" | "mouse";
-type Panel = "main" | "exhibits" | "experiments";
+type Panel = "main" | "exhibits" | "experiments" | "about";
 
 type Props = {
   onSelectSpecies: (species: Species) => void;
@@ -66,7 +70,10 @@ export default function MuseumResearchMenu({ onSelectSpecies }: Props) {
     <div className="relative z-[100] shrink-0">
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          if (open) close();
+          else setOpen(true);
+        }}
         aria-label={open ? "Stäng museimenyn" : "Öppna museimenyn"}
         aria-expanded={open}
         aria-controls="genlabbet-museum-navigation"
@@ -75,8 +82,7 @@ export default function MuseumResearchMenu({ onSelectSpecies }: Props) {
         {open ? <X size={19} /> : <Menu size={19} />}
         <span className="hidden text-xs font-bold sm:inline">Museimeny</span>
       </button>
-      {/* The shared exhibit list is dark-themed in Cell Explorer. Scope these
-          light-theme overrides to Genlabbet only, leaving other menus intact. */}
+      {/* Scoped light-theme overrides: do not change the shared exhibit menu elsewhere. */}
       <style jsx global>{`
         .genlabbet-light-exhibits {
           color: #24536f;
@@ -110,16 +116,22 @@ export default function MuseumResearchMenu({ onSelectSpecies }: Props) {
           <nav
             id="genlabbet-museum-navigation"
             aria-label="Museimenyn"
-            className="flex w-[min(260px,calc(100vw-24px))] min-h-0 flex-col overflow-hidden rounded-2xl border border-[#c9e0ec] bg-[#fafdff] p-3 text-[#17374d] shadow-[0_18px_45px_rgba(34,92,125,.16)]"
+            className="flex w-[min(280px,calc(100vw-24px))] min-h-0 flex-col overflow-hidden rounded-2xl border border-[#c9e0ec] bg-[#fafdff] p-3 text-[#17374d] shadow-[0_18px_45px_rgba(34,92,125,.16)]"
           >
             {panel === "main" ? (
               <div className="min-h-0 space-y-1 overflow-y-auto overscroll-contain">
                 <p className="px-2 pb-2 pt-1 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#528ba9]">
                   The Unfolding Universe
                 </p>
-                <a href="#genlabbet-intro" onClick={close} className={item}>
-                  <Info size={15} /> Om forskningsstationen
-                </a>
+                <button
+                  type="button"
+                  onClick={() => setPanel("about")}
+                  className={item}
+                >
+                  <Info size={15} />
+                  <span className="flex-1">Om Genlabbet</span>
+                  <ChevronRight size={15} />
+                </button>
                 <button
                   type="button"
                   onClick={() => setPanel("experiments")}
@@ -129,6 +141,36 @@ export default function MuseumResearchMenu({ onSelectSpecies }: Props) {
                   <span className="flex-1">Experimentera</span>
                   <ChevronRight size={15} />
                 </button>
+                <div className="my-2 border-t border-[#d8e9f2]" />
+
+                <p className="px-2 pb-1 pt-2 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#528ba9]">
+                  Forskningsstationer
+                </p>
+                <Link
+                  href="/museum/cell-explorer/forskningsstation"
+                  onClick={close}
+                  className={`${item} border border-[#c6e1ea] bg-[#edf8fa] text-[#176d82] hover:bg-[#dff2f5]`}
+                >
+                  <ArrowLeft size={16} className="shrink-0" />
+                  <span className="flex-1">Till forskningsstationerna</span>
+                </Link>
+                <div
+                  className="flex items-center gap-2 rounded-xl bg-[#e8f4fb] px-2 py-2.5 text-xs font-semibold text-[#24536f]"
+                  aria-current="page"
+                >
+                  <Microscope size={16} className="shrink-0 text-[#247ba8]" />
+                  <span className="flex-1">01 · Genlabbet</span>
+                  <span className="text-[10px] text-[#528ba9]">Här</span>
+                </div>
+                <Link
+                  href="/museum/cell-explorer/celldetektiverna"
+                  onClick={close}
+                  className={item}
+                >
+                  <Fingerprint size={16} className="shrink-0 text-[#247ba8]" />
+                  <span className="flex-1">02 · Celldetektiverna</span>
+                  <ChevronRight size={15} />
+                </Link>
                 <div className="my-2 border-t border-[#d8e9f2]" />
                 <button
                   type="button"
@@ -153,6 +195,74 @@ export default function MuseumResearchMenu({ onSelectSpecies }: Props) {
             ) : panel === "exhibits" ? (
               <div className="genlabbet-light-exhibits flex min-h-0 flex-col overflow-y-auto overscroll-contain">
                 <MuseumExhibitMenuSection onBack={() => setPanel("main")} />
+              </div>
+            ) : panel === "about" ? (
+              <div className="min-h-0 space-y-3 overflow-y-auto overscroll-contain px-1 pb-1">
+                <button
+                  type="button"
+                  onClick={() => setPanel("main")}
+                  className={item}
+                >
+                  <ArrowLeft size={15} /> Tillbaka till menyn
+                </button>
+                <div className="border-t border-[#d8e9f2]" />
+                <div className="rounded-xl border border-[#d4e7f0] bg-[#eef7fb] p-3">
+                  <div className="mb-2 flex items-center gap-2 text-[#247ba8]">
+                    <Microscope size={18} />
+                    <span className="text-[10px] font-extrabold uppercase tracking-[.1em]">
+                      Forskningsstation 01
+                    </span>
+                  </div>
+                  <h2 className="text-base font-bold text-[#17374d]">
+                    Välkommen till Genlabbet!
+                  </h2>
+                  <p className="mt-2 text-xs leading-relaxed text-[#486f85]">
+                    Här undersöker du hur egenskaper kan ärvas från föräldrar
+                    till ungar. Experimentera med marsvin, kaniner och möss.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2 px-2">
+                  <FlaskConical
+                    size={17}
+                    className="mt-0.5 shrink-0 text-[#247ba8]"
+                  />
+                  <div>
+                    <h3 className="text-xs font-bold text-[#24536f]">
+                      Så experimenterar du
+                    </h3>
+                    <p className="mt-1 text-xs leading-relaxed text-[#597e92]">
+                      Välj två föräldrar, gissa hur ungen kommer att se ut och
+                      testa din hypotes. Undersök sedan korsningsschemat för att
+                      se vilka genkombinationer som är möjliga.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2 px-2">
+                  <Lightbulb
+                    size={17}
+                    className="mt-0.5 shrink-0 text-[#247ba8]"
+                  />
+                  <div>
+                    <h3 className="text-xs font-bold text-[#24536f]">
+                      Vad kan du upptäcka?
+                    </h3>
+                    <p className="mt-1 text-xs leading-relaxed text-[#597e92]">
+                      En unge ärver en genvariant från varje förälder. Samma
+                      föräldrapar kan få ungar med olika egenskaper.
+                    </p>
+                  </div>
+                </div>
+                <p className="rounded-lg bg-[#f1f6f9] px-3 py-2 text-[11px] leading-relaxed text-[#668397]">
+                  Genlabbet använder en förenklad modell med två gener och
+                  fullständig dominans. Verklig nedärvning är ofta mer komplex.
+                </p>
+                <button
+                  type="button"
+                  onClick={close}
+                  className="w-full rounded-xl bg-[#dff1f8] px-3 py-2.5 text-xs font-bold text-[#246c91] transition hover:bg-[#cce9f5]"
+                >
+                  Fortsätt experimentera
+                </button>
               </div>
             ) : (
               <div className="min-h-0 space-y-1 overflow-y-auto overscroll-contain">
